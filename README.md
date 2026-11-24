@@ -1,16 +1,51 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+# Caveira App
 
-Currently, two official plugins are available:
+Aplicativo de treinamento físico, acompanhamento de desempenho e evolução pessoal.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Sobre o projeto
 
-## React Compiler
+O Caveira App reúne ferramentas para organizar treinos, acompanhar resultados e monitorar hábitos relacionados à rotina de treinamento.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Funcionalidades
 
-## Expanding the Oxlint configuration
+- Organização e montagem de treinos.
+- Registro e histórico de exercícios.
+- Cronômetro e timer de intervalos.
+- Dashboard de desempenho e evolução.
+- Registro de recordes pessoais e medidas corporais.
+- Controle de alimentação e hidratação.
+- Gerenciamento de suplementos.
+- Biblioteca de exercícios.
+- Relatórios de desempenho.
+- Autenticação e armazenamento de dados com Supabase.
+- Preparação para instalação como aplicativo (PWA).
+- Recursos de funcionamento offline.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Tecnologias
+
+- React
+- Vite
+- JavaScript
+- Supabase
+- Service Worker
+- Progressive Web App (PWA)
+
+## Desenvolvimento
+
+Para executar o projeto localmente:
+
+```bash
+npm install
+npm run dev
+```
+
+Para gerar a versão de produção:
+
+```bash
+npm run build
+```
+
+## Projeto
+
+Caveira App — desenvolvimento contínuo.
