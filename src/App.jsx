@@ -389,6 +389,7 @@ export default function App() {
     typeof window !== "undefined" ? window.innerWidth : 480
   );
   const ehDesktop = larguraTela >= 640;
+  const ehDesktopPainel = larguraTela >= 900;
 
   const [menuAberto, setMenuAberto] = useState(false);
   const [authSession, setAuthSession] = useState(null);
@@ -529,7 +530,6 @@ export default function App() {
   const [modoFocoLimpo, setModoFocoLimpo] = useState(false);
   const [logoQuebrou, setLogoQuebrou] = useState(false);
 
-  const calcRef = useRef(null);
   const backupRef = useRef(null);
   const timerEstavaRodandoRef = useRef(false);
   const wakeLockRef = useRef(null);
@@ -1137,16 +1137,6 @@ export default function App() {
     if (pagina === "timer") setDataSelecionada(hojeISO);
     setAbaAtiva(pagina);
     setMenuAberto(false);
-  }
-
-  function abrirCalculadoraMenu() {
-    setModoFocoLimpo(false);
-    setCalcAberta(true);
-    setAbaAtiva("hoje");
-    setMenuAberto(false);
-    setTimeout(() => {
-      calcRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 80);
   }
 
   function abrirBackupMenu() {
@@ -3127,9 +3117,6 @@ export default function App() {
                 <button type="button" onClick={() => abrirPagina("exercicios")} style={estiloMenuAtivo("exercicios", abaAtiva)}>Biblioteca de Exercícios</button>
                 <button type="button" onClick={() => abrirPagina("conquistas")} style={estiloMenuAtivo("conquistas", abaAtiva)}>Conquistas</button>
                 <button type="button" onClick={() => abrirPagina("relatorios")} style={estiloMenuAtivo("relatorios", abaAtiva)}>Relatórios</button>
-                <button type="button" onClick={abrirCalculadoraMenu} style={btnMenu}>
-                  Calculadora de Anilhas
-                </button>
                 <button
                   type="button"
                   onClick={() => {
@@ -3382,12 +3369,12 @@ export default function App() {
 
       {/* PÁGINA 1: HOJE (focada em treino, tempo, água e observação) */}
       {abaAtiva === "hoje" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px", position: "relative", paddingRight: ehDesktop ? "294px" : "0px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px", position: "relative", paddingRight: ehDesktopPainel ? "min(294px, 31vw)" : "0px" }}>
           {/* Painel lateral da sessão e semana: adicionado sem remover o calendário original. */}
-          {ehDesktop && (
-            <aside style={{ position: "absolute", top: "0px", right: "0px", width: "270px", minHeight: "520px", boxSizing: "border-box", borderLeft: "1px solid rgba(148,163,184,.16)", paddingLeft: "30px", color: "#9AA1AE", display: "flex", flexDirection: "column", gap: "24px" }}>
+          {(
+            <aside style={{ position: ehDesktopPainel ? "absolute" : "relative", top: ehDesktopPainel ? "0px" : "auto", right: ehDesktopPainel ? "0px" : "auto", width: ehDesktopPainel ? "270px" : "100%", maxWidth: ehDesktopPainel ? "none" : "480px", minHeight: ehDesktopPainel ? "520px" : "0px", boxSizing: "border-box", borderLeft: ehDesktopPainel ? "1px solid rgba(148,163,184,.12)" : "none", paddingLeft: ehDesktopPainel ? "24px" : "0px", paddingRight: ehDesktopPainel ? "0px" : "0px", margin: ehDesktopPainel ? "0px" : "0px auto 8px", color: "#9AA1AE", display: "flex", flexDirection: "column", gap: "24px", background: "transparent", backdropFilter: "none", WebkitBackdropFilter: "none", overflow: "visible" }}>
               <section style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
-                <div style={{ alignSelf: "stretch", fontSize: "10px", fontWeight: 700, color: "#9AA1AE", letterSpacing: ".04em" }}>SESSÃO DE HOJE</div>
+                <div style={{ alignSelf: "stretch", textAlign: ehDesktopPainel ? "left" : "center", fontSize: "10px", fontWeight: 700, color: "#9AA1AE", letterSpacing: ".04em" }}>SESSÃO DE HOJE</div>
                 <div style={{ position: "relative", width: "136px", height: "136px", margin: "20px auto 8px" }}>
                   <svg width="136" height="136" viewBox="0 0 136 136" style={{ transform: "rotate(-90deg)" }}>
                     <circle cx="68" cy="68" r="65" fill="none" stroke="#242833" strokeWidth="4" />
@@ -3421,7 +3408,7 @@ export default function App() {
           )}
           <div
             style={{
-              display: ehDesktop ? "none" : "flex",
+              display: "none",
               alignItems: "center",
               justifyContent: "space-between",
               gap: ehDesktop ? "24px" : "10px",
@@ -3629,154 +3616,9 @@ export default function App() {
             </div>
           )}
 
-          {/* Checklist pré-treino + Aquecimento */}
-          <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "10px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
-              <span style={{ fontSize: "11px", color: "#BEB7CA", fontWeight: 600 }}>Checklist pré-treino</span>
-              <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-                {[
-                  { key: "agua", label: "Água batida" },
-                  { key: "aquecimento", label: "Aquecido" },
-                  { key: "foco", label: "Foco alinhado" },
-                ].map((item) => {
-                  const marcado = Boolean(checklistDia[item.key]);
-                  return (
-                    <button
-                      key={item.key}
-                      type="button"
-                      onClick={() => alternarChecklist(item.key)}
-                      style={{
-                        padding: "4px 8px",
-                        borderRadius: "6px",
-                        border: "1px solid rgba(190, 170, 225, 0.19)",
-                        background: marcado ? "rgba(34, 197, 94, 0.14)" : "#111827",
-                        color: marcado ? "#A9E8CB" : "#BEB7CA",
-                        fontSize: "11px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {marcado ? "✓ " : ""}
-                      {item.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+          {/* Checklist pré-treino e aquecimento removidos conforme solicitação visual/funcional. */}
 
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px", flexWrap: "wrap", paddingTop: "8px", borderTop: "1px solid rgba(190, 170, 225, 0.14)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px" }}>
-                <span style={{ color: "#BEB7CA", fontWeight: 600 }}>Aquecimento</span>
-                <span style={{ color: "#9E96AD" }}>({aquecimentoDia.minutos} min)</span>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                {[5, 10, 15].map((min) => (
-                  <button
-                    key={min}
-                    type="button"
-                    onClick={() =>
-                      setAquecimentoPorData((prev) => ({
-                        ...prev,
-                        [dataSelecionada]: {
-                          feito: prev[dataSelecionada]?.feito ?? true,
-                          minutos: min,
-                        },
-                      }))
-                    }
-                    style={{
-                      padding: "4px 8px",
-                      borderRadius: "6px",
-                      border: "1px solid rgba(190, 170, 225, 0.19)",
-                      background: aquecimentoDia.minutos === min ? "rgba(190, 170, 225, 0.14)" : "#111827",
-                      color: aquecimentoDia.minutos === min ? "#DCCCF5" : "#BEB7CA",
-                      fontSize: "11px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {min}m
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  onClick={() =>
-                    setAquecimentoPorData((prev) => ({
-                      ...prev,
-                      [dataSelecionada]: {
-                        minutos: prev[dataSelecionada]?.minutos ?? 5,
-                        feito: !prev[dataSelecionada]?.feito,
-                      },
-                    }))
-                  }
-                  style={{
-                    padding: "5px 10px",
-                    borderRadius: "7px",
-                    border: "none",
-                    background: aquecimentoDia.feito ? "#9ADFC2" : "rgba(190, 170, 225, 0.14)",
-                    color: aquecimentoDia.feito ? "#111827" : "#EEEAF5",
-                    fontSize: "11px",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                  }}
-                >
-                  {aquecimentoDia.feito ? "Feito" : "Marcar"}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Calculadora de anilhas */}
-          <div ref={calcRef} style={cardClean}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: "12px", fontWeight: 600 }}>Calculadora de anilhas</span>
-              <button
-                type="button"
-                onClick={() => setCalcAberta((a) => !a)}
-                style={{ ...btnSecundario, flex: "none", padding: "4px 9px", fontSize: "11px" }}
-              >
-                {calcAberta ? "Esconder" : "Abrir"}
-              </button>
-            </div>
-
-            {calcAberta && (
-              <div style={{ marginTop: "10px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-                  <label style={{ fontSize: "11px", color: "#BEB7CA" }}>
-                    Peso total (kg)
-                    <input
-                      type="number"
-                      step="2.5"
-                      value={calcPesoTotal}
-                      onChange={(e) => setCalcPesoTotal(e.target.value)}
-                      style={{ ...campoTexto, marginTop: "4px", padding: "6px 8px" }}
-                    />
-                  </label>
-                  <label style={{ fontSize: "11px", color: "#BEB7CA" }}>
-                    Peso da barra (kg)
-                    <input
-                      type="number"
-                      step="1"
-                      value={calcPesoBarra}
-                      onChange={(e) => setCalcPesoBarra(e.target.value)}
-                      style={{ ...campoTexto, marginTop: "4px", padding: "6px 8px" }}
-                    />
-                  </label>
-                </div>
-
-                <div style={{ fontSize: "12px", color: "#EEEAF5" }}>
-                  Por lado:{" "}
-                  {resultadoAnilhas.itens.length === 0 ? (
-                    <span style={{ color: "#9E96AD" }}>Apenas a barra</span>
-                  ) : (
-                    resultadoAnilhas.itens.map((it) => `${it.qtd}x${it.anilha}kg`).join(" + ")
-                  )}
-                  {resultadoAnilhas.sobraPorLado > 0 && (
-                    <span style={{ color: "#E9C987", marginLeft: "6px" }}>
-                      (restam {resultadoAnilhas.sobraPorLado}kg/lado)
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+          {/* Calculadora de anilhas removida da interface conforme solicitação. */}
 
           {/* Resumo da sessão + Puxar último treino parecido */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
@@ -5813,7 +5655,7 @@ export default function App() {
                       {barras.map((barra) => <div key={barra.nome} style={{ minWidth: 0 }}><div style={{ display: "flex", justifyContent: "space-between", gap: "4px", fontSize: "9px", color: "#9E96AD", marginBottom: "3px" }}><span>{barra.nome}</span><strong style={{ color: "#EEEAF5" }}>{barra.valor}{barra.unidade}</strong></div><div style={{ height: "5px", borderRadius: "99px", background: "rgba(148, 163, 184, 0.20)", overflow: "hidden" }}><div style={{ width: `${Math.min(100, Math.round((barra.valor / barra.max) * 100))}%`, height: "100%", background: barra.cor, borderRadius: "99px" }} /></div></div>)}
                     </div>
                     <div style={{ gridColumn: ehDesktop ? "auto" : "2", display: "flex", flexWrap: "wrap", gap: "5px", fontSize: "9px", color: "#9E96AD" }}>
-                      <span>{dia.treino ? "✓ Treino" : "— Treino"}</span><span>• {dia.refeicoes} refeições</span><span>• {dia.cafeina} cafeína</span><span>• Mochila {dia.mochilaPct}%</span><span>• {dia.aquecimento ? "Aquecimento ✓" : "Sem aquecimento"}</span><span>• {dia.sinais} sinais</span><span>• Sono: {dia.sono}</span>
+                      <span>{dia.treino ? "✓ Treino" : "— Treino"}</span><span>• {dia.refeicoes} refeições</span><span>• {dia.cafeina} cafeína</span><span>• Mochila {dia.mochilaPct}%</span><span>• {dia.sinais} sinais</span><span>• Sono: {dia.sono}</span>
                     </div>
                   </div>
                 );
