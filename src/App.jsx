@@ -3087,18 +3087,38 @@ export default function App() {
         div[style*="rgba(44, 67, 96"],
         div[style*="rgba(38,54,75"],
         div[style*="rgba(38, 54, 75"],
+        /* Superfícies do dashboard: ficam integradas ao fundo, com transparência e sem caixas pesadas. */
         div[style*="rgba(34,50,73"],
         div[style*="rgba(34, 50, 73"],
         div[style*="rgba(27,41,60"],
         div[style*="rgba(27, 41, 60"],
         div[style*="rgba(49, 43, 63"],
         div[style*="rgba(35, 32, 46"],
-        div[style*="rgba(31, 29, 42"] {
-          background: #101218 !important;
-          border-color: #252a34 !important;
-          box-shadow: none !important;
-          -webkit-backdrop-filter: none !important;
-          backdrop-filter: none !important;
+        div[style*="rgba(31, 29, 42"],
+        div[style*="rgba(38, 54, 75"],
+        div[style*="rgba(25, 24, 33"],
+        div[style*="rgba(29, 27, 38"] {
+          background: rgba(13, 15, 21, .22) !important;
+          border-color: rgba(190, 170, 225, .10) !important;
+          box-shadow: 0 5px 18px rgba(0, 0, 0, .07) !important;
+          -webkit-backdrop-filter: blur(10px) !important;
+          backdrop-filter: blur(10px) !important;
+        }
+        /* Cards sem conteúdo de ação: reduzir presença, preservar espaço e leitura. */
+        div[style*="borderRadius"][style*="background: rgba(49, 43, 63"],
+        div[style*="border-radius"][style*="background: rgba(49, 43, 63"] {
+          background: rgba(15, 17, 23, .18) !important;
+          border: 1px solid rgba(190, 170, 225, .08) !important;
+        }
+        /* Listas e blocos informativos ganham acabamento leve; não altera controles. */
+        section[style*="background: rgba(49, 43, 63"],
+        section[style*="background: rgba(35, 32, 46"],
+        article[style*="background: rgba(49, 43, 63"],
+        article[style*="background: rgba(35, 32, 46"] {
+          background: rgba(13, 15, 21, .20) !important;
+          border-color: rgba(190, 170, 225, .10) !important;
+          box-shadow: 0 5px 18px rgba(0, 0, 0, .07) !important;
+          backdrop-filter: blur(10px) !important;
         }
         /* Blocos "próxima sessão" e assinatura Caveira no rodapé do painel lateral. */
         .caveira-proxima-sessao {
