@@ -2910,6 +2910,57 @@ export default function App() {
           *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
 
+        /* Sessão de Hoje: painel transparente, sem o fundo global aplicado a todos os aside.
+           Mobile: largura integral e conteúdo centralizado para não cortar o calendário/textos. */
+        aside.caveira-sessao-hoje {
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+        }
+        aside.caveira-sessao-hoje > section {
+          width: 100% !important;
+          max-width: 100% !important;
+          min-width: 0 !important;
+          box-sizing: border-box !important;
+        }
+        @media (max-width: 899px) {
+          aside.caveira-sessao-hoje {
+            width: 100% !important;
+            max-width: none !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            align-items: stretch !important;
+            gap: 24px !important;
+            background: transparent !important;
+            border: none !important;
+          }
+          aside.caveira-sessao-hoje > section {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+          }
+          aside.caveira-sessao-hoje > section:first-child {
+            align-items: center !important;
+          }
+          aside.caveira-sessao-hoje > section:first-child > div:first-child {
+            text-align: center !important;
+          }
+          aside.caveira-sessao-hoje > section:last-child {
+            width: 100% !important;
+          }
+          aside.caveira-sessao-hoje > section:last-child > div:nth-child(2),
+          aside.caveira-sessao-hoje > section:last-child > div:nth-child(3) {
+            width: 100% !important;
+            grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+          }
+          aside.caveira-sessao-hoje > section:last-child > button {
+            align-self: flex-start !important;
+          }
+        }
+
         /* Correção de uniformidade: aplica a paleta escura também ao conteúdo
            que ainda possuía fundos inline herdados do tema anterior. */
         div[style*="linear-gradient(145deg"] {
@@ -3372,7 +3423,7 @@ export default function App() {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", position: "relative", paddingRight: ehDesktopPainel ? "min(294px, 31vw)" : "0px" }}>
           {/* Painel lateral da sessão e semana: adicionado sem remover o calendário original. */}
           {(
-            <aside style={{ position: ehDesktopPainel ? "absolute" : "relative", top: ehDesktopPainel ? "0px" : "auto", right: ehDesktopPainel ? "0px" : "auto", width: ehDesktopPainel ? "270px" : "min(100%, 340px)", maxWidth: ehDesktopPainel ? "none" : "340px", minWidth: "0", minHeight: ehDesktopPainel ? "520px" : "0px", alignSelf: "center", boxSizing: "border-box", borderLeft: ehDesktopPainel ? "1px solid rgba(148,163,184,.12)" : "none", paddingLeft: ehDesktopPainel ? "24px" : "8px", paddingRight: ehDesktopPainel ? "0px" : "8px", margin: ehDesktopPainel ? "0px" : "0px auto 8px", color: "#9AA1AE", display: "flex", flexDirection: "column", gap: "24px", background: "transparent", backdropFilter: "none", WebkitBackdropFilter: "none", overflow: "visible" }}>
+            <aside className="caveira-sessao-hoje" style={{ position: ehDesktopPainel ? "absolute" : "relative", top: ehDesktopPainel ? "0px" : "auto", right: ehDesktopPainel ? "0px" : "auto", width: ehDesktopPainel ? "270px" : "100%", maxWidth: ehDesktopPainel ? "none" : "none", minWidth: "0", minHeight: ehDesktopPainel ? "520px" : "0px", alignSelf: "center", boxSizing: "border-box", borderLeft: ehDesktopPainel ? "1px solid rgba(148,163,184,.12)" : "none", paddingLeft: ehDesktopPainel ? "24px" : "0px", paddingRight: ehDesktopPainel ? "0px" : "0px", margin: ehDesktopPainel ? "0px" : "0px auto 8px", color: "#9AA1AE", display: "flex", flexDirection: "column", gap: "24px", background: "transparent", backdropFilter: "none", WebkitBackdropFilter: "none", overflow: "visible" }}>
               <section style={{ display: "flex", width: "100%", minWidth: "0", boxSizing: "border-box", flexDirection: "column", alignItems: "center", gap: "10px" }}>
                 <div style={{ alignSelf: "stretch", textAlign: ehDesktopPainel ? "left" : "center", fontSize: "10px", fontWeight: 700, color: "#9AA1AE", letterSpacing: ".04em" }}>SESSÃO DE HOJE</div>
                 <div style={{ position: "relative", width: "136px", height: "136px", flexShrink: 0, margin: "20px auto 8px", alignSelf: "center" }}>
