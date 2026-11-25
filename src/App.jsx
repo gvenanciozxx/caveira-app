@@ -3112,25 +3112,22 @@ export default function App() {
             style={{ border: 0, background: "transparent", padding: 0, cursor: "pointer", marginBottom: 24 }}>
             {renderLogo(34)}
           </button>
-          <nav aria-label="Menu principal" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, width: "100%" }}>
-            {[
-              { id: "hoje", icon: "hoje", title: "Treino de Hoje" },
-              { id: "montar", icon: "montar", title: "Montar Treinos" },
-              { id: "dashboard", icon: "dashboard", title: "Dashboard" },
-            ].map((item) => (
-              <button key={item.id} type="button" onClick={() => abrirPagina(item.id)} title={item.title} aria-label={item.title}
-                style={{
-                  width: 44, height: 44, border: "1px solid transparent", borderRadius: 11,
-                  display: "grid", placeItems: "center", cursor: "pointer",
-                  color: abaAtiva === item.id ? "#c5b2ff" : "#89909c",
-                  background: abaAtiva === item.id ? "#252833" : "transparent",
-                  boxShadow: abaAtiva === item.id ? "inset 0 0 16px rgba(197,178,255,.07)" : "none",
-                  transition: "background .2s ease, color .2s ease, transform .2s ease",
-                }}>
-                {renderIconeMenu(item.icon, 19)}
-              </button>
-            ))}
-          </nav>
+          {/* Faixa estreita do efeito ondulado na borda direita da sidebar compacta. */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute", top: 0, right: 0, bottom: 0,
+              width: 18, overflow: "hidden", pointerEvents: "none",
+              opacity: 0.42,
+              borderRight: "1px solid rgba(197,178,255,.22)",
+              WebkitMaskImage: "linear-gradient(90deg, transparent 0%, rgba(0,0,0,.28) 22%, #000 100%)",
+              maskImage: "linear-gradient(90deg, transparent 0%, rgba(0,0,0,.28) 22%, #000 100%)",
+            }}
+          >
+            <div style={{ position: "absolute", top: 0, right: -12, bottom: 0, width: 42, opacity: 0.7 }}>
+              <EfeitoRelevoPastel modo="aberto" />
+            </div>
+          </div>
           <div style={{ flex: 1 }} />
           <div style={{ width: 42, borderTop: "1px solid rgba(148,163,184,.16)", marginBottom: 18 }} />
           <button type="button" onClick={() => setMenuAberto(true)} title={`${authSession.user.user_metadata?.nome || "Usuário"} — ${authSession.user.email}`}
