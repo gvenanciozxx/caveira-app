@@ -2787,6 +2787,108 @@ export default function App() {
         @media (prefers-reduced-motion: reduce) {
           *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
+
+        /* Ajuste visual final: reprodução da referência Caveira/Lovable.
+           Somente apresentação; nenhum seletor altera estados, eventos ou dados. */
+        :root {
+          color-scheme: dark;
+          --caveira-bg: #090a0e;
+          --caveira-panel: #101218;
+          --caveira-panel-soft: #141720;
+          --caveira-border: #242832;
+          --caveira-text: #f1f2f5;
+          --caveira-muted: #9299a6;
+          --caveira-lilac: #c5b2ff;
+        }
+        html, body, #root {
+          background: #090a0e !important;
+          color: var(--caveira-text) !important;
+          font-family: Inter, Geist, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+        }
+        body {
+          background-image:
+            radial-gradient(ellipse 34% 28% at 100% 100%, rgba(173, 139, 255, .10), transparent 75%),
+            radial-gradient(ellipse 26% 22% at 0% 100%, rgba(111, 210, 173, .035), transparent 75%) !important;
+          background-attachment: fixed !important;
+        }
+        /* Base escura neutra e sem o tom roxo dominante anterior. */
+        div[style*="linear-gradient(145deg, #17161F"],
+        div[style*="linear-gradient(145deg, #191720"],
+        main[style*="radial-gradient"] {
+          background: #090a0e !important;
+        }
+        aside,
+        div[style*="position: fixed"][style*="left: 0"] {
+          background: #11141a !important;
+          border-color: #252a34 !important;
+          box-shadow: none !important;
+          -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+        }
+        header {
+          background: rgba(9, 10, 14, .96) !important;
+          border-bottom: 1px solid #242832 !important;
+          -webkit-backdrop-filter: blur(14px);
+          backdrop-filter: blur(14px);
+        }
+        /* Cards: superfícies planas, discretas e próximas à captura enviada. */
+        div[style*="rgba(44,67,96"],
+        div[style*="rgba(44, 67, 96"],
+        div[style*="rgba(38, 54, 75"],
+        div[style*="rgba(34, 50, 73"],
+        div[style*="rgba(27, 41, 60"],
+        div[style*="rgba(49, 43, 63"],
+        div[style*="rgba(35, 32, 46"],
+        div[style*="rgba(31, 29, 42"] {
+          background-color: #101218 !important;
+          border-color: #252a34 !important;
+          box-shadow: none !important;
+          -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+        }
+        /* Navegação fixa e superfícies de menu. */
+        nav[style*="position: fixed"] {
+          background: rgba(12, 14, 19, .96) !important;
+          border-color: #252a34 !important;
+          box-shadow: none !important;
+          -webkit-backdrop-filter: blur(16px);
+          backdrop-filter: blur(16px);
+        }
+        button, a, [role="button"] {
+          -webkit-tap-highlight-color: transparent;
+          transition: background-color .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease !important;
+        }
+        button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
+          outline: 2px solid rgba(197, 178, 255, .78) !important;
+          outline-offset: 3px;
+        }
+        input, select, textarea {
+          background: #11141a !important;
+          border: 1px solid #2a303b !important;
+          color: #f1f2f5 !important;
+          border-radius: 5px !important;
+          font-family: inherit !important;
+        }
+        input::placeholder, textarea::placeholder { color: #858d9b !important; }
+        input:focus, select:focus, textarea:focus {
+          outline: 1px solid rgba(197, 178, 255, .55) !important;
+          outline-offset: 1px;
+          border-color: rgba(197, 178, 255, .65) !important;
+        }
+        /* Destaques pastel anteriores passam ao lilás suave da referência. */
+        button[style*="#C7A9EF"], button[style*="#c7a9ef"],
+        button[style*="#B99AE7"], button[style*="#b99ae7"] {
+          background: #c5b2ff !important;
+          color: #111218 !important;
+        }
+        ::selection { background: rgba(197, 178, 255, .30); color: #fff; }
+        @media (max-width: 639px) {
+          input, select, textarea { font-size: 16px !important; }
+          body { overflow-x: hidden; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
         <span style={{ width: 6, height: 6, borderRadius: "50%", background: estaOnline ? "#B99AE7" : "#E9C987" }} />
