@@ -651,6 +651,7 @@ export default function App() {
   const [novoSeriesReps, setNovoSeriesReps] = useState("4x10");
   const [novoDescanso, setNovoDescanso] = useState(60);
   const [novoCarga, setNovoCarga] = useState(20);
+  const [formAdicionarExercicioAberto, setFormAdicionarExercicioAberto] = useState(false);
 
   const [exercicioFiltro, setExercicioFiltro] = useState("TODOS");
   const [diaSemanaFiltro, setDiaSemanaFiltro] = useState("TODOS");
@@ -1705,6 +1706,7 @@ export default function App() {
       ],
     }));
     setNovoNome("");
+    setFormAdicionarExercicioAberto(false);
   }
 
   function iniciarEdicao(item) {
@@ -3023,11 +3025,10 @@ export default function App() {
         .caveira-assinatura-painel {
           position: relative;
           overflow: hidden;
-          min-height: 150px;
+          min-height: 120px;
           padding-top: 18px;
-          background:
-            radial-gradient(ellipse at 80% 100%, rgba(197, 178, 255, .10), transparent 70%),
-            radial-gradient(circle, rgba(197, 178, 255, .16) 1px, transparent 1.2px) 0 38px / 5px 5px;
+          background: transparent !important;
+
         }
         .caveira-assinatura-painel img {
           opacity: .34;
@@ -3045,10 +3046,11 @@ export default function App() {
             padding: 20px 0;
           }
           .caveira-assinatura-painel {
-            min-height: 190px;
+            min-height: 120px;
             margin-left: -2px;
             margin-right: -2px;
             padding-top: 22px;
+            background: transparent !important;
           }
         }
         /* Mantém a barra de status legível, sem reintroduzir o fundo azulado. */
@@ -3286,21 +3288,21 @@ export default function App() {
               display: "inline-flex",
               alignItems: "center",
               gap: "8px",
-              padding: "4px 10px",
+              padding: abaAtiva === "montar" ? "0" : "4px 10px",
               borderRadius: "8px",
-              background: "rgba(49, 43, 63, 0.58)",
-              border: "1px solid rgba(190, 170, 225, 0.14)",
+              background: abaAtiva === "montar" ? "transparent" : "rgba(49, 43, 63, 0.58)",
+              border: abaAtiva === "montar" ? "none" : "1px solid rgba(190, 170, 225, 0.14)",
               marginBottom: "8px",
             }}
           >
             <span style={{ fontSize: "10px", letterSpacing: "0.14em", color: "#BEB7CA" }}>
-              CAVEIRA • UM DIA DE CADA VEZ
+              {abaAtiva === "montar" ? "SUA ROTINA, DO SEU JEITO" : "CAVEIRA • UM DIA DE CADA VEZ"}
             </span>
           </div>
 
           <h1
             style={{
-              fontSize: ehDesktop ? "32px" : "26px",
+              fontSize: abaAtiva === "montar" ? (ehDesktop ? "46px" : "32px") : (ehDesktop ? "32px" : "26px"),
               fontWeight: 800,
               letterSpacing: "-0.02em",
               lineHeight: 1.1,
@@ -3325,8 +3327,9 @@ export default function App() {
 
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "6px", flexWrap: "wrap" }}>
             <span style={{ fontSize: "12px", color: "#9E96AD" }}>
-              {infoDia?.nome}, {diaSel} de {MESES_CURTOS[(mesSel || 1) - 1]?.toLowerCase()}
-              {focoDiasPorChave[chaveDia] ? ` • Foco: ${focoDiasPorChave[chaveDia]}` : ""}
+              {abaAtiva === "montar"
+                ? "Uma semana bem planejada começa aqui."
+                : `${infoDia?.nome}, ${diaSel} de ${MESES_CURTOS[(mesSel || 1) - 1]?.toLowerCase()}${focoDiasPorChave[chaveDia] ? ` • Foco: ${focoDiasPorChave[chaveDia]}` : ""}`}
             </span>
             {abaAtiva === "hoje" && dataSelecionada !== hojeISO && (
               <button
@@ -3348,25 +3351,24 @@ export default function App() {
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          {renderLogo(ehDesktop ? 44 : 38)}
-          <div
-            style={{
-              textAlign: "right",
-              paddingLeft: "12px",
-              borderLeft: "1px solid rgba(190, 170, 225, 0.14)",
-              lineHeight: 1.1,
-            }}
-          >
-            <div style={{ fontSize: "10px", color: "#9E96AD", letterSpacing: "0.08em" }}>
-              {MESES_CURTOS[(mesSel || 1) - 1]}
-            </div>
-            <div style={{ fontSize: ehDesktop ? "26px" : "22px", fontWeight: 800, marginTop: "2px" }}>
-              {diaSel}
-            </div>
-            <div style={{ fontSize: "10px", color: "#9E96AD", marginTop: "2px" }}>{anoSel}</div>
+        {abaAtiva === "montar" ? (
+          <div style={{ flexShrink: 0, color: "#9E96AD", marginTop: "14px" }} aria-hidden="true">
+            <svg width={ehDesktop ? "52" : "40"} height={ehDesktop ? "52" : "40"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m6.5 6.5 11 11M3 8.5l5-5M16 21l5-5M2 11l3-3M19 16l3-3M7 2l3 3M14 19l3 3" />
+              <rect x="2" y="7" width="5" height="3" rx="1" transform="rotate(-45 2 7)" />
+              <rect x="17" y="14" width="5" height="3" rx="1" transform="rotate(-45 17 14)" />
+            </svg>
           </div>
-        </div>
+        ) : (
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            {renderLogo(ehDesktop ? 44 : 38)}
+            <div style={{ textAlign: "right", paddingLeft: "12px", borderLeft: "1px solid rgba(190, 170, 225, 0.14)", lineHeight: 1.1 }}>
+              <div style={{ fontSize: "10px", color: "#9E96AD", letterSpacing: "0.08em" }}>{MESES_CURTOS[(mesSel || 1) - 1]}</div>
+              <div style={{ fontSize: ehDesktop ? "26px" : "22px", fontWeight: 800, marginTop: "2px" }}>{diaSel}</div>
+              <div style={{ fontSize: "10px", color: "#9E96AD", marginTop: "2px" }}>{anoSel}</div>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Banner de alarme sonoro quando o timer termina */}
@@ -3539,9 +3541,9 @@ export default function App() {
                 </div>
               </section>
               <div className="caveira-assinatura-painel" aria-label="Caveira — Força na constância">
-                <img src="/LogoCaveira.png" alt="Caveira" onError={(e) => { e.currentTarget.style.display = "none"; }} style={{ width: "30px", height: "30px", objectFit: "contain", display: "block", marginBottom: "12px" }} />
-                <div style={{ color: "#9299A6", fontSize: "16px", fontWeight: 500, letterSpacing: ".04em", marginBottom: "4px" }}>CAVEIRA</div>
-                <div style={{ color: "#727A88", fontSize: "8px", letterSpacing: ".08em", fontWeight: 650 }}>FORÇA NA CONSTÂNCIA.</div>
+                <img src="/LogoCaveira.png" alt="Caveira" onError={(e) => { e.currentTarget.style.display = "none"; }} style={{ width: "40px", height: "40px", objectFit: "contain", display: "block", marginBottom: "12px" }} />
+                <div style={{ color: "#9299A6", fontSize: "18px", fontWeight: 500, letterSpacing: ".04em", marginBottom: "5px" }}>CAVEIRA</div>
+                <div style={{ color: "#727A88", fontSize: "9px", letterSpacing: ".08em", fontWeight: 650 }}>FORÇA NA CONSTÂNCIA.</div>
               </div>
             </aside>
           )}
@@ -5241,7 +5243,7 @@ export default function App() {
       {abaAtiva === "montar" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
-            <div style={{ display: "flex", gap: "6px", overflowX: "auto" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, minmax(0, 1fr))", gap: "4px", width: "100%", borderTop: "1px solid rgba(190, 170, 225, 0.16)", borderBottom: "1px solid rgba(190, 170, 225, 0.16)", padding: "14px 0" }}>
               {DIAS_SEMANA.map((d) => {
                 const ativa = d.chave === diaMontagem;
                 return (
@@ -5251,11 +5253,19 @@ export default function App() {
                     onClick={() => {
                       setEditandoId(null);
                       setDiaMontagem(d.chave);
+                      setFormAdicionarExercicioAberto(false);
                     }}
                     style={{
-                      padding: "7px 10px",
-                      borderRadius: "8px",
+                      padding: "10px 4px",
+                      minHeight: "54px",
+                      borderRadius: "5px",
                       border: "none",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "6px",
+                      minWidth: 0,
                       background: ativa ? "rgba(190, 170, 225, 0.14)" : "transparent",
                       color: ativa ? "#F1EEF7" : "#9E96AD",
                       fontSize: "12px",
@@ -5264,98 +5274,32 @@ export default function App() {
                     }}
                   >
                     {d.rotulo}
+                    <span style={{ height: "4px", color: "#C7A9EF", fontSize: "9px", lineHeight: 1 }}>
+                      {(rotina[d.chave] || []).length > 0 ? "•" : " "}
+                    </span>
                   </button>
                 );
               })}
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
-              <select
-                value={modoAplicacaoRotina}
-                onChange={(e) => setModoAplicacaoRotina(e.target.value)}
-                style={{ ...campoTexto, width: "auto", padding: "6px 8px", fontSize: "11px" }}
-              >
-                <option value="somar">Somar ao dia</option>
-                <option value="substituir">Substituir dia</option>
-              </select>
 
-              <select
-                value={diaOrigemCopia}
-                onChange={(e) => setDiaOrigemCopia(e.target.value)}
-                style={{ ...campoTexto, width: "auto", padding: "6px 8px", fontSize: "11px" }}
-              >
-                {DIAS_SEMANA.map((d) => (
-                  <option key={d.chave} value={d.chave}>
-                    Copiar {d.rotulo}
-                  </option>
-                ))}
-              </select>
-
-              <button
-                type="button"
-                onClick={copiarTreinoDeOutroDia}
-                disabled={diaOrigemCopia === diaMontagem || (rotina[diaOrigemCopia] || []).length === 0}
-                style={{
-                  ...btnSecundario,
-                  flex: "none",
-                  padding: "6px 10px",
-                  fontSize: "11px",
-                  opacity: diaOrigemCopia === diaMontagem || (rotina[diaOrigemCopia] || []).length === 0 ? 0.45 : 1,
-                }}
-              >
-                Duplicar dia
-              </button>
-            </div>
           </div>
 
-          <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "8px" }}>
-            <div style={{ fontSize: "11px", color: "#BEB7CA" }}>Modelos de treino</div>
-            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-              <select
-                value={presetSelecionadoId}
-                onChange={(e) => setPresetSelecionadoId(e.target.value)}
-                style={{ ...campoTexto, flex: 1, minWidth: "160px", padding: "7px 8px", fontSize: "11px" }}
-              >
-                {presets.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.nome} ({p.exercicios.length})
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                onClick={aplicarPresetNoDia}
-                style={{ ...btnSecundario, flex: "none", padding: "7px 10px", fontSize: "11px" }}
-              >
-                Aplicar no dia
-              </button>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap", marginTop: "4px" }}>
+            <div>
+              <div style={{ fontSize: "10px", color: "#9E96AD", letterSpacing: "0.06em", marginBottom: "8px" }}>ROTINA SEMANAL</div>
+              <h2 style={{ margin: 0, fontSize: "20px", lineHeight: 1.2, fontWeight: 750, color: "#F1EEF7" }}>
+                {DIAS_SEMANA.find((d) => d.chave === diaMontagem)?.nome || diaMontagem}
+              </h2>
             </div>
-
-            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-              <input
-                type="text"
-                placeholder="Nome do modelo (ex.: Upper A)"
-                value={novoPresetNome}
-                onChange={(e) => setNovoPresetNome(e.target.value)}
-                style={{ ...campoTexto, flex: 1, minWidth: "160px", padding: "7px 8px", fontSize: "11px" }}
-              />
-              <button
-                type="button"
-                onClick={salvarPresetDoDia}
-                disabled={!novoPresetNome.trim() || (rotina[diaMontagem] || []).length === 0}
-                style={{
-                  ...btnSecundario,
-                  flex: "none",
-                  padding: "7px 10px",
-                  fontSize: "11px",
-                  opacity: !novoPresetNome.trim() || (rotina[diaMontagem] || []).length === 0 ? 0.45 : 1,
-                }}
-              >
-                Salvar dia como modelo
-              </button>
-            </div>
+            <button type="button" onClick={() => setFormAdicionarExercicioAberto((aberto) => !aberto)}
+              style={{ display: "inline-flex", alignItems: "center", gap: "8px", border: "none", borderRadius: "5px", background: "#C7A9EF", color: "#15121D", padding: "11px 16px", fontSize: "12px", fontWeight: 700, cursor: "pointer" }}>
+              <span style={{ fontSize: "18px", lineHeight: 1 }}>+</span>
+              {formAdicionarExercicioAberto ? "Fechar" : "Adicionar exercício"}
+            </button>
           </div>
 
+          {formAdicionarExercicioAberto && (
           <form onSubmit={adicionarExercicio} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             <div>
               <label style={rotuloCampo}>Exercício</label>
@@ -5467,11 +5411,12 @@ export default function App() {
               Adicionar
             </button>
           </form>
+          )}
 
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: ehDesktop ? "repeat(2, 1fr)" : "1fr",
+              gridTemplateColumns: "1fr",
               gap: "8px",
             }}
           >
@@ -5481,10 +5426,11 @@ export default function App() {
                 <div
                   key={item.id}
                   style={{
-                    padding: "10px 12px",
-                    borderRadius: "8px",
-                    background: "rgba(49, 43, 63, 0.58)",
-                    border: "1px solid rgba(190, 170, 225, 0.14)",
+                    padding: "18px 0",
+                    borderRadius: "0",
+                    background: "transparent",
+                    border: "none",
+                    borderBottom: "1px solid rgba(190, 170, 225, 0.14)",
                     display: "flex",
                     flexDirection: "column",
                     gap: "8px",
@@ -5546,12 +5492,15 @@ export default function App() {
                       </div>
                     </div>
                   ) : (
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
-                      <div>
-                        <strong>{item.nome}</strong>{" "}
-                        <span style={{ color: "#BEB7CA", fontSize: "12px" }}>
-                          • {item.seriesReps} • {item.descanso}s • {item.carga}kg
-                        </span>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", minWidth: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0, flex: 1 }}>
+                        <span style={{ flex: "none", width: "24px", color: "#9E96AD", fontSize: "16px", fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>{String(idx + 1).padStart(2, "0")}</span>
+                        <div style={{ minWidth: 0 }}>
+                          <strong style={{ display: "block", color: "#F1EEF7", marginBottom: "8px", overflowWrap: "anywhere" }}>{item.nome}</strong>
+                          <span style={{ color: "#9E96AD", fontSize: "11px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                            <span>{item.seriesReps.replace(/x/i, " × ")}</span><span>·</span><span>{item.descanso}s descanso</span><span>·</span><span>{item.carga} kg</span>
+                          </span>
+                        </div>
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                         <button
@@ -5561,7 +5510,7 @@ export default function App() {
                           style={{ ...btnCarga, opacity: idx === 0 ? 0.35 : 1 }}
                           title="Subir"
                         >
-                          ↑
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V5M6 11l6-6 6 6" /></svg>
                         </button>
                         <button
                           type="button"
@@ -5573,21 +5522,25 @@ export default function App() {
                           }}
                           title="Descer"
                         >
-                          ↓
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M18 13l-6 6-6-6" /></svg>
                         </button>
                         <button
                           type="button"
                           onClick={() => iniciarEdicao(item)}
-                          style={{ background: "none", border: "none", color: "#BEB7CA", cursor: "pointer", fontSize: "11px" }}
+                          style={{ background: "none", border: "none", color: "#737B88", cursor: "pointer", padding: "5px" }}
+                          title="Editar exercício"
+                          aria-label={`Editar ${item.nome}`}
                         >
-                          Editar
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z" /></svg>
                         </button>
                         <button
                           type="button"
                           onClick={() => removerExercicio(diaMontagem, item.id)}
-                          style={{ background: "none", border: "none", color: "#9E96AD", cursor: "pointer", fontSize: "11px" }}
+                          style={{ background: "none", border: "none", color: "#737B88", cursor: "pointer", padding: "5px" }}
+                          title="Excluir exercício"
+                          aria-label={`Excluir ${item.nome}`}
                         >
-                          Excluir
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v5M14 11v5" /></svg>
                         </button>
                       </div>
                     </div>
@@ -5596,6 +5549,102 @@ export default function App() {
               );
             })}
           </div>
+
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", borderTop: "1px solid rgba(190, 170, 225, 0.14)", paddingTop: "12px", color: "#9E96AD", fontSize: "11px" }}>
+            <span>{(rotina[diaMontagem] || []).length} exercícios</span>
+            <span>{(rotina[diaMontagem] || []).reduce((total, item) => total + (parseInt(String(item.seriesReps).match(/\d+/)?.[0] || "0", 10) || 0), 0)} séries no total</span>
+          </div>
+
+                      <details style={{ width: "100%", borderBottom: "1px solid rgba(190, 170, 225, 0.12)", paddingBottom: "8px" }}>
+              <summary style={{ cursor: "pointer", color: "#9E96AD", fontSize: "11px", fontWeight: 600, padding: "5px 0" }}>Modelos e opções da rotina</summary>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px", paddingTop: "12px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
+              <select
+                value={modoAplicacaoRotina}
+                onChange={(e) => setModoAplicacaoRotina(e.target.value)}
+                style={{ ...campoTexto, width: "auto", padding: "6px 8px", fontSize: "11px" }}
+              >
+                <option value="somar">Somar ao dia</option>
+                <option value="substituir">Substituir dia</option>
+              </select>
+
+              <select
+                value={diaOrigemCopia}
+                onChange={(e) => setDiaOrigemCopia(e.target.value)}
+                style={{ ...campoTexto, width: "auto", padding: "6px 8px", fontSize: "11px" }}
+              >
+                {DIAS_SEMANA.map((d) => (
+                  <option key={d.chave} value={d.chave}>
+                    Copiar {d.rotulo}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                type="button"
+                onClick={copiarTreinoDeOutroDia}
+                disabled={diaOrigemCopia === diaMontagem || (rotina[diaOrigemCopia] || []).length === 0}
+                style={{
+                  ...btnSecundario,
+                  flex: "none",
+                  padding: "6px 10px",
+                  fontSize: "11px",
+                  opacity: diaOrigemCopia === diaMontagem || (rotina[diaOrigemCopia] || []).length === 0 ? 0.45 : 1,
+                }}
+              >
+                Duplicar dia
+              </button>
+            </div>
+          </div>
+
+          <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "8px" }}>
+            <div style={{ fontSize: "11px", color: "#BEB7CA" }}>Modelos de treino</div>
+            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+              <select
+                value={presetSelecionadoId}
+                onChange={(e) => setPresetSelecionadoId(e.target.value)}
+                style={{ ...campoTexto, flex: 1, minWidth: "160px", padding: "7px 8px", fontSize: "11px" }}
+              >
+                {presets.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.nome} ({p.exercicios.length})
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                onClick={aplicarPresetNoDia}
+                style={{ ...btnSecundario, flex: "none", padding: "7px 10px", fontSize: "11px" }}
+              >
+                Aplicar no dia
+              </button>
+            </div>
+
+            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+              <input
+                type="text"
+                placeholder="Nome do modelo (ex.: Upper A)"
+                value={novoPresetNome}
+                onChange={(e) => setNovoPresetNome(e.target.value)}
+                style={{ ...campoTexto, flex: 1, minWidth: "160px", padding: "7px 8px", fontSize: "11px" }}
+              />
+              <button
+                type="button"
+                onClick={salvarPresetDoDia}
+                disabled={!novoPresetNome.trim() || (rotina[diaMontagem] || []).length === 0}
+                style={{
+                  ...btnSecundario,
+                  flex: "none",
+                  padding: "7px 10px",
+                  fontSize: "11px",
+                  opacity: !novoPresetNome.trim() || (rotina[diaMontagem] || []).length === 0 ? 0.45 : 1,
+                }}
+              >
+                Salvar dia como modelo
+              </button>
+            </div>
+              </div>
+            </details>
         </div>
       )}
 
