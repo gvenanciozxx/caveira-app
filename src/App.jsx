@@ -2921,6 +2921,15 @@ export default function App() {
       <main style={{ minHeight: "100vh", background: "radial-gradient(circle at 50% 0%, #1D1B27 0%, #17161F 70%)", color: "#F1EEF7", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px", boxSizing: "border-box", fontFamily: "inherit" }}>
         <style>{`html, body, #root { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; } button, a, [role="button"] { touch-action: manipulation; } @media (max-width: 639px) { input, select, textarea { font-size: 16px !important; } }`}</style>
         <section style={{ width: "100%", maxWidth: "420px", background: "rgba(31, 29, 42, 0.91)", border: "1px solid rgba(190, 170, 225, 0.19)", borderRadius: "18px", padding: "30px", boxShadow: "0 24px 80px rgba(0,0,0,.4)" }}>
+          <button
+            type="button"
+            onClick={() => { setEtapaEntrada("manual"); setAuthErro(""); setAuthMensagem(""); }}
+            aria-label="Voltar ao manual de apresentação"
+            title="Voltar ao manual"
+            style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "36px", height: "36px", margin: "-8px 0 18px -8px", padding: 0, borderRadius: "50%", border: "1px solid rgba(190,170,225,.18)", background: "rgba(255,255,255,.035)", color: "#DCCCF5", cursor: "pointer" }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/><path d="M9 12h11"/></svg>
+          </button>
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "28px" }}>
             <img src="/LogoCaveira.png" alt="Caveira" onError={(e) => { e.currentTarget.style.display = "none"; }} style={{ width: "42px", height: "42px", objectFit: "contain" }} />
             <div><div style={{ fontSize: "15px", fontWeight: 900, letterSpacing: ".16em" }}>CAVEIRA</div><div style={{ color: "#9E96AD", fontSize: "10px", letterSpacing: ".12em" }}>UM DIA DE CADA VEZ</div></div>
@@ -2937,7 +2946,7 @@ export default function App() {
             <button disabled={authEnviando} type="submit" style={authBotao}>{authEnviando ? textoUi("Aguarde...", "Please wait...") : authModo === "cadastro" ? textoUi("Criar conta", "Create account") : authModo === "recuperar" ? textoUi("Enviar código", "Send code") : authModo === "novaSenha" ? textoUi("Alterar senha", "Change password") : textoUi("Entrar", "Sign in")}</button>
           </form>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "10px", marginTop: "20px", fontSize: "12px" }}>
-            {authModo === "login" && <><button type="button" onClick={() => { setAuthModo("cadastro"); setAuthErro(""); setAuthMensagem(""); }} style={{ background: "none", border: 0, color: "#DCCCF5", cursor: "pointer" }}>Criar cadastro</button><button type="button" onClick={() => { setAuthModo("recuperar"); setAuthErro(""); setAuthMensagem(""); }} style={{ background: "none", border: 0, color: "#BEB7CA", cursor: "pointer" }}>Esqueci minha senha</button></>}
+            {authModo === "login" && <><button type="button" onClick={() => { setAuthModo("cadastro"); setAuthErro(""); setAuthMensagem(""); }} style={{ background: "none", border: 0, color: "#DCCCF5", cursor: "pointer" }}>Criar cadastro</button><span style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", gap: "5px" }}><button type="button" onClick={() => { setAuthModo("recuperar"); setAuthErro(""); setAuthMensagem(""); }} style={{ background: "none", border: 0, padding: 0, color: "#BEB7CA", cursor: "pointer" }}>Esqueci minha senha</button><span aria-hidden="true" style={{ display: "block", width: "34px", height: "1px", borderRadius: "2px", background: "rgba(199,169,239,.58)" }} /></span></>}
             {authModo !== "login" && <button type="button" onClick={() => { setAuthModo("login"); setAuthErro(""); setAuthMensagem(""); }} style={{ background: "none", border: 0, color: "#DCCCF5", cursor: "pointer" }}>{textoUi("Voltar para login", "Back to sign in")}</button>}
           </div>
         </section>
