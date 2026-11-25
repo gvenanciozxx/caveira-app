@@ -2354,13 +2354,27 @@ export default function App() {
     );
   };
 
+  const renderIconeMenu = (tipo, tamanho = 18) => {
+    const props = { width: tamanho, height: tamanho, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true, style: { display: "block", flexShrink: 0 } };
+    const caminhos = {
+      hoje: <><path d="m6.5 6.5 11 11"/><path d="m7 3 4 4-3 3-4-4z"/><path d="m17 13 4 4-3 3-4-4z"/><path d="m8 10 6 6"/><path d="m4 14 6-6"/></>,
+      montar: <><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/><path d="M8 4v4"/><path d="M15 10v4"/><path d="M11 16v4"/></>,
+      dashboard: <><path d="M3 20h18"/><path d="m5 16 4-4 3 2 6-7"/><path d="M17 7h3v3"/></>,
+      suplementos: <><path d="m4 7 13 10"/><path d="m7 4 4 4-3 3-4-4z"/><path d="m17 13 4 4-3 3-4-4z"/></>,
+      painel: <><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="m14 9 3 3-3 3"/></>,
+      sair: <><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M21 3v18"/></>,
+      pontos: <><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></>,
+    };
+    return <svg {...props}>{caminhos[tipo] || caminhos.painel}</svg>;
+  };
+
   const larguraColunaFechada = 72;
-  const larguraDrawer = ehDesktop ? 248 : 252;
+  const larguraDrawer = ehDesktop ? 260 : "min(280px, 86vw)";
   const larguraMenuDesktop = menuAberto ? larguraDrawer : larguraColunaFechada;
   const larguraContainer = ehDesktop ? "100%" : "460px";
   const paddingContainer = ehDesktop
     ? "28px 32px 96px"
-    : `${menuAberto ? "20px" : "72px"} 14px 88px 14px`;
+    : `${menuAberto ? "20px" : "60px"} 14px 88px 14px`;
 
   const displayTimerSeg = timerRodando || timerRestante > 0 ? timerRestante : totalConfigTimerSeg;
 
@@ -2946,153 +2960,73 @@ export default function App() {
       >
         <EfeitoRelevoPastel modo="aberto" />
       </div>
-      {/* Menu fechado: coluna compacta no PC e botão superior no celular */}
+      {/* Sidebar compacta no desktop — mantém acesso rápido e animações do app */}
       {!menuAberto && ehDesktop && (
-        <div
+        <aside
+          aria-label="Navegação compacta"
           style={{
-            position: "fixed",
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: `${larguraColunaFechada}px`,
-            zIndex: 40,
-            background: "linear-gradient(145deg, #191720 0%, #24212E 52%, #191720 100%)",
-            borderRight: "1px solid rgba(190, 170, 225, 0.17)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "22px 0 18px",
-            boxSizing: "border-box",
+            position: "fixed", left: 0, top: 0, bottom: 0,
+            width: `${larguraColunaFechada}px`, zIndex: 40,
+            background: "linear-gradient(145deg, #11141a 0%, #101218 52%, #11141a 100%)",
+            borderRight: "1px solid rgba(190,170,225,.14)",
+            display: "flex", flexDirection: "column", alignItems: "center",
+            padding: "18px 0 16px", boxSizing: "border-box",
           }}
         >
-          <button
-            type="button"
-            onClick={() => setMenuAberto(true)}
-            title="Abrir menu"
-            aria-label="Abrir menu"
-            style={{
-              background: "rgba(49, 43, 63, 0.78)",
-              color: "#F1EEF7",
-              border: "1px solid rgba(190, 170, 225, 0.19)",
-              borderRadius: "7px",
-              width: "30px",
-              height: "30px",
-              cursor: "pointer",
-              fontSize: "16px",
-            }}
-          >
-            ☰
+          <button type="button" onClick={() => setMenuAberto(true)} title="Expandir menu" aria-label="Expandir menu"
+            style={{ border: 0, background: "transparent", padding: 0, cursor: "pointer", marginBottom: 24 }}>
+            {renderLogo(34)}
           </button>
-          <button
-            type="button"
-            onClick={() => setMenuAberto(true)}
-            title={`${authSession.user.user_metadata?.nome || "Usuário"} — ${authSession.user.email}`}
-            aria-label={`Perfil de ${authSession.user.email}`}
-            style={{
-              width: "34px",
-              height: "34px",
-              borderRadius: "50%",
-              display: "grid",
-              placeItems: "center",
-              background: "#342B46",
-              border: "1px solid #74618F",
-              color: "#DCCCF5",
-              fontWeight: 800,
-              cursor: "pointer",
-            }}
-          >
+          <nav aria-label="Menu principal" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, width: "100%" }}>
+            {[
+              { id: "hoje", icon: "hoje", title: "Treino de Hoje" },
+              { id: "montar", icon: "montar", title: "Montar Treinos" },
+              { id: "dashboard", icon: "dashboard", title: "Dashboard" },
+            ].map((item) => (
+              <button key={item.id} type="button" onClick={() => abrirPagina(item.id)} title={item.title} aria-label={item.title}
+                style={{
+                  width: 44, height: 44, border: "1px solid transparent", borderRadius: 11,
+                  display: "grid", placeItems: "center", cursor: "pointer",
+                  color: abaAtiva === item.id ? "#c5b2ff" : "#89909c",
+                  background: abaAtiva === item.id ? "#252833" : "transparent",
+                  boxShadow: abaAtiva === item.id ? "inset 0 0 16px rgba(197,178,255,.07)" : "none",
+                  transition: "background .2s ease, color .2s ease, transform .2s ease",
+                }}>
+                {renderIconeMenu(item.icon, 19)}
+              </button>
+            ))}
+          </nav>
+          <div style={{ flex: 1 }} />
+          <div style={{ width: 42, borderTop: "1px solid rgba(148,163,184,.16)", marginBottom: 18 }} />
+          <button type="button" onClick={() => setMenuAberto(true)} title={`${authSession.user.user_metadata?.nome || "Usuário"} — ${authSession.user.email}`}
+            aria-label="Abrir perfil e menu"
+            style={{ width: 34, height: 34, borderRadius: "50%", display: "grid", placeItems: "center", background: "linear-gradient(135deg,#d8a9ed,#a7b9ff)", border: 0, color: "#17141d", fontWeight: 800, cursor: "pointer", marginBottom: 14 }}>
             {(authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0, 1).toUpperCase()}
           </button>
-        </div>
+          <button type="button" onClick={sairDaConta} title="Sair" aria-label="Sair da conta"
+            style={{ border: 0, background: "transparent", color: "#89909c", cursor: "pointer", padding: 8 }}>
+            {renderIconeMenu("sair", 18)}
+          </button>
+        </aside>
       )}
 
       {!menuAberto && !ehDesktop && (
-        <div
+        <button
+          type="button"
+          onClick={() => setMenuAberto(true)}
+          title="Abrir menu"
+          aria-label="Abrir menu"
           style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: "56px",
-            zIndex: 40,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "12px",
-            padding: "0 14px",
-            boxSizing: "border-box",
-            background: "rgba(17,24,36,0.98)",
-            borderBottom: "1px solid rgba(190, 170, 225, 0.15)",
-            boxShadow: "0 5px 18px rgba(0,0,0,0.2)",
+            position: "fixed", top: 10, left: 12, zIndex: 45,
+            width: 38, height: 38, display: "grid", placeItems: "center",
+            borderRadius: 10, border: "1px solid rgba(190,170,225,.2)",
+            background: "rgba(17,20,26,.92)", color: "#d9dce4",
+            cursor: "pointer", boxShadow: "0 8px 24px rgba(0,0,0,.24)",
+            backdropFilter: "blur(12px)",
           }}
         >
-          <button
-            type="button"
-            onClick={() => setMenuAberto(true)}
-            title="Abrir menu"
-            aria-label="Abrir menu"
-            style={{
-              background: "rgba(49, 43, 63, 0.78)",
-              color: "#F1EEF7",
-              border: "1px solid rgba(190, 170, 225, 0.19)",
-              borderRadius: "8px",
-              width: "38px",
-              height: "36px",
-              cursor: "pointer",
-              fontSize: "20px",
-              flexShrink: 0,
-            }}
-          >
-            ☰
-          </button>
-          <button
-            type="button"
-            onClick={() => setMenuAberto(true)}
-            title="Abrir perfil e menu"
-            aria-label={`Usuário conectado: ${authSession.user.email}`}
-            style={{
-              minWidth: 0,
-              maxWidth: "calc(100% - 52px)",
-              display: "flex",
-              alignItems: "center",
-              gap: "9px",
-              padding: "4px 8px",
-              border: "1px solid rgba(190, 170, 225, 0.15)",
-              borderRadius: "9px",
-              background: "rgba(34, 50, 73, 0.88)",
-              color: "#F1EEF7",
-              cursor: "pointer",
-              textAlign: "left",
-            }}
-          >
-            <span
-              style={{
-                width: "30px",
-                height: "30px",
-                borderRadius: "50%",
-                flexShrink: 0,
-                display: "grid",
-                placeItems: "center",
-                background: "#342B46",
-                border: "1px solid #74618F",
-                color: "#DCCCF5",
-                fontWeight: 800,
-                fontSize: "12px",
-              }}
-            >
-              {(authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0, 1).toUpperCase()}
-            </span>
-            <span style={{ minWidth: 0, display: "flex", flexDirection: "column" }}>
-              <span style={{ color: "#F1EEF7", fontSize: "11px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {authSession.user.user_metadata?.nome || "Usuário"}
-              </span>
-              <span style={{ color: "#BEB7CA", fontSize: "9px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {authSession.user.email}
-              </span>
-            </span>
-          </button>
-        </div>
+          {renderIconeMenu("pontos", 20)}
+        </button>
       )}
 
       {/* Menu lateral esquerdo profissional */}
@@ -3115,11 +3049,12 @@ export default function App() {
               top: ehDesktop ? 0 : undefined,
               bottom: ehDesktop ? 0 : undefined,
               width: larguraDrawer,
-              height: "100%",
-              background: "linear-gradient(145deg, #191720 0%, #24212E 52%, #191720 100%)",
-              borderRight: "1px solid rgba(190, 170, 225, 0.17)",
-              padding: "22px 14px 18px",
-              boxShadow: "18px 0 48px rgba(0,0,0,0.28)",
+              maxWidth: "min(100vw, 280px)",
+              height: "100dvh",
+              background: "linear-gradient(145deg, #11141a 0%, #101218 52%, #11141a 100%)",
+              borderRight: "1px solid rgba(190, 170, 225, 0.14)",
+              padding: "18px 14px 16px",
+              boxShadow: "18px 0 48px rgba(0,0,0,0.32)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -3141,25 +3076,26 @@ export default function App() {
                   onClick={() => setMenuAberto(false)}
                   aria-label="Fechar menu"
                   style={{
-                    background: "rgba(20,25,34,0.92)",
-                    border: "1px solid rgba(190, 170, 225, 0.19)",
+                    background: "rgba(17,20,26,.94)",
+                    border: "1px solid rgba(197,178,255,.55)",
                     borderRadius: "7px",
-                    color: "#EEEAF5",
-                    width: "28px",
-                    height: "28px",
+                    color: "#aeb5c2",
+                    width: "36px",
+                    height: "36px",
                     cursor: "pointer",
-                    fontSize: "12px",
+                    display: "grid",
+                    placeItems: "center",
                   }}
                 >
-                  ✕
+                  {renderIconeMenu("painel", 16)}
                 </button>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                 <span style={rotuloSecaoMenu}>Menu principal</span>
-                <button type="button" onClick={() => abrirPagina("hoje")} style={estiloMenuAtivo("hoje", abaAtiva)}>♧　Treino de Hoje</button>
-                <button type="button" onClick={() => abrirPagina("montar")} style={estiloMenuAtivo("montar", abaAtiva)}>☷　Montar Treinos</button>
-                <button type="button" onClick={() => abrirPagina("dashboard")} style={estiloMenuAtivo("dashboard", abaAtiva)}>▥　Dashboard</button>
+                <button type="button" onClick={() => abrirPagina("hoje")} style={estiloMenuAtivo("hoje", abaAtiva)}>{renderIconeMenu("hoje", 18)}<span>Treino de Hoje</span></button>
+                <button type="button" onClick={() => abrirPagina("montar")} style={estiloMenuAtivo("montar", abaAtiva)}>{renderIconeMenu("montar", 18)}<span>Montar Treinos</span></button>
+                <button type="button" onClick={() => abrirPagina("dashboard")} style={estiloMenuAtivo("dashboard", abaAtiva)}>{renderIconeMenu("dashboard", 18)}<span>Dashboard</span></button>
                 <div style={{ height: "1px", background: "rgba(148, 163, 184, 0.20)", margin: "9px 2px 7px" }} />
                 <span style={rotuloSecaoMenu}>Páginas e ferramentas</span>
                 <button type="button" onClick={() => abrirPagina("suplementos")} style={estiloMenuAtivo("suplementos", abaAtiva)}>
@@ -3202,7 +3138,7 @@ export default function App() {
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 8px", background: "transparent", borderTop: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: 0, minWidth: 0, paddingTop: "16px" }}>
                 <div style={{ width: "34px", height: "34px", borderRadius: "50%", flexShrink: 0, display: "grid", placeItems: "center", background: "#342B46", border: "1px solid #74618F", color: "#DCCCF5", fontWeight: 800, fontSize: "13px" }}>{(authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0, 1).toUpperCase()}</div>
                 <div style={{ minWidth: 0, flex: 1 }}><div style={{ color: "#F1EEF7", fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.user_metadata?.nome || "Usuário"}</div><div style={{ color: "#BEB7CA", fontSize: "10px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.email}</div></div>
-                <button type="button" onClick={sairDaConta} title="Sair da conta" aria-label="Sair da conta" style={{ border: 0, background: "transparent", color: "#BEB7CA", cursor: "pointer", fontSize: "16px" }}>↪</button>
+                <button type="button" onClick={sairDaConta} title="Sair da conta" aria-label="Sair da conta" style={{ border: 0, background: "transparent", color: "#89909c", cursor: "pointer", display: "grid", placeItems: "center", padding: 8 }}>{renderIconeMenu("sair", 18)}</button>
               </div>
               <button type="button" onClick={resetarDados} style={{ ...btnMenu, color: "#F19AAB", padding: "6px 8px", fontSize: "11px", opacity: 0.85 }}>Resetar dados do app</button>
             </div>
@@ -6078,24 +6014,26 @@ const btnMenu = {
   alignItems: "center",
   width: "100%",
   textAlign: "left",
-  padding: "9px 10px",
-  borderRadius: "8px",
+  padding: "10px 12px",
+  borderRadius: "9px",
   border: "1px solid transparent",
   background: "transparent",
-  color: "#BEB7CA",
+  color: "#aab2bf",
   fontSize: "13px",
   fontWeight: 400,
   letterSpacing: "0.01em",
   cursor: "pointer",
+  gap: "12px",
+  transition: "background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease",
 };
 
 const estiloMenuAtivo = (pagina, paginaAtiva) => ({
   ...btnMenu,
-  background: paginaAtiva === pagina ? "rgba(199, 169, 239, 0.13)" : "transparent",
-  color: paginaAtiva === pagina ? "#eff6ff" : "#BEB7CA",
-  border: paginaAtiva === pagina ? "1px solid rgba(199, 169, 239, 0.24)" : "1px solid transparent",
-  borderLeft: paginaAtiva === pagina ? "3px solid #B99AE7" : "3px solid transparent",
-  boxShadow: paginaAtiva === pagina ? "inset 0 0 18px rgba(199, 169, 239, 0.08)" : "none",
+  background: paginaAtiva === pagina ? "#252833" : "transparent",
+  color: paginaAtiva === pagina ? "#f2f4f8" : "#aab2bf",
+  border: paginaAtiva === pagina ? "1px solid rgba(255,255,255,.035)" : "1px solid transparent",
+  borderLeft: "1px solid transparent",
+  boxShadow: paginaAtiva === pagina ? "inset 0 0 18px rgba(197,178,255,.035)" : "none",
   fontWeight: paginaAtiva === pagina ? 650 : 400,
 });
 
