@@ -545,6 +545,17 @@ export default function App() {
 
   // Páginas disponíveis: "hoje" | "montar" | "timer" | "dashboard" | "suplementos" | "alimentacao" | "mochila"
   const [abaAtiva, setAbaAtiva] = useState("hoje");
+  const historicoPaginasRef = useRef([]);
+  const [preferenciaFonte, setPreferenciaFonte] = useState(() => {
+    try { return localStorage.getItem("caveira-fonte") || "padrao"; } catch { return "padrao"; }
+  });
+  const [idiomaApp, setIdiomaApp] = useState(() => {
+    try { return localStorage.getItem("caveira-idioma") || "pt"; } catch { return "pt"; }
+  });
+  const emIngles = idiomaApp === "en";
+  const textoUi = (pt, en) => emIngles ? en : pt;
+  useEffect(() => { try { localStorage.setItem("caveira-fonte", preferenciaFonte); } catch {} }, [preferenciaFonte]);
+  useEffect(() => { try { localStorage.setItem("caveira-idioma", idiomaApp); } catch {} }, [idiomaApp]);
   const [dataSelecionada, setDataSelecionada] = useState(hojeISO);
   const [rotina, setRotina] = useState(ROTINA_INICIAL);
   const [focoDiasPorChave, setFocoDiasPorChave] = useState({});
@@ -1144,8 +1155,16 @@ export default function App() {
 
   function abrirPagina(pagina) {
     setModoFocoLimpo(false);
+    if (pagina !== abaAtiva) historicoPaginasRef.current.push(abaAtiva);
     if (pagina === "timer") setDataSelecionada(hojeISO);
     setAbaAtiva(pagina);
+    setMenuAberto(false);
+  }
+
+  function voltarPaginaAnterior() {
+    setModoFocoLimpo(false);
+    const anterior = historicoPaginasRef.current.pop();
+    setAbaAtiva(anterior && anterior !== abaAtiva ? anterior : "hoje");
     setMenuAberto(false);
   }
 
@@ -2696,6 +2715,7 @@ export default function App() {
         isolation: "isolate",
         boxSizing: "border-box",
         transition: "width 0.2s ease, margin 0.2s ease, padding 0.2s ease",
+        zoom: preferenciaFonte === "pequena" ? (ehDesktop ? 0.94 : 0.88) : preferenciaFonte === "grande" ? (ehDesktop ? 1.06 : 0.98) : (ehDesktop ? 1 : 0.92),
       }}
     >
       <style>{`
@@ -3377,7 +3397,7 @@ export default function App() {
                 <div style={{ height: 1, background: "rgba(148,163,184,.14)", margin: "10px 2px 8px", flexShrink: 0 }} />
                 <span style={rotuloSecaoMenu}>SISTEMA</span>
                 <button type="button" onClick={abrirBackupMenu} style={btnMenu}>{renderIconeMenu("backup", 17)}<span>Backup & Dados</span></button>
-                <button type="button" onClick={() => abrirPagina("configuracoes")} style={estiloMenuAtivo("configuracoes", abaAtiva)}>{renderIconeMenu("configuracoes", 17)}<span>Configurações</span></button>
+                <button type="button" onClick={() => abrirPagina("configuracoes")} style={estiloMenuAtivo("configuracoes", abaAtiva)}>{renderIconeMenu("configuracoes", 17)}<span>{textoUi("Configurações", "Settings")}</span></button>
               </div>
             </div>
 
@@ -3404,7 +3424,9 @@ export default function App() {
           marginBottom: "18px",
         }}
       >
-        <div>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 9 }}>
+          {abaAtiva !== "hoje" && <button type="button" onClick={voltarPaginaAnterior} aria-label={textoUi("Voltar página anterior", "Go back")} title={textoUi("Voltar", "Back")} style={{ marginTop: 2, flex: "none", width: 30, height: 30, display: "grid", placeItems: "center", border: "1px solid rgba(190,170,225,.14)", borderRadius: 8, background: "rgba(35,32,46,.28)", color: "#BEB7CA", cursor: "pointer", fontSize: 18, lineHeight: 1 }}>‹</button>}
+          <div style={{ minWidth: 0 }}>
           <div
             style={{
               display: "inline-flex",
@@ -3432,27 +3454,27 @@ export default function App() {
           >
             {abaAtiva === "hoje" && (
               <>
-                Treino de hoje<span style={{ color: "#C7A9EF" }}>.</span>
+                {textoUi("Treino de hoje", "Today’s workout")}<span style={{ color: "#C7A9EF" }}>.</span>
               </>
             )}
-            {abaAtiva === "montar" && "Montar treinos."}
+            {abaAtiva === "montar" && textoUi("Montar treinos.", "Build workouts.")}
             {abaAtiva === "dashboard" && "Dashboard."}
             {abaAtiva === "timer" && "Timer."}
-            {abaAtiva === "suplementos" && "Suplementos."}
-            {abaAtiva === "alimentacao" && "Alimentação & Rotina."}
-            {abaAtiva === "mochila" && "Mochila & Ritmo."}
-            {abaAtiva === "desempenho" && "Central de Desempenho."}
-            {abaAtiva === "exercicios" && "Biblioteca de Exercícios."}
-            {abaAtiva === "conquistas" && "Conquistas."}
-            {abaAtiva === "relatorios" && "Relatórios."}
-            {abaAtiva === "configuracoes" && "Configurações."}
+            {abaAtiva === "suplementos" && textoUi("Suplementos.", "Supplements.")}
+            {abaAtiva === "alimentacao" && textoUi("Alimentação & Rotina.", "Nutrition & Routine.")}
+            {abaAtiva === "mochila" && textoUi("Mochila & Ritmo.", "Pack & Pace.")}
+            {abaAtiva === "desempenho" && textoUi("Central de Desempenho.", "Performance Center.")}
+            {abaAtiva === "exercicios" && textoUi("Biblioteca de Exercícios.", "Exercise Library.")}
+            {abaAtiva === "conquistas" && textoUi("Conquistas.", "Achievements.")}
+            {abaAtiva === "relatorios" && textoUi("Relatórios.", "Reports.")}
+            {abaAtiva === "configuracoes" && textoUi("Configurações.", "Settings.")}
           </h1>
 
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "6px", flexWrap: "wrap" }}>
             <span style={{ fontSize: "12px", color: "#9E96AD" }}>
               {abaAtiva === "montar"
                 ? "Uma semana bem planejada começa aqui."
-                : abaAtiva === "configuracoes" ? "Gerencie seu perfil e as opções de segurança do aplicativo." : `${infoDia?.nome}, ${diaSel} de ${MESES_CURTOS[(mesSel || 1) - 1]?.toLowerCase()}${focoDiasPorChave[chaveDia] ? ` • Foco: ${focoDiasPorChave[chaveDia]}` : ""}`}
+                : abaAtiva === "configuracoes" ? textoUi("Gerencie seu perfil e as opções de segurança do aplicativo.", "Manage your profile and app security options.") : `${infoDia?.nome}, ${diaSel} de ${MESES_CURTOS[(mesSel || 1) - 1]?.toLowerCase()}${focoDiasPorChave[chaveDia] ? ` • Foco: ${focoDiasPorChave[chaveDia]}` : ""}`}
             </span>
             {abaAtiva === "hoje" && dataSelecionada !== hojeISO && (
               <button
@@ -3471,6 +3493,7 @@ export default function App() {
                 Voltar para hoje
               </button>
             )}
+          </div>
           </div>
         </div>
 
@@ -4050,20 +4073,6 @@ export default function App() {
                           >
                             {ex.nome}
                           </button>
-                          {typeof prEx === "number" && prEx > 0 && (
-                            <span
-                              style={{
-                                fontSize: "10px",
-                                padding: "1px 6px",
-                                borderRadius: "5px",
-                                background: bateuPr ? "rgba(234, 179, 8, 0.16)" : "#282432",
-                                color: bateuPr ? "#DCCCF5" : "#BEB7CA",
-                                border: "1px solid rgba(190, 170, 225, 0.19)",
-                              }}
-                            >
-                              PR {prEx}kg
-                            </span>
-                          )}
                         </div>
 
                         <div
@@ -5794,6 +5803,26 @@ export default function App() {
       {/* DASHBOARD */}
       {abaAtiva === "configuracoes" && (
         <div style={{ display: "grid", gap: 14, maxWidth: 720 }}>
+          <section style={{ ...cardClean, background: "rgba(20,22,28,.24)", border: "1px solid rgba(190,170,225,.10)", display: "grid", gap: 12 }}>
+            <div>
+              <div style={{ fontSize: 10, letterSpacing: ".12em", color: "#BEB7CA", marginBottom: 5 }}>{textoUi("PERSONALIZAÇÃO", "PERSONALIZATION")}</div>
+              <h2 style={{ margin: 0, fontSize: 16 }}>{textoUi("Aparência e idioma", "Appearance and language")}</h2>
+              <p style={{ color: "#9E96AD", fontSize: 12, margin: "6px 0 0", lineHeight: 1.5 }}>{textoUi("Ajuste o tamanho da interface e o idioma dos elementos principais.", "Adjust interface size and the language of main interface elements.")}</p>
+            </div>
+            <div style={{ display: "grid", gap: 7 }}>
+              <label style={{ ...rotuloCampo, marginBottom: 0 }}>{textoUi("Tamanho da fonte", "Font size")}</label>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,minmax(0,1fr))", gap: 7 }}>
+                {[{id:"pequena",pt:"Pequena",en:"Small"},{id:"padrao",pt:"Padrão",en:"Standard"},{id:"grande",pt:"Grande",en:"Large"}].map(opt => <button key={opt.id} type="button" onClick={() => setPreferenciaFonte(opt.id)} style={{ ...btnSecundario, background: preferenciaFonte===opt.id ? "rgba(197,178,255,.16)" : "transparent", borderColor: preferenciaFonte===opt.id ? "rgba(197,178,255,.4)" : "rgba(190,170,225,.15)", color: preferenciaFonte===opt.id ? "#E6D8FA" : "#BEB7CA" }}>{textoUi(opt.pt,opt.en)}</button>)}
+              </div>
+            </div>
+            <div style={{ display: "grid", gap: 7 }}>
+              <label style={{ ...rotuloCampo, marginBottom: 0 }}>{textoUi("Idioma", "Language")}</label>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 7 }}>
+                {[{id:"pt",label:"Português"},{id:"en",label:"English"}].map(opt => <button key={opt.id} type="button" onClick={() => setIdiomaApp(opt.id)} style={{ ...btnSecundario, background: idiomaApp===opt.id ? "rgba(197,178,255,.16)" : "transparent", borderColor: idiomaApp===opt.id ? "rgba(197,178,255,.4)" : "rgba(190,170,225,.15)", color: idiomaApp===opt.id ? "#E6D8FA" : "#BEB7CA" }}>{opt.label}</button>)}
+              </div>
+              {emIngles && <p style={{ ...labelMini, margin: 0 }}>{"Note: the language selection is applied to the main navigation and personalization controls; user-entered data remains unchanged."}</p>}
+            </div>
+          </section>
           <section style={{ ...cardClean, background: "rgba(20,22,28,.38)", border: "1px solid rgba(190,170,225,.13)", display: "grid", gap: 12 }}>
             <div>
               <div style={{ fontSize: 10, letterSpacing: ".12em", color: "#BEB7CA", marginBottom: 5 }}>USUÁRIO</div>
@@ -6343,10 +6372,10 @@ export default function App() {
         }}
       >
         {[
-          { id: "hoje", rotulo: "Hoje" },
-          { id: "montar", rotulo: "Montar" },
-          { id: "timer", rotulo: "Timer" },
-          { id: "dashboard", rotulo: "Dashboard" },
+          { id: "hoje", rotulo: textoUi("Hoje", "Today") },
+          { id: "montar", rotulo: textoUi("Montar", "Build") },
+          { id: "timer", rotulo: textoUi("Timer", "Timer") },
+          { id: "dashboard", rotulo: textoUi("Dashboard", "Dashboard") },
         ].map((aba) => {
           const ativa = abaAtiva === aba.id;
           return (
