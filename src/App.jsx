@@ -300,15 +300,15 @@ function RoletaColuna({ label, opcoes, valor, aoMudar }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
-      <span style={{ fontSize: "10px", color: "#a8b6ca", letterSpacing: "0.06em" }}>{label}</span>
+      <span style={{ fontSize: "10px", color: "#9E96AD", letterSpacing: "0.06em" }}>{label}</span>
       <div
         style={{
           position: "relative",
           width: "100%",
           height: `${ALTURA_ITEM_ROLETA * 3}px`,
           borderRadius: "10px",
-          background: "rgba(38, 54, 75, 0.62)",
-          border: "1px solid rgba(148, 190, 215, 0.19)",
+          background: "rgba(29, 27, 39, 0.72)",
+          border: "1px solid rgba(190, 170, 225, 0.15)",
           overflow: "hidden",
         }}
       >
@@ -353,7 +353,7 @@ function RoletaColuna({ label, opcoes, valor, aoMudar }) {
                   scrollSnapAlign: "center",
                   background: "transparent",
                   border: "none",
-                  color: ativo ? "#bae6fd" : "#a8b6ca",
+                  color: ativo ? "#DCCCF5" : "#9E96AD",
                   fontSize: ativo ? "16px" : "13px",
                   fontWeight: ativo ? 700 : 400,
                   cursor: "pointer",
@@ -2338,14 +2338,14 @@ export default function App() {
           width: `${tamanho}px`,
           height: `${tamanho}px`,
           borderRadius: "8px",
-          background: "rgba(52, 70, 94, 0.72)",
-          border: "1px solid rgba(148, 190, 215, 0.24)",
+          background: "rgba(49, 43, 63, 0.78)",
+          border: "1px solid rgba(190, 170, 225, 0.19)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           fontSize: "12px",
           fontWeight: 700,
-          color: "#c0cce0",
+          color: "#BEB7CA",
           flexShrink: 0,
         }}
       >
@@ -2365,36 +2365,36 @@ export default function App() {
   const displayTimerSeg = timerRodando || timerRestante > 0 ? timerRestante : totalConfigTimerSeg;
 
   if (authCarregando) {
-    return <div style={{ minHeight: "100vh", background: "rgba(38, 54, 75, 0.62)", color: "#c0cce0", display: "grid", placeItems: "center", fontFamily: "inherit" }}>Carregando sua conta...</div>;
+    return <div style={{ minHeight: "100vh", background: "rgba(29, 27, 39, 0.72)", color: "#BEB7CA", display: "grid", placeItems: "center", fontFamily: "inherit" }}>Carregando sua conta...</div>;
   }
 
   if (!authSession) {
-    const authInput = { width: "100%", boxSizing: "border-box", padding: "13px 14px", borderRadius: "9px", border: "1px solid rgba(148, 190, 215, 0.24)", background: "rgba(38, 54, 75, 0.62)", color: "#edf1f7", fontSize: "14px", outline: "none" };
-    const authLabel = { display: "block", color: "#c0cce0", fontSize: "12px", marginBottom: "7px" };
-    const authBotao = { width: "100%", padding: "13px", border: "0", borderRadius: "9px", background: "#7dd3fc", color: "#111827", fontWeight: 800, fontSize: "14px", cursor: authEnviando ? "wait" : "pointer", opacity: authEnviando ? 0.7 : 1 };
+    const authInput = { width: "100%", boxSizing: "border-box", padding: "13px 14px", borderRadius: "9px", border: "1px solid rgba(190, 170, 225, 0.19)", background: "rgba(29, 27, 39, 0.72)", color: "#F1EEF7", fontSize: "14px", outline: "none" };
+    const authLabel = { display: "block", color: "#BEB7CA", fontSize: "12px", marginBottom: "7px" };
+    const authBotao = { width: "100%", padding: "13px", border: "0", borderRadius: "9px", background: "#C7A9EF", color: "#111827", fontWeight: 800, fontSize: "14px", cursor: authEnviando ? "wait" : "pointer", opacity: authEnviando ? 0.7 : 1 };
     const tituloAuth = authModo === "cadastro" ? "Criar sua conta" : authModo === "recuperar" ? "Recuperar senha" : authModo === "novaSenha" ? "Nova senha" : "Bem-vindo de volta";
     return (
-      <main style={{ minHeight: "100vh", background: "radial-gradient(circle at 50% 0%, #26364B 0%, #202D40 70%)", color: "#edf1f7", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px", boxSizing: "border-box", fontFamily: "inherit" }}>
+      <main style={{ minHeight: "100vh", background: "radial-gradient(circle at 50% 0%, #1D1B27 0%, #17161F 70%)", color: "#F1EEF7", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px", boxSizing: "border-box", fontFamily: "inherit" }}>
         <style>{`html, body, #root { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; } button, a, [role="button"] { touch-action: manipulation; } @media (max-width: 639px) { input, select, textarea { font-size: 16px !important; } }`}</style>
-        <section style={{ width: "100%", maxWidth: "420px", background: "rgba(38, 54, 75, 0.88)", border: "1px solid rgba(148, 190, 215, 0.24)", borderRadius: "18px", padding: "30px", boxShadow: "0 24px 80px rgba(0,0,0,.4)" }}>
+        <section style={{ width: "100%", maxWidth: "420px", background: "rgba(31, 29, 42, 0.91)", border: "1px solid rgba(190, 170, 225, 0.19)", borderRadius: "18px", padding: "30px", boxShadow: "0 24px 80px rgba(0,0,0,.4)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "28px" }}>
             <img src="/LogoCaveira.png" alt="Caveira" onError={(e) => { e.currentTarget.style.display = "none"; }} style={{ width: "42px", height: "42px", objectFit: "contain" }} />
-            <div><div style={{ fontSize: "15px", fontWeight: 900, letterSpacing: ".16em" }}>CAVEIRA</div><div style={{ color: "#a8b6ca", fontSize: "10px", letterSpacing: ".12em" }}>UM DIA DE CADA VEZ</div></div>
+            <div><div style={{ fontSize: "15px", fontWeight: 900, letterSpacing: ".16em" }}>CAVEIRA</div><div style={{ color: "#9E96AD", fontSize: "10px", letterSpacing: ".12em" }}>UM DIA DE CADA VEZ</div></div>
           </div>
           <h1 style={{ fontSize: "25px", margin: "0 0 8px", letterSpacing: "-.03em" }}>{tituloAuth}</h1>
-          <p style={{ color: "#c0cce0", fontSize: "13px", lineHeight: 1.6, margin: "0 0 22px" }}>{authModo === "cadastro" ? "Preencha seus dados para começar." : authModo === "recuperar" ? "Informe seu email para receber as instruções de recuperação." : authModo === "novaSenha" ? "Use o código enviado ao seu email para definir uma nova senha." : "Entre para acessar seus treinos e sua rotina."}</p>
+          <p style={{ color: "#BEB7CA", fontSize: "13px", lineHeight: 1.6, margin: "0 0 22px" }}>{authModo === "cadastro" ? "Preencha seus dados para começar." : authModo === "recuperar" ? "Informe seu email para receber as instruções de recuperação." : authModo === "novaSenha" ? "Use o código enviado ao seu email para definir uma nova senha." : "Entre para acessar seus treinos e sua rotina."}</p>
           <form onSubmit={enviarFormularioAuth} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
             {authModo === "cadastro" && <label style={authLabel}>Nome de usuário<input required value={authNome} onChange={(e) => setAuthNome(e.target.value)} placeholder="Como deseja ser chamado?" style={{ ...authInput, display: "block", marginTop: "7px" }} /></label>}
             {(authModo === "login" || authModo === "cadastro" || authModo === "recuperar" || authModo === "novaSenha") && <label style={authLabel}>Email<input required type="email" value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} placeholder="seu@email.com" style={{ ...authInput, display: "block", marginTop: "7px" }} /></label>}
-            {(authModo === "login" || authModo === "cadastro") && <label style={authLabel}>Senha<div style={{ position: "relative", marginTop: "7px" }}><input required minLength={6} type={authMostrarSenha ? "text" : "password"} value={authSenha} onChange={(e) => setAuthSenha(e.target.value)} placeholder="Mínimo de 6 caracteres" style={{ ...authInput, paddingRight: "62px" }} /><button type="button" onClick={() => setAuthMostrarSenha((v) => !v)} style={{ position: "absolute", right: "9px", top: "50%", transform: "translateY(-50%)", background: "transparent", border: 0, color: "#7dd3fc", cursor: "pointer", fontSize: "11px" }}>{authMostrarSenha ? "Ocultar" : "Mostrar"}</button></div></label>}
+            {(authModo === "login" || authModo === "cadastro") && <label style={authLabel}>Senha<div style={{ position: "relative", marginTop: "7px" }}><input required minLength={6} type={authMostrarSenha ? "text" : "password"} value={authSenha} onChange={(e) => setAuthSenha(e.target.value)} placeholder="Mínimo de 6 caracteres" style={{ ...authInput, paddingRight: "62px" }} /><button type="button" onClick={() => setAuthMostrarSenha((v) => !v)} style={{ position: "absolute", right: "9px", top: "50%", transform: "translateY(-50%)", background: "transparent", border: 0, color: "#C7A9EF", cursor: "pointer", fontSize: "11px" }}>{authMostrarSenha ? "Ocultar" : "Mostrar"}</button></div></label>}
             {authModo === "novaSenha" && <><label style={authLabel}>Código recebido por email<input required inputMode="numeric" value={authCodigo} onChange={(e) => setAuthCodigo(e.target.value)} placeholder="Digite o código" style={{ ...authInput, display: "block", marginTop: "7px" }} /></label><label style={authLabel}>Nova senha<input required minLength={6} type={authMostrarSenha ? "text" : "password"} value={authNovaSenha} onChange={(e) => setAuthNovaSenha(e.target.value)} placeholder="Mínimo de 6 caracteres" style={{ ...authInput, display: "block", marginTop: "7px" }} /></label></>}
-            {authErro && <div role="alert" style={{ padding: "10px 12px", borderRadius: "8px", background: "rgba(248,113,113,.1)", border: "1px solid rgba(248,113,113,.25)", color: "#fca5a5", fontSize: "12px" }}>{authErro}</div>}
-            {authMensagem && <div role="status" style={{ padding: "10px 12px", borderRadius: "8px", background: "rgba(125,211,252,.1)", border: "1px solid rgba(125,211,252,.25)", color: "#bae6fd", fontSize: "12px", lineHeight: 1.5 }}>{authMensagem}</div>}
+            {authErro && <div role="alert" style={{ padding: "10px 12px", borderRadius: "8px", background: "rgba(248,113,113,.1)", border: "1px solid rgba(248,113,113,.25)", color: "#F4B8C2", fontSize: "12px" }}>{authErro}</div>}
+            {authMensagem && <div role="status" style={{ padding: "10px 12px", borderRadius: "8px", background: "rgba(199,169,239,.12)", border: "1px solid rgba(199,169,239,.26)", color: "#DCCCF5", fontSize: "12px", lineHeight: 1.5 }}>{authMensagem}</div>}
             <button disabled={authEnviando} type="submit" style={authBotao}>{authEnviando ? "Aguarde..." : authModo === "cadastro" ? "Criar conta" : authModo === "recuperar" ? "Enviar código" : authModo === "novaSenha" ? "Alterar senha" : "Entrar"}</button>
           </form>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "10px", marginTop: "20px", fontSize: "12px" }}>
-            {authModo === "login" && <><button type="button" onClick={() => { setAuthModo("cadastro"); setAuthErro(""); setAuthMensagem(""); }} style={{ background: "none", border: 0, color: "#bae6fd", cursor: "pointer" }}>Criar cadastro</button><button type="button" onClick={() => { setAuthModo("recuperar"); setAuthErro(""); setAuthMensagem(""); }} style={{ background: "none", border: 0, color: "#c0cce0", cursor: "pointer" }}>Esqueci minha senha</button></>}
-            {authModo !== "login" && <button type="button" onClick={() => { setAuthModo("login"); setAuthErro(""); setAuthMensagem(""); }} style={{ background: "none", border: 0, color: "#bae6fd", cursor: "pointer" }}>Voltar para login</button>}
+            {authModo === "login" && <><button type="button" onClick={() => { setAuthModo("cadastro"); setAuthErro(""); setAuthMensagem(""); }} style={{ background: "none", border: 0, color: "#DCCCF5", cursor: "pointer" }}>Criar cadastro</button><button type="button" onClick={() => { setAuthModo("recuperar"); setAuthErro(""); setAuthMensagem(""); }} style={{ background: "none", border: 0, color: "#BEB7CA", cursor: "pointer" }}>Esqueci minha senha</button></>}
+            {authModo !== "login" && <button type="button" onClick={() => { setAuthModo("login"); setAuthErro(""); setAuthMensagem(""); }} style={{ background: "none", border: 0, color: "#DCCCF5", cursor: "pointer" }}>Voltar para login</button>}
           </div>
         </section>
       </main>
@@ -2402,11 +2402,11 @@ export default function App() {
   }
 
   if (authSession && !dadosNuvemCarregados) {
-    return <div style={{ minHeight: "100vh", background: "rgba(38, 54, 75, 0.62)", color: "#c0cce0", display: "grid", placeItems: "center", padding: "24px", textAlign: "center", fontFamily: "inherit" }}>
+    return <div style={{ minHeight: "100vh", background: "rgba(29, 27, 39, 0.72)", color: "#BEB7CA", display: "grid", placeItems: "center", padding: "24px", textAlign: "center", fontFamily: "inherit" }}>
       <div style={{ maxWidth: "440px" }}>
-        <div style={{ fontSize: "15px", fontWeight: 800, color: "#bae6fd", marginBottom: "10px" }}>CAVEIRA APP</div>
+        <div style={{ fontSize: "15px", fontWeight: 800, color: "#DCCCF5", marginBottom: "10px" }}>CAVEIRA APP</div>
         <div>{erroDadosNuvem ? "Não foi possível acessar seus dados na nuvem." : statusDadosNuvem}</div>
-        {erroDadosNuvem && <><p style={{ color: "#fca5a5", fontSize: "12px", lineHeight: 1.5 }}>{erroDadosNuvem}</p><button onClick={() => { setErroDadosNuvem(""); setTentativaNuvem((n) => n + 1); }} style={{ marginTop: "8px", padding: "10px 16px", borderRadius: "8px", border: 0, background: "#7dd3fc", color: "#111827", fontWeight: 800, cursor: "pointer" }}>Tentar novamente</button></>}
+        {erroDadosNuvem && <><p style={{ color: "#F4B8C2", fontSize: "12px", lineHeight: 1.5 }}>{erroDadosNuvem}</p><button onClick={() => { setErroDadosNuvem(""); setTentativaNuvem((n) => n + 1); }} style={{ marginTop: "8px", padding: "10px 16px", borderRadius: "8px", border: 0, background: "#C7A9EF", color: "#111827", fontWeight: 800, cursor: "pointer" }}>Tentar novamente</button></>}
       </div>
     </div>;
   }
@@ -2416,8 +2416,8 @@ export default function App() {
       <div
         style={{
           minHeight: "100vh",
-          background: "rgba(38, 54, 75, 0.62)",
-          color: "#edf1f7",
+          background: "rgba(29, 27, 39, 0.72)",
+          color: "#F1EEF7",
           padding: "24px 18px",
           display: "flex",
           flexDirection: "column",
@@ -2428,7 +2428,7 @@ export default function App() {
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontSize: "11px", color: "#c0cce0", letterSpacing: "0.08em" }}>
+          <span style={{ fontSize: "11px", color: "#BEB7CA", letterSpacing: "0.08em" }}>
             MODO FOCO • {infoDia?.rotulo.toUpperCase()}
           </span>
           <button
@@ -2437,9 +2437,9 @@ export default function App() {
             style={{
               padding: "6px 12px",
               borderRadius: "8px",
-              border: "1px solid rgba(148, 190, 215, 0.24)",
-              background: "rgba(52, 70, 94, 0.72)",
-              color: "#edf1f7",
+              border: "1px solid rgba(190, 170, 225, 0.19)",
+              background: "rgba(49, 43, 63, 0.78)",
+              color: "#F1EEF7",
               fontSize: "12px",
               cursor: "pointer",
             }}
@@ -2450,7 +2450,7 @@ export default function App() {
 
         <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: "18px" }}>
           <div>
-            <div style={{ fontSize: "11px", color: "#a8b6ca", letterSpacing: "0.1em" }}>
+            <div style={{ fontSize: "11px", color: "#9E96AD", letterSpacing: "0.1em" }}>
               {modoTempo === "timer"
                 ? "TIMER"
                 : modoTempo === "intervalo"
@@ -2461,7 +2461,7 @@ export default function App() {
               style={{
                 fontSize: "54px",
                 fontWeight: 800,
-                color: "#bae6fd",
+                color: "#DCCCF5",
                 fontVariantNumeric: "tabular-nums",
                 lineHeight: 1.05,
                 marginTop: "6px",
@@ -2477,11 +2477,11 @@ export default function App() {
 
           {proximoExercicio && (
             <div style={{ ...cardClean, textAlign: "left" }}>
-              <div style={{ fontSize: "10px", color: "#a8b6ca" }}>PRÓXIMO / ATUAL</div>
+              <div style={{ fontSize: "10px", color: "#9E96AD" }}>PRÓXIMO / ATUAL</div>
               <div style={{ fontSize: "18px", fontWeight: 700, marginTop: "4px" }}>
                 {proximoExercicio.nome}
               </div>
-              <div style={{ fontSize: "13px", color: "#c0cce0", marginTop: "4px" }}>
+              <div style={{ fontSize: "13px", color: "#BEB7CA", marginTop: "4px" }}>
                 {proximoExercicio.seriesReps} • {proximoExercicio.cargaAtual}kg • Descanso{" "}
                 {proximoExercicio.descanso}s
               </div>
@@ -2502,7 +2502,7 @@ export default function App() {
               padding: "14px",
               borderRadius: "10px",
               border: "none",
-              background: "#7dd3fc",
+              background: "#C7A9EF",
               color: "#111827",
               fontWeight: 700,
               fontSize: "14px",
@@ -2530,7 +2530,7 @@ export default function App() {
                 padding: "14px 16px",
                 borderRadius: "10px",
                 border: "none",
-                background: "#22c55e",
+                background: "#9ADFC2",
                 color: "#111827",
                 fontWeight: 700,
                 fontSize: "14px",
@@ -2549,8 +2549,8 @@ export default function App() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(145deg, #202D40 0%, #26364B 52%, #202D40 100%)",
-        color: "#edf1f7",
+        background: "linear-gradient(145deg, #17161F 0%, #1D1B27 52%, #17161F 100%)",
+        color: "#F1EEF7",
         width: ehDesktop ? `calc(100% - ${larguraMenuDesktop}px)` : "100%",
         maxWidth: larguraContainer,
         margin: ehDesktop ? `0 0 0 ${larguraMenuDesktop}px` : "0 auto",
@@ -2564,7 +2564,7 @@ export default function App() {
       <style>{`
         html, body, #root {
           min-height: 100%;
-          background: linear-gradient(145deg, #202D40 0%, #26364B 52%, #202D40 100%);
+          background: linear-gradient(145deg, #17161F 0%, #1D1B27 52%, #17161F 100%);
           background-attachment: fixed;
           -webkit-text-size-adjust: 100%;
           text-size-adjust: 100%;
@@ -2575,7 +2575,7 @@ export default function App() {
         }
         /* Superfícies glass: transparência e desfoque discretos, sem alterar layout. */
         div[style*="rgba(38, 54, 75"],
-        div[style*="rgba(52, 70, 94, 0.46)"] {
+        div[style*="rgba(49, 43, 63, 0.58)"] {
           -webkit-backdrop-filter: blur(12px);
           backdrop-filter: blur(12px);
           box-shadow: 0 8px 24px rgba(5, 12, 24, 0.12);
@@ -2584,7 +2584,7 @@ export default function App() {
           touch-action: manipulation;
         }
         input:focus, select:focus, textarea:focus {
-          outline: 2px solid rgba(96, 165, 250, 0.48);
+          outline: 2px solid rgba(190, 160, 232, 0.52);
           outline-offset: 1px;
         }
         @media print {
@@ -2601,9 +2601,86 @@ export default function App() {
             touch-action: manipulation;
           }
         }
+
+        /* Caveira App — identidade visual Lovable (camada exclusivamente visual) */
+        :root {
+          color-scheme: dark;
+          --caveira-bg: #17161f;
+          --caveira-surface: rgba(35, 32, 46, .76);
+          --caveira-surface-strong: rgba(31, 29, 42, .94);
+          --caveira-border: rgba(190, 170, 225, .15);
+          --caveira-lilac: #c7a9ef;
+          --caveira-muted: #9e96ad;
+          --caveira-text: #f1eef7;
+        }
+        html, body, #root {
+          background: var(--caveira-bg) !important;
+          color: var(--caveira-text);
+          font-family: Geist, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        body {
+          background-image:
+            radial-gradient(ellipse 55% 42% at 100% 100%, rgba(199,169,239,.10), transparent 72%),
+            radial-gradient(ellipse 40% 32% at 0% 100%, rgba(157,223,200,.045), transparent 72%);
+          background-attachment: fixed;
+        }
+        /* Fundo principal e sidebar: grafite profundo, sem mexer nas dimensões ou eventos. */
+        div[style*="linear-gradient(145deg, #17161F"],
+        div[style*="linear-gradient(145deg, #191720"] {
+          background: linear-gradient(145deg, #17161f 0%, #201d2a 52%, #17161f 100%) !important;
+        }
+        aside {
+          background: linear-gradient(160deg, rgba(27,25,35,.98), rgba(32,29,43,.97)) !important;
+          border-right-color: var(--caveira-border) !important;
+          box-shadow: 18px 0 52px rgba(0,0,0,.32) !important;
+          -webkit-backdrop-filter: blur(22px);
+          backdrop-filter: blur(22px);
+        }
+        header {
+          border-bottom-color: var(--caveira-border) !important;
+        }
+        /* Cartões e painéis com vidro discreto. */
+        div[style*="border-radius"][style*="background"],
+        section[style*="border-radius"][style*="background"] {
+          -webkit-backdrop-filter: blur(16px);
+          backdrop-filter: blur(16px);
+        }
+        div[style*="rgba(49, 43, 63"],
+        div[style*="rgba(31, 29, 42"],
+        div[style*="rgba(35, 32, 46"] {
+          border-color: var(--caveira-border);
+          box-shadow: 0 10px 30px rgba(0,0,0,.13);
+        }
+        button, a, [role="button"] {
+          transition: background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
+          -webkit-tap-highlight-color: transparent;
+        }
+        button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
+          outline: 2px solid rgba(199,169,239,.72) !important;
+          outline-offset: 3px;
+        }
+        input, select, textarea {
+          background-color: rgba(24, 22, 33, .72) !important;
+          border-color: rgba(190,170,225,.20) !important;
+          color: #f1eef7 !important;
+          border-radius: 10px;
+        }
+        input::placeholder, textarea::placeholder { color: #8f879f !important; }
+        input:focus, select:focus, textarea:focus {
+          outline: 2px solid rgba(199,169,239,.42) !important;
+          outline-offset: 1px;
+          border-color: rgba(199,169,239,.55) !important;
+        }
+        ::selection { background: rgba(199,169,239,.28); color: #fff; }
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+        @media (max-width: 639px) {
+          input, select, textarea { font-size: 16px !important; }
+        }
       `}</style>
-      <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#bfdbfe" : "#fde68a", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
-        <span style={{ width: 6, height: 6, borderRadius: "50%", background: estaOnline ? "#60a5fa" : "#fbbf24" }} />
+      <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
+        <span style={{ width: 6, height: 6, borderRadius: "50%", background: estaOnline ? "#B99AE7" : "#E9C987" }} />
         {estaOnline ? (statusDadosNuvem.includes("pendente") || statusDadosNuvem.includes("aguardando") ? "Sincronização pendente" : "Online") : "Offline • salvando neste dispositivo"}
       </div>
       {/* Ondulações pastéis no canto inferior direito, atrás do conteúdo */}
@@ -2639,8 +2716,8 @@ export default function App() {
             bottom: 0,
             width: `${larguraColunaFechada}px`,
             zIndex: 40,
-            background: "linear-gradient(145deg, #1B293C 0%, #223249 52%, #1B293C 100%)",
-            borderRight: "1px solid rgba(186, 230, 253, 0.16)",
+            background: "linear-gradient(145deg, #191720 0%, #24212E 52%, #191720 100%)",
+            borderRight: "1px solid rgba(190, 170, 225, 0.17)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -2655,9 +2732,9 @@ export default function App() {
             title="Abrir menu"
             aria-label="Abrir menu"
             style={{
-              background: "rgba(52, 70, 94, 0.72)",
-              color: "#edf1f7",
-              border: "1px solid rgba(148, 190, 215, 0.24)",
+              background: "rgba(49, 43, 63, 0.78)",
+              color: "#F1EEF7",
+              border: "1px solid rgba(190, 170, 225, 0.19)",
               borderRadius: "7px",
               width: "30px",
               height: "30px",
@@ -2678,9 +2755,9 @@ export default function App() {
               borderRadius: "50%",
               display: "grid",
               placeItems: "center",
-              background: "#24445D",
-              border: "1px solid #4C7896",
-              color: "#bae6fd",
+              background: "#342B46",
+              border: "1px solid #74618F",
+              color: "#DCCCF5",
               fontWeight: 800,
               cursor: "pointer",
             }}
@@ -2706,7 +2783,7 @@ export default function App() {
             padding: "0 14px",
             boxSizing: "border-box",
             background: "rgba(17,24,36,0.98)",
-            borderBottom: "1px solid rgba(148, 190, 215, 0.19)",
+            borderBottom: "1px solid rgba(190, 170, 225, 0.15)",
             boxShadow: "0 5px 18px rgba(0,0,0,0.2)",
           }}
         >
@@ -2716,9 +2793,9 @@ export default function App() {
             title="Abrir menu"
             aria-label="Abrir menu"
             style={{
-              background: "rgba(52, 70, 94, 0.72)",
-              color: "#edf1f7",
-              border: "1px solid rgba(148, 190, 215, 0.24)",
+              background: "rgba(49, 43, 63, 0.78)",
+              color: "#F1EEF7",
+              border: "1px solid rgba(190, 170, 225, 0.19)",
               borderRadius: "8px",
               width: "38px",
               height: "36px",
@@ -2741,10 +2818,10 @@ export default function App() {
               alignItems: "center",
               gap: "9px",
               padding: "4px 8px",
-              border: "1px solid rgba(148, 190, 215, 0.19)",
+              border: "1px solid rgba(190, 170, 225, 0.15)",
               borderRadius: "9px",
               background: "rgba(34, 50, 73, 0.88)",
-              color: "#edf1f7",
+              color: "#F1EEF7",
               cursor: "pointer",
               textAlign: "left",
             }}
@@ -2757,9 +2834,9 @@ export default function App() {
                 flexShrink: 0,
                 display: "grid",
                 placeItems: "center",
-                background: "#24445D",
-                border: "1px solid #4C7896",
-                color: "#bae6fd",
+                background: "#342B46",
+                border: "1px solid #74618F",
+                color: "#DCCCF5",
                 fontWeight: 800,
                 fontSize: "12px",
               }}
@@ -2767,10 +2844,10 @@ export default function App() {
               {(authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0, 1).toUpperCase()}
             </span>
             <span style={{ minWidth: 0, display: "flex", flexDirection: "column" }}>
-              <span style={{ color: "#edf1f7", fontSize: "11px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              <span style={{ color: "#F1EEF7", fontSize: "11px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {authSession.user.user_metadata?.nome || "Usuário"}
               </span>
-              <span style={{ color: "#c0cce0", fontSize: "9px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              <span style={{ color: "#BEB7CA", fontSize: "9px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {authSession.user.email}
               </span>
             </span>
@@ -2799,8 +2876,8 @@ export default function App() {
               bottom: ehDesktop ? 0 : undefined,
               width: larguraDrawer,
               height: "100%",
-              background: "linear-gradient(145deg, #1B293C 0%, #223249 52%, #1B293C 100%)",
-              borderRight: "1px solid rgba(186, 230, 253, 0.16)",
+              background: "linear-gradient(145deg, #191720 0%, #24212E 52%, #191720 100%)",
+              borderRight: "1px solid rgba(190, 170, 225, 0.17)",
               padding: "22px 14px 18px",
               boxShadow: "18px 0 48px rgba(0,0,0,0.28)",
               display: "flex",
@@ -2825,9 +2902,9 @@ export default function App() {
                   aria-label="Fechar menu"
                   style={{
                     background: "rgba(20,25,34,0.92)",
-                    border: "1px solid rgba(148, 190, 215, 0.24)",
+                    border: "1px solid rgba(190, 170, 225, 0.19)",
                     borderRadius: "7px",
-                    color: "#e8edf5",
+                    color: "#EEEAF5",
                     width: "28px",
                     height: "28px",
                     cursor: "pointer",
@@ -2882,12 +2959,12 @@ export default function App() {
             </div>
 
             <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "9px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 8px", background: "transparent", borderTop: "1px solid rgba(148, 190, 215, 0.16)", borderRadius: 0, minWidth: 0, paddingTop: "16px" }}>
-                <div style={{ width: "34px", height: "34px", borderRadius: "50%", flexShrink: 0, display: "grid", placeItems: "center", background: "#24445D", border: "1px solid #4C7896", color: "#bae6fd", fontWeight: 800, fontSize: "13px" }}>{(authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0, 1).toUpperCase()}</div>
-                <div style={{ minWidth: 0, flex: 1 }}><div style={{ color: "#edf1f7", fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.user_metadata?.nome || "Usuário"}</div><div style={{ color: "#c0cce0", fontSize: "10px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.email}</div></div>
-                <button type="button" onClick={sairDaConta} title="Sair da conta" aria-label="Sair da conta" style={{ border: 0, background: "transparent", color: "#c0cce0", cursor: "pointer", fontSize: "16px" }}>↪</button>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 8px", background: "transparent", borderTop: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: 0, minWidth: 0, paddingTop: "16px" }}>
+                <div style={{ width: "34px", height: "34px", borderRadius: "50%", flexShrink: 0, display: "grid", placeItems: "center", background: "#342B46", border: "1px solid #74618F", color: "#DCCCF5", fontWeight: 800, fontSize: "13px" }}>{(authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0, 1).toUpperCase()}</div>
+                <div style={{ minWidth: 0, flex: 1 }}><div style={{ color: "#F1EEF7", fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.user_metadata?.nome || "Usuário"}</div><div style={{ color: "#BEB7CA", fontSize: "10px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.email}</div></div>
+                <button type="button" onClick={sairDaConta} title="Sair da conta" aria-label="Sair da conta" style={{ border: 0, background: "transparent", color: "#BEB7CA", cursor: "pointer", fontSize: "16px" }}>↪</button>
               </div>
-              <button type="button" onClick={resetarDados} style={{ ...btnMenu, color: "#f87171", padding: "6px 8px", fontSize: "11px", opacity: 0.85 }}>Resetar dados do app</button>
+              <button type="button" onClick={resetarDados} style={{ ...btnMenu, color: "#F19AAB", padding: "6px 8px", fontSize: "11px", opacity: 0.85 }}>Resetar dados do app</button>
             </div>
           </aside>
         </div>
@@ -2901,7 +2978,7 @@ export default function App() {
           justifyContent: "space-between",
           gap: "12px",
           paddingBottom: "18px",
-          borderBottom: "1px solid rgba(148, 190, 215, 0.16)",
+          borderBottom: "1px solid rgba(190, 170, 225, 0.14)",
           marginBottom: "18px",
         }}
       >
@@ -2913,12 +2990,12 @@ export default function App() {
               gap: "8px",
               padding: "4px 10px",
               borderRadius: "8px",
-              background: "rgba(52, 70, 94, 0.46)",
-              border: "1px solid rgba(148, 190, 215, 0.16)",
+              background: "rgba(49, 43, 63, 0.58)",
+              border: "1px solid rgba(190, 170, 225, 0.14)",
               marginBottom: "8px",
             }}
           >
-            <span style={{ fontSize: "10px", letterSpacing: "0.14em", color: "#c0cce0" }}>
+            <span style={{ fontSize: "10px", letterSpacing: "0.14em", color: "#BEB7CA" }}>
               CAVEIRA • UM DIA DE CADA VEZ
             </span>
           </div>
@@ -2933,7 +3010,7 @@ export default function App() {
           >
             {abaAtiva === "hoje" && (
               <>
-                Treino de hoje<span style={{ color: "#7dd3fc" }}>.</span>
+                Treino de hoje<span style={{ color: "#C7A9EF" }}>.</span>
               </>
             )}
             {abaAtiva === "montar" && "Montar treinos."}
@@ -2949,7 +3026,7 @@ export default function App() {
           </h1>
 
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "6px", flexWrap: "wrap" }}>
-            <span style={{ fontSize: "12px", color: "#a8b6ca" }}>
+            <span style={{ fontSize: "12px", color: "#9E96AD" }}>
               {infoDia?.nome}, {diaSel} de {MESES_CURTOS[(mesSel || 1) - 1]?.toLowerCase()}
               {focoDiasPorChave[chaveDia] ? ` • Foco: ${focoDiasPorChave[chaveDia]}` : ""}
             </span>
@@ -2958,10 +3035,10 @@ export default function App() {
                 type="button"
                 onClick={() => setDataSelecionada(hojeISO)}
                 style={{
-                  background: "rgba(52, 70, 94, 0.72)",
-                  border: "1px solid rgba(148, 190, 215, 0.24)",
+                  background: "rgba(49, 43, 63, 0.78)",
+                  border: "1px solid rgba(190, 170, 225, 0.19)",
                   borderRadius: "6px",
-                  color: "#bae6fd",
+                  color: "#DCCCF5",
                   fontSize: "11px",
                   padding: "2px 8px",
                   cursor: "pointer",
@@ -2979,17 +3056,17 @@ export default function App() {
             style={{
               textAlign: "right",
               paddingLeft: "12px",
-              borderLeft: "1px solid rgba(148, 190, 215, 0.16)",
+              borderLeft: "1px solid rgba(190, 170, 225, 0.14)",
               lineHeight: 1.1,
             }}
           >
-            <div style={{ fontSize: "10px", color: "#a8b6ca", letterSpacing: "0.08em" }}>
+            <div style={{ fontSize: "10px", color: "#9E96AD", letterSpacing: "0.08em" }}>
               {MESES_CURTOS[(mesSel || 1) - 1]}
             </div>
             <div style={{ fontSize: ehDesktop ? "26px" : "22px", fontWeight: 800, marginTop: "2px" }}>
               {diaSel}
             </div>
-            <div style={{ fontSize: "10px", color: "#a8b6ca", marginTop: "2px" }}>{anoSel}</div>
+            <div style={{ fontSize: "10px", color: "#9E96AD", marginTop: "2px" }}>{anoSel}</div>
           </div>
         </div>
       </header>
@@ -3004,7 +3081,7 @@ export default function App() {
             padding: "10px 14px",
             borderRadius: "10px",
             background: "rgba(125, 211, 252, 0.14)",
-            border: "1px solid #7dd3fc",
+            border: "1px solid #C7A9EF",
             marginBottom: "14px",
             fontSize: "12px",
           }}
@@ -3019,7 +3096,7 @@ export default function App() {
               padding: "5px 10px",
               borderRadius: "7px",
               border: "none",
-              background: "#7dd3fc",
+              background: "#C7A9EF",
               color: "#111827",
               fontWeight: 700,
               fontSize: "11px",
@@ -3041,7 +3118,7 @@ export default function App() {
               justifyContent: "space-between",
               gap: ehDesktop ? "24px" : "10px",
               paddingBottom: "16px",
-              borderBottom: "1px solid rgba(148, 190, 215, 0.16)",
+              borderBottom: "1px solid rgba(190, 170, 225, 0.14)",
             }}
           >
             <div
@@ -3064,8 +3141,8 @@ export default function App() {
                   width="18"
                   height="18"
                   viewBox="0 0 24 24"
-                  fill={dashboardData.foguinhoAtivo ? "#f97316" : "none"}
-                  stroke={dashboardData.foguinhoAtivo ? "#fb923c" : "#52525b"}
+                  fill={dashboardData.foguinhoAtivo ? "#E5A17E" : "none"}
+                  stroke={dashboardData.foguinhoAtivo ? "#E9B18D" : "#52525b"}
                   strokeWidth="1.8"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -3082,14 +3159,14 @@ export default function App() {
                   style={{
                     fontSize: "14px",
                     fontWeight: 600,
-                    color: dashboardData.foguinhoAtivo ? "#fb923c" : "#a8b6ca",
+                    color: dashboardData.foguinhoAtivo ? "#E9B18D" : "#9E96AD",
                     lineHeight: 1,
                   }}
                 >
                   {dashboardData.streak}
                 </span>
               </div>
-              <span style={{ fontSize: "10px", fontWeight: 300, color: "#a8b6ca", letterSpacing: "0.02em" }}>
+              <span style={{ fontSize: "10px", fontWeight: 300, color: "#9E96AD", letterSpacing: "0.02em" }}>
                 {dashboardData.streak === 1 ? "Dia" : "Dias"}
               </span>
             </div>
@@ -3122,7 +3199,7 @@ export default function App() {
                       borderRadius: "8px",
                       border: "none",
                       background: selecionada ? "rgba(255,255,255,0.04)" : "transparent",
-                      color: selecionada || d.ehHoje ? "#edf1f7" : "#a8b6ca",
+                      color: selecionada || d.ehHoje ? "#F1EEF7" : "#9E96AD",
                       cursor: d.dataISO > hojeISO ? "not-allowed" : "pointer",
                       opacity: d.dataISO > hojeISO ? 0.25 : 1,
                       display: "flex",
@@ -3136,7 +3213,7 @@ export default function App() {
                       style={{
                         fontSize: ehDesktop ? "12px" : "11px",
                         fontWeight: d.ehHoje || selecionada ? 500 : 300,
-                        color: d.ehHoje ? "#edf1f7" : "#c0cce0",
+                        color: d.ehHoje ? "#F1EEF7" : "#BEB7CA",
                         lineHeight: 1.1,
                       }}
                     >
@@ -3146,7 +3223,7 @@ export default function App() {
                       style={{
                         fontSize: ehDesktop ? "14px" : "13px",
                         fontWeight: selecionada ? 600 : 300,
-                        color: selecionada ? "#bae6fd" : "#d4d4d8",
+                        color: selecionada ? "#DCCCF5" : "#d4d4d8",
                         lineHeight: 1.1,
                       }}
                     >
@@ -3157,7 +3234,7 @@ export default function App() {
                         width: "4px",
                         height: "4px",
                         borderRadius: "999px",
-                        background: treinouNoDia ? "#fb923c" : "transparent",
+                        background: treinouNoDia ? "#E9B18D" : "transparent",
                       }}
                     />
                   </button>
@@ -3167,7 +3244,7 @@ export default function App() {
           </div>
 
           {!diaPodeEditar && (
-            <div style={{ padding: "10px 12px", borderRadius: "9px", background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.28)", color: "#fbbf24", fontSize: "12px" }}>
+            <div style={{ padding: "10px 12px", borderRadius: "9px", background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.28)", color: "#E9C987", fontSize: "12px" }}>
               Dia fechado para alterações. Você pode consultar os registros, mas somente a data de hoje pode ser editada.
             </div>
           )}
@@ -3196,9 +3273,9 @@ export default function App() {
                     style={{
                       padding: "5px 10px",
                       borderRadius: "7px",
-                      border: "1px solid rgba(148, 190, 215, 0.24)",
-                      background: ativo ? "rgba(148, 190, 215, 0.16)" : "#111827",
-                      color: ativo ? "#bae6fd" : "#c0cce0",
+                      border: "1px solid rgba(190, 170, 225, 0.19)",
+                      background: ativo ? "rgba(190, 170, 225, 0.14)" : "#111827",
+                      color: ativo ? "#DCCCF5" : "#BEB7CA",
                       fontSize: "11px",
                       fontWeight: ativo ? 700 : 400,
                       cursor: "pointer",
@@ -3217,9 +3294,9 @@ export default function App() {
                 style={{
                   padding: "5px 10px",
                   borderRadius: "7px",
-                  border: "1px solid rgba(148, 190, 215, 0.24)",
-                  background: "rgba(38, 54, 75, 0.62)",
-                  color: "#c0cce0",
+                  border: "1px solid rgba(190, 170, 225, 0.19)",
+                  background: "rgba(29, 27, 39, 0.72)",
+                  color: "#BEB7CA",
                   fontSize: "11px",
                   cursor: "pointer",
                 }}
@@ -3233,7 +3310,7 @@ export default function App() {
             <div
               style={{
                 fontSize: "11px",
-                color: "#fbbf24",
+                color: "#E9C987",
                 background: "rgba(251, 191, 36, 0.08)",
                 padding: "8px 10px",
                 borderRadius: "8px",
@@ -3247,7 +3324,7 @@ export default function App() {
           {/* Checklist pré-treino + Aquecimento */}
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "10px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
-              <span style={{ fontSize: "11px", color: "#c0cce0", fontWeight: 600 }}>Checklist pré-treino</span>
+              <span style={{ fontSize: "11px", color: "#BEB7CA", fontWeight: 600 }}>Checklist pré-treino</span>
               <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
                 {[
                   { key: "agua", label: "Água batida" },
@@ -3263,9 +3340,9 @@ export default function App() {
                       style={{
                         padding: "4px 8px",
                         borderRadius: "6px",
-                        border: "1px solid rgba(148, 190, 215, 0.24)",
+                        border: "1px solid rgba(190, 170, 225, 0.19)",
                         background: marcado ? "rgba(34, 197, 94, 0.14)" : "#111827",
-                        color: marcado ? "#4ade80" : "#c0cce0",
+                        color: marcado ? "#A9E8CB" : "#BEB7CA",
                         fontSize: "11px",
                         cursor: "pointer",
                       }}
@@ -3278,10 +3355,10 @@ export default function App() {
               </div>
             </div>
 
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px", flexWrap: "wrap", paddingTop: "8px", borderTop: "1px solid rgba(148, 190, 215, 0.16)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px", flexWrap: "wrap", paddingTop: "8px", borderTop: "1px solid rgba(190, 170, 225, 0.14)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px" }}>
-                <span style={{ color: "#c0cce0", fontWeight: 600 }}>Aquecimento</span>
-                <span style={{ color: "#a8b6ca" }}>({aquecimentoDia.minutos} min)</span>
+                <span style={{ color: "#BEB7CA", fontWeight: 600 }}>Aquecimento</span>
+                <span style={{ color: "#9E96AD" }}>({aquecimentoDia.minutos} min)</span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 {[5, 10, 15].map((min) => (
@@ -3300,9 +3377,9 @@ export default function App() {
                     style={{
                       padding: "4px 8px",
                       borderRadius: "6px",
-                      border: "1px solid rgba(148, 190, 215, 0.24)",
-                      background: aquecimentoDia.minutos === min ? "rgba(148, 190, 215, 0.16)" : "#111827",
-                      color: aquecimentoDia.minutos === min ? "#bae6fd" : "#c0cce0",
+                      border: "1px solid rgba(190, 170, 225, 0.19)",
+                      background: aquecimentoDia.minutos === min ? "rgba(190, 170, 225, 0.14)" : "#111827",
+                      color: aquecimentoDia.minutos === min ? "#DCCCF5" : "#BEB7CA",
                       fontSize: "11px",
                       cursor: "pointer",
                     }}
@@ -3325,8 +3402,8 @@ export default function App() {
                     padding: "5px 10px",
                     borderRadius: "7px",
                     border: "none",
-                    background: aquecimentoDia.feito ? "#22c55e" : "rgba(148, 190, 215, 0.16)",
-                    color: aquecimentoDia.feito ? "#111827" : "#e8edf5",
+                    background: aquecimentoDia.feito ? "#9ADFC2" : "rgba(190, 170, 225, 0.14)",
+                    color: aquecimentoDia.feito ? "#111827" : "#EEEAF5",
                     fontSize: "11px",
                     fontWeight: 600,
                     cursor: "pointer",
@@ -3354,7 +3431,7 @@ export default function App() {
             {calcAberta && (
               <div style={{ marginTop: "10px", display: "flex", flexDirection: "column", gap: "8px" }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-                  <label style={{ fontSize: "11px", color: "#c0cce0" }}>
+                  <label style={{ fontSize: "11px", color: "#BEB7CA" }}>
                     Peso total (kg)
                     <input
                       type="number"
@@ -3364,7 +3441,7 @@ export default function App() {
                       style={{ ...campoTexto, marginTop: "4px", padding: "6px 8px" }}
                     />
                   </label>
-                  <label style={{ fontSize: "11px", color: "#c0cce0" }}>
+                  <label style={{ fontSize: "11px", color: "#BEB7CA" }}>
                     Peso da barra (kg)
                     <input
                       type="number"
@@ -3376,15 +3453,15 @@ export default function App() {
                   </label>
                 </div>
 
-                <div style={{ fontSize: "12px", color: "#e8edf5" }}>
+                <div style={{ fontSize: "12px", color: "#EEEAF5" }}>
                   Por lado:{" "}
                   {resultadoAnilhas.itens.length === 0 ? (
-                    <span style={{ color: "#a8b6ca" }}>Apenas a barra</span>
+                    <span style={{ color: "#9E96AD" }}>Apenas a barra</span>
                   ) : (
                     resultadoAnilhas.itens.map((it) => `${it.qtd}x${it.anilha}kg`).join(" + ")
                   )}
                   {resultadoAnilhas.sobraPorLado > 0 && (
-                    <span style={{ color: "#fbbf24", marginLeft: "6px" }}>
+                    <span style={{ color: "#E9C987", marginLeft: "6px" }}>
                       (restam {resultadoAnilhas.sobraPorLado}kg/lado)
                     </span>
                   )}
@@ -3396,7 +3473,7 @@ export default function App() {
           {/* Resumo da sessão + Puxar último treino parecido */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
             <div>
-              <div style={{ fontSize: "10px", letterSpacing: "0.1em", color: "#a8b6ca" }}>SEU TREINO</div>
+              <div style={{ fontSize: "10px", letterSpacing: "0.1em", color: "#9E96AD" }}>SEU TREINO</div>
               <div style={{ fontSize: "16px", fontWeight: 700, marginTop: "3px" }}>
                 {exercicios.length === 0 ? "Dia de descanso" : "Sessão programada"}
               </div>
@@ -3412,22 +3489,22 @@ export default function App() {
                     flex: "none",
                     padding: "5px 9px",
                     fontSize: "11px",
-                    color: "#bae6fd",
+                    color: "#DCCCF5",
                   }}
                 >
                   Puxar último ({ultimoTreinoParecido.dataISO.slice(5)})
                 </button>
               )}
 
-              <div style={{ textAlign: "right", fontSize: "12px", color: "#c0cce0" }}>
+              <div style={{ textAlign: "right", fontSize: "12px", color: "#BEB7CA" }}>
                 <div>
                   {concluidosHoje}/{exercicios.length} concluídos
                 </div>
                 {exercicios.length > 0 && (
-                  <div style={{ fontSize: "11px", color: "#a8b6ca", marginTop: "2px" }}>
+                  <div style={{ fontSize: "11px", color: "#9E96AD", marginTop: "2px" }}>
                     Volume: {volumeSessaoKg.toLocaleString("pt-BR")} kg
                     {comparadorMelhorDia && (
-                      <span style={{ marginLeft: "6px", color: comparadorMelhorDia.diff >= 0 ? "#22c55e" : "#c0cce0" }}>
+                      <span style={{ marginLeft: "6px", color: comparadorMelhorDia.diff >= 0 ? "#9ADFC2" : "#BEB7CA" }}>
                         ({comparadorMelhorDia.diff >= 0 ? "+" : ""}
                         {comparadorMelhorDia.diff.toLocaleString("pt-BR")} vs melhor dia)
                       </span>
@@ -3440,7 +3517,7 @@ export default function App() {
 
           {exercicios.length === 0 ? (
             <div style={{ ...cardClean, textAlign: "center", padding: "20px 14px", display: "flex", flexDirection: "column", gap: "10px" }}>
-              <div style={{ color: "#a8b6ca", fontSize: "13px" }}>Sem exercícios para este dia.</div>
+              <div style={{ color: "#9E96AD", fontSize: "13px" }}>Sem exercícios para este dia.</div>
               <div style={{ display: "flex", justifyContent: "center", gap: "6px", flexWrap: "wrap" }}>
                 {MOTIVOS_SEM_TREINO.map((motivo) => {
                   const ativo = motivoSemTreinoDia === motivo;
@@ -3452,9 +3529,9 @@ export default function App() {
                       style={{
                         padding: "5px 10px",
                         borderRadius: "7px",
-                        border: "1px solid rgba(148, 190, 215, 0.24)",
-                        background: ativo ? "rgba(148, 190, 215, 0.16)" : "#111827",
-                        color: ativo ? "#bae6fd" : "#c0cce0",
+                        border: "1px solid rgba(190, 170, 225, 0.19)",
+                        background: ativo ? "rgba(190, 170, 225, 0.14)" : "#111827",
+                        color: ativo ? "#DCCCF5" : "#BEB7CA",
                         fontSize: "11px",
                         cursor: "pointer",
                       }}
@@ -3495,8 +3572,8 @@ export default function App() {
                     style={{
                       padding: "12px",
                       borderRadius: "10px",
-                      background: "rgba(52, 70, 94, 0.46)",
-                      border: "1px solid rgba(148, 190, 215, 0.16)",
+                      background: "rgba(49, 43, 63, 0.58)",
+                      border: "1px solid rgba(190, 170, 225, 0.14)",
                       display: "flex",
                       flexDirection: "column",
                       gap: "8px",
@@ -3521,7 +3598,7 @@ export default function App() {
                               background: "none",
                               border: "none",
                               padding: 0,
-                              color: "#edf1f7",
+                              color: "#F1EEF7",
                               fontSize: "14px",
                               fontWeight: 600,
                               cursor: "pointer",
@@ -3536,9 +3613,9 @@ export default function App() {
                                 fontSize: "10px",
                                 padding: "1px 6px",
                                 borderRadius: "5px",
-                                background: bateuPr ? "rgba(234, 179, 8, 0.16)" : "#243149",
-                                color: bateuPr ? "#bae6fd" : "#c0cce0",
-                                border: "1px solid rgba(148, 190, 215, 0.24)",
+                                background: bateuPr ? "rgba(234, 179, 8, 0.16)" : "#282432",
+                                color: bateuPr ? "#DCCCF5" : "#BEB7CA",
+                                border: "1px solid rgba(190, 170, 225, 0.19)",
                               }}
                             >
                               PR {prEx}kg
@@ -3553,7 +3630,7 @@ export default function App() {
                             gap: "10px",
                             marginTop: "6px",
                             fontSize: "12px",
-                            color: "#c0cce0",
+                            color: "#BEB7CA",
                             flexWrap: "wrap",
                           }}
                         >
@@ -3565,7 +3642,7 @@ export default function App() {
                             style={{
                               background: "none",
                               border: "none",
-                              color: "#bae6fd",
+                              color: "#DCCCF5",
                               cursor: "pointer",
                               fontSize: "12px",
                               padding: 0,
@@ -3573,7 +3650,7 @@ export default function App() {
                           >
                             {ex.descanso}s
                           </button>
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "#edf1f7" }}>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "#F1EEF7" }}>
                             <button type="button" onClick={() => alterarCarga(ex, -2)} style={btnCarga}>
                               -
                             </button>
@@ -3584,7 +3661,7 @@ export default function App() {
                                 background: "none",
                                 border: "none",
                                 padding: 0,
-                                color: "#edf1f7",
+                                color: "#F1EEF7",
                                 fontWeight: 700,
                                 fontSize: "12px",
                                 cursor: "pointer",
@@ -3599,14 +3676,14 @@ export default function App() {
                         </div>
 
                         {(ultimoRegistro || sugestaoSubir) && (
-                          <div style={{ fontSize: "11px", color: "#a8b6ca", marginTop: "5px" }}>
+                          <div style={{ fontSize: "11px", color: "#9E96AD", marginTop: "5px" }}>
                             {ultimoRegistro && (
                               <span>
-                                Última: <strong style={{ color: "#c0cce0" }}>{ultimoRegistro.carga}kg</strong> ({ultimoRegistro.dataISO.slice(5)})
+                                Última: <strong style={{ color: "#BEB7CA" }}>{ultimoRegistro.carga}kg</strong> ({ultimoRegistro.dataISO.slice(5)})
                               </span>
                             )}
                             {sugestaoSubir && estadoDia !== "cansado" && (
-                              <span style={{ color: "#22c55e", marginLeft: ultimoRegistro ? "8px" : 0 }}>
+                              <span style={{ color: "#9ADFC2", marginLeft: ultimoRegistro ? "8px" : 0 }}>
                                 • Subir +2kg?
                               </span>
                             )}
@@ -3621,8 +3698,8 @@ export default function App() {
                           padding: "7px 11px",
                           borderRadius: "8px",
                           border: "none",
-                          background: ex.feito ? "#22c55e" : "rgba(148, 190, 215, 0.16)",
-                          color: ex.feito ? "#111827" : "#e8edf5",
+                          background: ex.feito ? "#9ADFC2" : "rgba(190, 170, 225, 0.14)",
+                          color: ex.feito ? "#111827" : "#EEEAF5",
                           fontSize: "12px",
                           fontWeight: 600,
                           cursor: "pointer",
@@ -3649,12 +3726,12 @@ export default function App() {
                       <div
                         style={{
                           paddingTop: "8px",
-                          borderTop: "1px solid rgba(148, 190, 215, 0.16)",
+                          borderTop: "1px solid rgba(190, 170, 225, 0.14)",
                           fontSize: "11px",
-                          color: "#c0cce0",
+                          color: "#BEB7CA",
                         }}
                       >
-                        <div style={{ marginBottom: "4px", color: "#a8b6ca" }}>Histórico de cargas:</div>
+                        <div style={{ marginBottom: "4px", color: "#9E96AD" }}>Histórico de cargas:</div>
                         {histEx.length === 0 ? (
                           <div>Sem registros anteriores para este exercício.</div>
                         ) : (
@@ -3665,9 +3742,9 @@ export default function App() {
                                 style={{
                                   padding: "3px 7px",
                                   borderRadius: "6px",
-                                  background: "rgba(38, 54, 75, 0.62)",
-                                  border: "1px solid rgba(148, 190, 215, 0.19)",
-                                  color: "#e8edf5",
+                                  background: "rgba(29, 27, 39, 0.72)",
+                                  border: "1px solid rgba(190, 170, 225, 0.15)",
+                                  color: "#EEEAF5",
                                 }}
                               >
                                 {h.dataISO.slice(5)}: <strong>{h.carga}kg</strong>
@@ -3685,7 +3762,7 @@ export default function App() {
 
           {/* Sinais do corpo */}
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "8px" }}>
-            <span style={{ fontSize: "11px", color: "#c0cce0", fontWeight: 600 }}>Como o corpo respondeu</span>
+            <span style={{ fontSize: "11px", color: "#BEB7CA", fontWeight: 600 }}>Como o corpo respondeu</span>
             <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
               {SINAIS_CORPO.map((sinal) => {
                 const ativo = sinaisDia.includes(sinal);
@@ -3697,9 +3774,9 @@ export default function App() {
                     style={{
                       padding: "4px 9px",
                       borderRadius: "7px",
-                      border: "1px solid rgba(148, 190, 215, 0.24)",
+                      border: "1px solid rgba(190, 170, 225, 0.19)",
                       background: ativo ? "rgba(125, 211, 252, 0.14)" : "#111827",
-                      color: ativo ? "#bae6fd" : "#c0cce0",
+                      color: ativo ? "#DCCCF5" : "#BEB7CA",
                       fontSize: "11px",
                       cursor: "pointer",
                     }}
@@ -3719,10 +3796,10 @@ export default function App() {
               gap: "12px",
             }}
           >
-            <div style={{ padding: "14px", borderRadius: "10px", background: "rgba(52, 70, 94, 0.46)", border: "1px solid rgba(148, 190, 215, 0.16)" }}>
+            <div style={{ padding: "14px", borderRadius: "10px", background: "rgba(49, 43, 63, 0.58)", border: "1px solid rgba(190, 170, 225, 0.14)" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                 <span style={{ fontSize: "13px", fontWeight: 600 }}>Água</span>
-                <label style={{ fontSize: "12px", color: "#c0cce0" }}>
+                <label style={{ fontSize: "12px", color: "#BEB7CA" }}>
                   Peso{" "}
                   <input
                     type="number"
@@ -3730,9 +3807,9 @@ export default function App() {
                     onChange={(e) => setPesoKg(e.target.value)}
                     style={{
                       width: "52px",
-                      background: "rgba(38, 54, 75, 0.62)",
-                      color: "#edf1f7",
-                      border: "1px solid rgba(148, 190, 215, 0.24)",
+                      background: "rgba(29, 27, 39, 0.72)",
+                      color: "#F1EEF7",
+                      border: "1px solid rgba(190, 170, 225, 0.19)",
                       borderRadius: "6px",
                       padding: "3px 6px",
                       fontSize: "12px",
@@ -3742,12 +3819,12 @@ export default function App() {
                 </label>
               </div>
 
-              <div style={{ fontSize: "12px", color: "#c0cce0", marginBottom: "8px" }}>
+              <div style={{ fontSize: "12px", color: "#BEB7CA", marginBottom: "8px" }}>
                 {aguaHojeMl} ml de {metaAguaMl} ml ({aguaPct}%)
               </div>
 
               <div style={{ height: "4px", background: "rgba(148, 163, 184, 0.18)", borderRadius: "999px", overflow: "hidden", marginBottom: "10px" }}>
-                <div style={{ width: `${aguaPct}%`, height: "100%", background: "#38bdf8" }} />
+                <div style={{ width: `${aguaPct}%`, height: "100%", background: "#C4A5EC" }} />
               </div>
 
               <form
@@ -3791,7 +3868,7 @@ export default function App() {
               </div>
             </div>
 
-            <div style={{ padding: "14px", borderRadius: "10px", background: "rgba(52, 70, 94, 0.46)", border: "1px solid rgba(148, 190, 215, 0.16)", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <div style={{ padding: "14px", borderRadius: "10px", background: "rgba(49, 43, 63, 0.58)", border: "1px solid rgba(190, 170, 225, 0.14)", display: "flex", flexDirection: "column", gap: "8px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span style={{ fontSize: "13px", fontWeight: 600 }}>Observação</span>
                 <button
@@ -3810,7 +3887,7 @@ export default function App() {
                 style={campoTexto}
               />
               {statusResumo && (
-                <div style={{ fontSize: "11px", color: "#c0cce0", whiteSpace: "pre-wrap" }}>{statusResumo}</div>
+                <div style={{ fontSize: "11px", color: "#BEB7CA", whiteSpace: "pre-wrap" }}>{statusResumo}</div>
               )}
             </div>
           </div>
@@ -3823,12 +3900,12 @@ export default function App() {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", maxWidth: "760px", margin: "0 auto", width: "100%" }}>
           <div style={{ ...cardClean, padding: "14px", display: "flex", flexDirection: "column", gap: "6px" }}>
             <div style={{ fontSize: "13px", fontWeight: 700 }}>Central de tempo</div>
-            <div style={{ fontSize: "11px", color: "#a8b6ca" }}>Cronômetro da sessão, contagem regressiva e intervalos de trabalho e descanso.</div>
+            <div style={{ fontSize: "11px", color: "#9E96AD" }}>Cronômetro da sessão, contagem regressiva e intervalos de trabalho e descanso.</div>
           </div>
           {/* Central de Tempo */}
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "12px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-              <div style={{ display: "inline-flex", background: "rgba(38, 54, 75, 0.62)", border: "1px solid rgba(148, 190, 215, 0.19)", borderRadius: "8px", padding: "3px", flexWrap: "wrap" }}>
+              <div style={{ display: "inline-flex", background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.15)", borderRadius: "8px", padding: "3px", flexWrap: "wrap" }}>
                 <button
                   type="button"
                   onClick={() => {
@@ -3840,8 +3917,8 @@ export default function App() {
                     padding: "6px 11px",
                     borderRadius: "6px",
                     border: "none",
-                    background: modoTempo === "cronometro" ? "#edf1f7" : "transparent",
-                    color: modoTempo === "cronometro" ? "#111827" : "#c0cce0",
+                    background: modoTempo === "cronometro" ? "#F1EEF7" : "transparent",
+                    color: modoTempo === "cronometro" ? "#111827" : "#BEB7CA",
                     fontSize: "12px",
                     fontWeight: 700,
                     cursor: "pointer",
@@ -3860,8 +3937,8 @@ export default function App() {
                     padding: "6px 11px",
                     borderRadius: "6px",
                     border: "none",
-                    background: modoTempo === "timer" ? "#7dd3fc" : "transparent",
-                    color: modoTempo === "timer" ? "#111827" : "#c0cce0",
+                    background: modoTempo === "timer" ? "#C7A9EF" : "transparent",
+                    color: modoTempo === "timer" ? "#111827" : "#BEB7CA",
                     fontSize: "12px",
                     fontWeight: 700,
                     cursor: "pointer",
@@ -3879,8 +3956,8 @@ export default function App() {
                     padding: "6px 11px",
                     borderRadius: "6px",
                     border: "none",
-                    background: modoTempo === "intervalo" ? "#38bdf8" : "transparent",
-                    color: modoTempo === "intervalo" ? "#111827" : "#c0cce0",
+                    background: modoTempo === "intervalo" ? "#C4A5EC" : "transparent",
+                    color: modoTempo === "intervalo" ? "#111827" : "#BEB7CA",
                     fontSize: "12px",
                     fontWeight: 700,
                     cursor: "pointer",
@@ -3890,9 +3967,9 @@ export default function App() {
                 </button>
               </div>
 
-              <div style={{ fontSize: "11px", color: "#a8b6ca" }}>
-                Ativo: <strong style={{ color: "#c0cce0" }}>{formatarDuracao(tempoAtivoSeg)}</strong> • Descanso:{" "}
-                <strong style={{ color: "#c0cce0" }}>{formatarDuracao(tempoDescansoSeg)}</strong>
+              <div style={{ fontSize: "11px", color: "#9E96AD" }}>
+                Ativo: <strong style={{ color: "#BEB7CA" }}>{formatarDuracao(tempoAtivoSeg)}</strong> • Descanso:{" "}
+                <strong style={{ color: "#BEB7CA" }}>{formatarDuracao(tempoDescansoSeg)}</strong>
               </div>
             </div>
 
@@ -3908,7 +3985,7 @@ export default function App() {
                 }}
               >
                 <div>
-                  <div style={{ fontSize: "10px", letterSpacing: "0.1em", color: "#a8b6ca" }}>
+                  <div style={{ fontSize: "10px", letterSpacing: "0.1em", color: "#9E96AD" }}>
                     DURAÇÃO TOTAL DA SESSÃO
                   </div>
                   <div
@@ -3917,7 +3994,7 @@ export default function App() {
                       fontWeight: 800,
                       letterSpacing: "-0.02em",
                       lineHeight: 1.05,
-                      color: cronometroRodando ? "#bae6fd" : "#edf1f7",
+                      color: cronometroRodando ? "#DCCCF5" : "#F1EEF7",
                       fontVariantNumeric: "tabular-nums",
                       marginTop: "4px",
                     }}
@@ -3934,7 +4011,7 @@ export default function App() {
                       padding: "10px 16px",
                       borderRadius: "9px",
                       border: "none",
-                      background: cronometroRodando ? "#7dd3fc" : "#edf1f7",
+                      background: cronometroRodando ? "#C7A9EF" : "#F1EEF7",
                       color: "#111827",
                       fontWeight: 700,
                       fontSize: "13px",
@@ -3949,9 +4026,9 @@ export default function App() {
                     style={{
                       padding: "10px 14px",
                       borderRadius: "9px",
-                      border: "1px solid #22c55e",
+                      border: "1px solid #9ADFC2",
                       background: "rgba(34, 197, 94, 0.14)",
-                      color: "#4ade80",
+                      color: "#A9E8CB",
                       fontWeight: 700,
                       fontSize: "12px",
                       cursor: "pointer",
@@ -3978,14 +4055,14 @@ export default function App() {
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
                   <div>
-                    <div style={{ fontSize: "10px", letterSpacing: "0.1em", color: "#a8b6ca" }}>
+                    <div style={{ fontSize: "10px", letterSpacing: "0.1em", color: "#9E96AD" }}>
                       CONTAGEM REGRESSIVA
                     </div>
                     <div
                       style={{
                         fontSize: ehDesktop ? "42px" : "34px",
                         fontWeight: 800,
-                        color: timerRodando || alarmeTocando ? "#bae6fd" : "#edf1f7",
+                        color: timerRodando || alarmeTocando ? "#DCCCF5" : "#F1EEF7",
                         fontVariantNumeric: "tabular-nums",
                         lineHeight: 1.05,
                         marginTop: "4px",
@@ -4003,7 +4080,7 @@ export default function App() {
                         padding: "10px 16px",
                         borderRadius: "9px",
                         border: "none",
-                        background: timerRodando ? "#f97316" : "#7dd3fc",
+                        background: timerRodando ? "#E5A17E" : "#C7A9EF",
                         color: "#111827",
                         fontWeight: 700,
                         fontSize: "13px",
@@ -4067,9 +4144,9 @@ export default function App() {
                       style={{
                         padding: "5px 10px",
                         borderRadius: "7px",
-                        border: "1px solid rgba(148, 190, 215, 0.24)",
-                        background: "rgba(38, 54, 75, 0.62)",
-                        color: "#e8edf5",
+                        border: "1px solid rgba(190, 170, 225, 0.19)",
+                        background: "rgba(29, 27, 39, 0.72)",
+                        color: "#EEEAF5",
                         fontSize: "11px",
                         cursor: "pointer",
                       }}
@@ -4085,7 +4162,7 @@ export default function App() {
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
                   <div>
-                    <div style={{ fontSize: "10px", color: "#38bdf8", letterSpacing: "0.08em" }}>
+                    <div style={{ fontSize: "10px", color: "#C4A5EC", letterSpacing: "0.08em" }}>
                       {intervaloFase === "trabalho" ? "FASE DE AÇÃO" : "FASE DE DESCANSO"} • RODADA{" "}
                       {intervaloRodadaAtual}/{intervaloRodadasTotal}
                     </div>
@@ -4093,7 +4170,7 @@ export default function App() {
                       style={{
                         fontSize: "34px",
                         fontWeight: 800,
-                        color: intervaloFase === "trabalho" ? "#edf1f7" : "#38bdf8",
+                        color: intervaloFase === "trabalho" ? "#F1EEF7" : "#C4A5EC",
                         fontVariantNumeric: "tabular-nums",
                         lineHeight: 1.05,
                         marginTop: "4px",
@@ -4111,7 +4188,7 @@ export default function App() {
                         padding: "9px 14px",
                         borderRadius: "8px",
                         border: "none",
-                        background: intervaloRodando ? "#f97316" : "#38bdf8",
+                        background: intervaloRodando ? "#E5A17E" : "#C4A5EC",
                         color: "#111827",
                         fontWeight: 700,
                         fontSize: "12px",
@@ -4136,7 +4213,7 @@ export default function App() {
                 </div>
 
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
-                  <label style={{ fontSize: "11px", color: "#c0cce0" }}>
+                  <label style={{ fontSize: "11px", color: "#BEB7CA" }}>
                     Ação (s)
                     <input
                       type="number"
@@ -4150,7 +4227,7 @@ export default function App() {
                       style={{ ...campoTexto, marginTop: "4px", padding: "6px 8px" }}
                     />
                   </label>
-                  <label style={{ fontSize: "11px", color: "#c0cce0" }}>
+                  <label style={{ fontSize: "11px", color: "#BEB7CA" }}>
                     Pausa (s)
                     <input
                       type="number"
@@ -4164,7 +4241,7 @@ export default function App() {
                       style={{ ...campoTexto, marginTop: "4px", padding: "6px 8px" }}
                     />
                   </label>
-                  <label style={{ fontSize: "11px", color: "#c0cce0" }}>
+                  <label style={{ fontSize: "11px", color: "#BEB7CA" }}>
                     Rodadas
                     <input
                       type="number"
@@ -4190,7 +4267,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => setFormSuplementoAberto((aberto) => !aberto)}
-              style={{ ...btnSecundario, background: "#3b82f6", color: "#071426", border: 0, fontWeight: 800, padding: "10px 18px" }}
+              style={{ ...btnSecundario, background: "#A98BDD", color: "#15131C", border: 0, fontWeight: 800, padding: "10px 18px" }}
             >
               {formSuplementoAberto ? "Fechar cadastro" : "＋ Registrar"}
             </button>
@@ -4269,12 +4346,12 @@ export default function App() {
                   <img
                     src={novoSupFoto}
                     alt="Prévia do suplemento"
-                    style={{ width: "44px", height: "44px", objectFit: "cover", borderRadius: "8px", border: "1px solid rgba(148, 190, 215, 0.24)" }}
+                    style={{ width: "44px", height: "44px", objectFit: "cover", borderRadius: "8px", border: "1px solid rgba(190, 170, 225, 0.19)" }}
                   />
                   <button
                     type="button"
                     onClick={() => setNovoSupFoto("")}
-                    style={{ background: "none", border: "none", color: "#f87171", fontSize: "11px", cursor: "pointer" }}
+                    style={{ background: "none", border: "none", color: "#F19AAB", fontSize: "11px", cursor: "pointer" }}
                   >
                     Remover foto
                   </button>
@@ -4282,7 +4359,7 @@ export default function App() {
               )}
             </div>
 
-            {avisoSupFoto && <div style={{ fontSize: "11px", color: "#f87171" }}>{avisoSupFoto}</div>}
+            {avisoSupFoto && <div style={{ fontSize: "11px", color: "#F19AAB" }}>{avisoSupFoto}</div>}
 
             <button
               type="submit"
@@ -4290,7 +4367,7 @@ export default function App() {
                 padding: "9px",
                 borderRadius: "8px",
                 border: "none",
-                background: "#edf1f7",
+                background: "#F1EEF7",
                 color: "#111827",
                 fontWeight: 700,
                 fontSize: "13px",
@@ -4303,7 +4380,7 @@ export default function App() {
           )}
 
           {suplementos.length === 0 ? (
-            <div style={{ ...cardClean, textAlign: "center", color: "#a8b6ca", fontSize: "13px" }}>
+            <div style={{ ...cardClean, textAlign: "center", color: "#9E96AD", fontSize: "13px" }}>
               Nenhum suplemento cadastrado ainda.
             </div>
           ) : (
@@ -4333,7 +4410,7 @@ export default function App() {
                         height: "76px",
                         objectFit: "cover",
                         borderRadius: "10px",
-                        border: "1px solid rgba(148, 190, 215, 0.24)",
+                        border: "1px solid rgba(190, 170, 225, 0.19)",
                         flexShrink: 0,
                       }}
                     />
@@ -4343,13 +4420,13 @@ export default function App() {
                         width: "76px",
                         height: "76px",
                         borderRadius: "10px",
-                        background: "rgba(38, 54, 75, 0.62)",
-                        border: "1px solid rgba(148, 190, 215, 0.19)",
+                        background: "rgba(29, 27, 39, 0.72)",
+                        border: "1px solid rgba(190, 170, 225, 0.15)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         fontSize: "11px",
-                        color: "#a8b6ca",
+                        color: "#9E96AD",
                         flexShrink: 0,
                       }}
                     >
@@ -4359,7 +4436,7 @@ export default function App() {
 
                   <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "4px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "6px" }}>
-                      <strong style={{ fontSize: "14px", color: "#edf1f7" }}>{sup.nome}</strong>
+                      <strong style={{ fontSize: "14px", color: "#F1EEF7" }}>{sup.nome}</strong>
                       <span
                         style={{
                           fontSize: "10px",
@@ -4370,22 +4447,22 @@ export default function App() {
                               ? "rgba(251, 191, 36, 0.15)"
                               : sup.status === "Ativo"
                               ? "rgba(34, 197, 94, 0.14)"
-                              : "rgba(148, 190, 215, 0.16)",
+                              : "rgba(190, 170, 225, 0.14)",
                           color:
                             sup.status === "Acabando"
-                              ? "#fbbf24"
+                              ? "#E9C987"
                               : sup.status === "Ativo"
-                              ? "#4ade80"
-                              : "#c0cce0",
-                          border: "1px solid rgba(148, 190, 215, 0.24)",
+                              ? "#A9E8CB"
+                              : "#BEB7CA",
+                          border: "1px solid rgba(190, 170, 225, 0.19)",
                         }}
                       >
                         {sup.status}
                       </span>
                     </div>
 
-                    {sup.dose && <div style={{ fontSize: "12px", color: "#c0cce0" }}>{sup.dose}</div>}
-                    {sup.detalhe && <div style={{ fontSize: "11px", color: "#a8b6ca" }}>{sup.detalhe}</div>}
+                    {sup.dose && <div style={{ fontSize: "12px", color: "#BEB7CA" }}>{sup.dose}</div>}
+                    {sup.detalhe && <div style={{ fontSize: "11px", color: "#9E96AD" }}>{sup.detalhe}</div>}
 
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "6px", marginTop: "6px", flexWrap: "wrap" }}>
                       <div style={{ display: "flex", gap: "4px" }}>
@@ -4397,9 +4474,9 @@ export default function App() {
                             style={{
                               padding: "3px 7px",
                               borderRadius: "6px",
-                              border: "1px solid rgba(148, 190, 215, 0.24)",
-                              background: sup.status === st ? "rgba(148, 190, 215, 0.16)" : "#111827",
-                              color: sup.status === st ? "#bae6fd" : "#a8b6ca",
+                              border: "1px solid rgba(190, 170, 225, 0.19)",
+                              background: sup.status === st ? "rgba(190, 170, 225, 0.14)" : "#111827",
+                              color: sup.status === st ? "#DCCCF5" : "#9E96AD",
                               fontSize: "10px",
                               cursor: "pointer",
                             }}
@@ -4412,7 +4489,7 @@ export default function App() {
                       <button
                         type="button"
                         onClick={() => removerSuplemento(sup.id)}
-                        style={{ background: "none", border: "none", color: "#a8b6ca", fontSize: "11px", cursor: "pointer" }}
+                        style={{ background: "none", border: "none", color: "#9E96AD", fontSize: "11px", cursor: "pointer" }}
                       >
                         Excluir
                       </button>
@@ -4428,7 +4505,7 @@ export default function App() {
       {/* PÁGINA DEDICADA: ALIMENTAÇÃO & ROTINA */}
       {abaAtiva === "alimentacao" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {!diaPodeEditar && <div style={{ padding: "10px 12px", borderRadius: "9px", background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.28)", color: "#fbbf24", fontSize: "12px" }}>Dia fechado para alterações. Os registros podem ser consultados, mas não modificados.</div>}
+          {!diaPodeEditar && <div style={{ padding: "10px 12px", borderRadius: "9px", background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.28)", color: "#E9C987", fontSize: "12px" }}>Dia fechado para alterações. Os registros podem ser consultados, mas não modificados.</div>}
           <fieldset disabled={!diaPodeEditar} style={{ border: 0, padding: 0, margin: 0, minWidth: 0, display: "flex", flexDirection: "column", gap: "16px" }}>
           {/* Qualidade do sono */}
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -4444,9 +4521,9 @@ export default function App() {
                     style={{
                       padding: "6px 11px",
                       borderRadius: "8px",
-                      border: "1px solid rgba(148, 190, 215, 0.24)",
+                      border: "1px solid rgba(190, 170, 225, 0.19)",
                       background: ativo ? "rgba(125, 211, 252, 0.14)" : "#111827",
-                      color: ativo ? "#bae6fd" : "#c0cce0",
+                      color: ativo ? "#DCCCF5" : "#BEB7CA",
                       fontSize: "12px",
                       cursor: "pointer",
                     }}
@@ -4470,8 +4547,8 @@ export default function App() {
                   flex: "none",
                   padding: "7px 11px",
                   fontSize: "11px",
-                  borderColor: janelaTreinoDia.pre ? "#22c55e" : "rgba(148, 190, 215, 0.24)",
-                  color: janelaTreinoDia.pre ? "#4ade80" : "#c0cce0",
+                  borderColor: janelaTreinoDia.pre ? "#9ADFC2" : "rgba(190, 170, 225, 0.19)",
+                  color: janelaTreinoDia.pre ? "#A9E8CB" : "#BEB7CA",
                 }}
               >
                 {janelaTreinoDia.pre ? "✓ Pré-treino feito" : "Pré-treino pendente"}
@@ -4484,8 +4561,8 @@ export default function App() {
                   flex: "none",
                   padding: "7px 11px",
                   fontSize: "11px",
-                  borderColor: janelaTreinoDia.pos ? "#22c55e" : "rgba(148, 190, 215, 0.24)",
-                  color: janelaTreinoDia.pos ? "#4ade80" : "#c0cce0",
+                  borderColor: janelaTreinoDia.pos ? "#9ADFC2" : "rgba(190, 170, 225, 0.19)",
+                  color: janelaTreinoDia.pos ? "#A9E8CB" : "#BEB7CA",
                 }}
               >
                 {janelaTreinoDia.pos ? "✓ Pós-treino feito" : "Pós-treino pendente"}
@@ -4503,8 +4580,8 @@ export default function App() {
                   flex: "none",
                   padding: "7px 11px",
                   fontSize: "11px",
-                  borderColor: refeicaoLivreDia ? "#bae6fd" : "rgba(148, 190, 215, 0.24)",
-                  color: refeicaoLivreDia ? "#bae6fd" : "#c0cce0",
+                  borderColor: refeicaoLivreDia ? "#DCCCF5" : "rgba(190, 170, 225, 0.19)",
+                  color: refeicaoLivreDia ? "#DCCCF5" : "#BEB7CA",
                 }}
               >
                 {refeicaoLivreDia ? "✓ Refeição fora / livre" : "Marcar refeição fora / livre"}
@@ -4522,9 +4599,9 @@ export default function App() {
                     style={{
                       padding: "6px 10px",
                       borderRadius: "8px",
-                      border: "1px solid rgba(148, 190, 215, 0.24)",
+                      border: "1px solid rgba(190, 170, 225, 0.19)",
                       background: feita ? "rgba(34, 197, 94, 0.14)" : "#111827",
-                      color: feita ? "#4ade80" : "#e8edf5",
+                      color: feita ? "#A9E8CB" : "#EEEAF5",
                       fontSize: "11px",
                       fontWeight: feita ? 600 : 400,
                       cursor: "pointer",
@@ -4567,7 +4644,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={registrarCafeina}
-                style={{ ...btnSecundario, flex: "none", padding: "7px 12px", color: "#bae6fd" }}
+                style={{ ...btnSecundario, flex: "none", padding: "7px 12px", color: "#DCCCF5" }}
               >
                 + Registrar agora ({cafeinaDia.length})
               </button>
@@ -4584,8 +4661,8 @@ export default function App() {
                       gap: "6px",
                       padding: "4px 8px",
                       borderRadius: "6px",
-                      background: "rgba(38, 54, 75, 0.62)",
-                      border: "1px solid rgba(148, 190, 215, 0.24)",
+                      background: "rgba(29, 27, 39, 0.72)",
+                      border: "1px solid rgba(190, 170, 225, 0.19)",
                       fontSize: "11px",
                     }}
                   >
@@ -4593,7 +4670,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => removerCafeina(c.id)}
-                      style={{ background: "none", border: "none", color: "#a8b6ca", cursor: "pointer", padding: 0 }}
+                      style={{ background: "none", border: "none", color: "#9E96AD", cursor: "pointer", padding: 0 }}
                     >
                       ✕
                     </button>
@@ -4641,8 +4718,8 @@ export default function App() {
                       gap: "6px",
                       padding: "4px 8px",
                       borderRadius: "6px",
-                      background: "rgba(38, 54, 75, 0.62)",
-                      border: "1px solid rgba(148, 190, 215, 0.24)",
+                      background: "rgba(29, 27, 39, 0.72)",
+                      border: "1px solid rgba(190, 170, 225, 0.19)",
                       fontSize: "11px",
                     }}
                   >
@@ -4650,7 +4727,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => removerCardio(c.id)}
-                      style={{ background: "none", border: "none", color: "#a8b6ca", cursor: "pointer", padding: 0 }}
+                      style={{ background: "none", border: "none", color: "#9E96AD", cursor: "pointer", padding: 0 }}
                     >
                       ✕
                     </button>
@@ -4666,7 +4743,7 @@ export default function App() {
       {/* PÁGINA DEDICADA: MOCHILA & RITMO */}
       {abaAtiva === "mochila" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {!diaPodeEditar && <div style={{ padding: "10px 12px", borderRadius: "9px", background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.28)", color: "#fbbf24", fontSize: "12px" }}>Dia fechado para alterações. Os registros podem ser consultados, mas não modificados.</div>}
+          {!diaPodeEditar && <div style={{ padding: "10px 12px", borderRadius: "9px", background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.28)", color: "#E9C987", fontSize: "12px" }}>Dia fechado para alterações. Os registros podem ser consultados, mas não modificados.</div>}
           <fieldset disabled={!diaPodeEditar} style={{ border: 0, padding: 0, margin: 0, minWidth: 0, display: "flex", flexDirection: "column", gap: "16px" }}>
           {/* Checklist da mochila */}
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -4683,7 +4760,7 @@ export default function App() {
                       gap: "6px",
                       padding: "6px 10px",
                       borderRadius: "8px",
-                      border: "1px solid rgba(148, 190, 215, 0.24)",
+                      border: "1px solid rgba(190, 170, 225, 0.19)",
                       background: marcado ? "rgba(34, 197, 94, 0.14)" : "#111827",
                       fontSize: "11px",
                     }}
@@ -4694,7 +4771,7 @@ export default function App() {
                       style={{
                         background: "none",
                         border: "none",
-                        color: marcado ? "#4ade80" : "#e8edf5",
+                        color: marcado ? "#A9E8CB" : "#EEEAF5",
                         cursor: "pointer",
                         padding: 0,
                         fontWeight: marcado ? 600 : 400,
@@ -4706,7 +4783,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => removerItemMochila(item.id)}
-                      style={{ background: "none", border: "none", color: "#a8b6ca", cursor: "pointer", padding: 0 }}
+                      style={{ background: "none", border: "none", color: "#9E96AD", cursor: "pointer", padding: 0 }}
                     >
                       ✕
                     </button>
@@ -4733,7 +4810,7 @@ export default function App() {
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "10px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
               <span style={{ fontSize: "12px", fontWeight: 600 }}>Meta semanal de treinos</span>
-              <label style={{ fontSize: "12px", color: "#c0cce0" }}>
+              <label style={{ fontSize: "12px", color: "#BEB7CA" }}>
                 Meta{" "}
                 <input
                   type="number"
@@ -4743,9 +4820,9 @@ export default function App() {
                   onChange={(e) => setMetaTreinosSemana(e.target.value)}
                   style={{
                     width: "44px",
-                    background: "rgba(38, 54, 75, 0.62)",
-                    color: "#edf1f7",
-                    border: "1px solid rgba(148, 190, 215, 0.24)",
+                    background: "rgba(29, 27, 39, 0.72)",
+                    color: "#F1EEF7",
+                    border: "1px solid rgba(190, 170, 225, 0.19)",
                     borderRadius: "6px",
                     padding: "3px 6px",
                     fontSize: "12px",
@@ -4754,18 +4831,18 @@ export default function App() {
                 x/semana
               </label>
             </div>
-            <div style={{ fontSize: "12px", color: "#c0cce0" }}>
-              Últimos 7 dias: <strong style={{ color: "#edf1f7" }}>{dashboardData.treinos7d}</strong>/{dashboardData.metaSemanalSegura} ({dashboardData.metaSemanalPct}%)
+            <div style={{ fontSize: "12px", color: "#BEB7CA" }}>
+              Últimos 7 dias: <strong style={{ color: "#F1EEF7" }}>{dashboardData.treinos7d}</strong>/{dashboardData.metaSemanalSegura} ({dashboardData.metaSemanalPct}%)
             </div>
             <div style={{ height: "4px", background: "rgba(148, 163, 184, 0.18)", borderRadius: "999px", overflow: "hidden" }}>
-              <div style={{ width: `${dashboardData.metaSemanalPct}%`, height: "100%", background: "#bae6fd" }} />
+              <div style={{ width: `${dashboardData.metaSemanalPct}%`, height: "100%", background: "#DCCCF5" }} />
             </div>
 
-            <div style={{ paddingTop: "8px", borderTop: "1px solid rgba(148, 190, 215, 0.16)", display: "flex", flexDirection: "column", gap: "6px" }}>
-              <span style={{ fontSize: "11px", color: "#c0cce0" }}>Foco por dia da semana</span>
+            <div style={{ paddingTop: "8px", borderTop: "1px solid rgba(190, 170, 225, 0.14)", display: "flex", flexDirection: "column", gap: "6px" }}>
+              <span style={{ fontSize: "11px", color: "#BEB7CA" }}>Foco por dia da semana</span>
               {DIAS_SEMANA.map((d) => (
                 <div key={d.chave} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <span style={{ width: "36px", fontSize: "12px", color: "#c0cce0" }}>{d.rotulo}</span>
+                  <span style={{ width: "36px", fontSize: "12px", color: "#BEB7CA" }}>{d.rotulo}</span>
                   <input
                     type="text"
                     placeholder="Ex.: Peito/Tríceps, Pernas, Descanso..."
@@ -4825,7 +4902,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => limparDiaRotina(diaDestinoSemanaCopia)}
-                style={{ ...btnSecundario, flex: "none", padding: "7px 11px", color: "#f87171" }}
+                style={{ ...btnSecundario, flex: "none", padding: "7px 11px", color: "#F19AAB" }}
               >
                 Limpar {diaDestinoSemanaCopia.toUpperCase()}
               </button>
@@ -4854,8 +4931,8 @@ export default function App() {
                       padding: "7px 10px",
                       borderRadius: "8px",
                       border: "none",
-                      background: ativa ? "rgba(148, 190, 215, 0.16)" : "transparent",
-                      color: ativa ? "#edf1f7" : "#a8b6ca",
+                      background: ativa ? "rgba(190, 170, 225, 0.14)" : "transparent",
+                      color: ativa ? "#F1EEF7" : "#9E96AD",
                       fontSize: "12px",
                       fontWeight: ativa ? 700 : 500,
                       cursor: "pointer",
@@ -4907,7 +4984,7 @@ export default function App() {
           </div>
 
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "8px" }}>
-            <div style={{ fontSize: "11px", color: "#c0cce0" }}>Modelos de treino</div>
+            <div style={{ fontSize: "11px", color: "#BEB7CA" }}>Modelos de treino</div>
             <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
               <select
                 value={presetSelecionadoId}
@@ -5055,7 +5132,7 @@ export default function App() {
                 padding: "9px",
                 borderRadius: "8px",
                 border: "none",
-                background: "#edf1f7",
+                background: "#F1EEF7",
                 color: "#111827",
                 fontWeight: 700,
                 fontSize: "13px",
@@ -5081,8 +5158,8 @@ export default function App() {
                   style={{
                     padding: "10px 12px",
                     borderRadius: "8px",
-                    background: "rgba(52, 70, 94, 0.46)",
-                    border: "1px solid rgba(148, 190, 215, 0.16)",
+                    background: "rgba(49, 43, 63, 0.58)",
+                    border: "1px solid rgba(190, 170, 225, 0.14)",
                     display: "flex",
                     flexDirection: "column",
                     gap: "8px",
@@ -5132,7 +5209,7 @@ export default function App() {
                             padding: "5px 10px",
                             borderRadius: "7px",
                             border: "none",
-                            background: "#edf1f7",
+                            background: "#F1EEF7",
                             color: "#111827",
                             fontWeight: 700,
                             fontSize: "11px",
@@ -5147,7 +5224,7 @@ export default function App() {
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
                       <div>
                         <strong>{item.nome}</strong>{" "}
-                        <span style={{ color: "#c0cce0", fontSize: "12px" }}>
+                        <span style={{ color: "#BEB7CA", fontSize: "12px" }}>
                           • {item.seriesReps} • {item.descanso}s • {item.carga}kg
                         </span>
                       </div>
@@ -5176,14 +5253,14 @@ export default function App() {
                         <button
                           type="button"
                           onClick={() => iniciarEdicao(item)}
-                          style={{ background: "none", border: "none", color: "#c0cce0", cursor: "pointer", fontSize: "11px" }}
+                          style={{ background: "none", border: "none", color: "#BEB7CA", cursor: "pointer", fontSize: "11px" }}
                         >
                           Editar
                         </button>
                         <button
                           type="button"
                           onClick={() => removerExercicio(diaMontagem, item.id)}
-                          style={{ background: "none", border: "none", color: "#a8b6ca", cursor: "pointer", fontSize: "11px" }}
+                          style={{ background: "none", border: "none", color: "#9E96AD", cursor: "pointer", fontSize: "11px" }}
                         >
                           Excluir
                         </button>
@@ -5201,7 +5278,7 @@ export default function App() {
       {abaAtiva === "dashboard" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           {(dashboardData.diasSemBackup === null || dashboardData.diasSemBackup >= 7) && (
-            <div style={{ fontSize: "11px", color: "#fbbf24", background: "rgba(251, 191, 36, 0.08)", padding: "8px 12px", borderRadius: "8px", border: "1px solid rgba(251, 191, 36, 0.25)" }}>
+            <div style={{ fontSize: "11px", color: "#E9C987", background: "rgba(251, 191, 36, 0.08)", padding: "8px 12px", borderRadius: "8px", border: "1px solid rgba(251, 191, 36, 0.25)" }}>
               {dashboardData.diasSemBackup === null
                 ? "Dica: faça seu primeiro backup JSON abaixo para proteger seu histórico."
                 : `Faz ${dashboardData.diasSemBackup} dias desde o último backup JSON.`}
@@ -5211,7 +5288,7 @@ export default function App() {
           {/* Resumo semanal automático */}
           <div style={cardClean}>
             <div style={{ ...labelMini, marginBottom: "6px" }}>Resumo da semana (7 dias)</div>
-            <div style={{ fontSize: "12px", color: "#e8edf5", lineHeight: 1.5 }}>
+            <div style={{ fontSize: "12px", color: "#EEEAF5", lineHeight: 1.5 }}>
               <strong>{dashboardData.treinos7d}</strong> treino(s) •{" "}
               <strong>{dashboardData.volume7dAtual.toLocaleString("pt-BR")} kg</strong> de volume • cardio{" "}
               <strong>{dashboardData.minCardio7d} min</strong> • média de{" "}
@@ -5245,7 +5322,7 @@ export default function App() {
             >
               {dashboardData.estagnados.length > 0 && (
                 <div style={cardClean}>
-                  <div style={{ ...labelMini, color: "#fbbf24", marginBottom: "6px" }}>Atenção à estagnação</div>
+                  <div style={{ ...labelMini, color: "#E9C987", marginBottom: "6px" }}>Atenção à estagnação</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "12px" }}>
                     {dashboardData.estagnados.map((est, i) => (
                       <div key={i}>
@@ -5266,9 +5343,9 @@ export default function App() {
                         style={{
                           padding: "3px 8px",
                           borderRadius: "6px",
-                          background: "rgba(38, 54, 75, 0.62)",
-                          border: "1px solid rgba(148, 190, 215, 0.24)",
-                          color: "#e8edf5",
+                          background: "rgba(29, 27, 39, 0.72)",
+                          border: "1px solid rgba(190, 170, 225, 0.19)",
+                          color: "#EEEAF5",
                         }}
                       >
                         {sinal}: <strong>{qtd}x</strong>
@@ -5290,7 +5367,7 @@ export default function App() {
             <div style={cardClean}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                 <span style={labelMini}>Meta mensal de treinos</span>
-                <label style={{ fontSize: "11px", color: "#c0cce0" }}>
+                <label style={{ fontSize: "11px", color: "#BEB7CA" }}>
                   Meta{" "}
                   <input
                     type="number"
@@ -5300,9 +5377,9 @@ export default function App() {
                     onChange={(e) => setMetaTreinosMes(e.target.value)}
                     style={{
                       width: "44px",
-                      background: "rgba(38, 54, 75, 0.62)",
-                      color: "#edf1f7",
-                      border: "1px solid rgba(148, 190, 215, 0.24)",
+                      background: "rgba(29, 27, 39, 0.72)",
+                      color: "#F1EEF7",
+                      border: "1px solid rgba(190, 170, 225, 0.19)",
                       borderRadius: "6px",
                       padding: "2px 5px",
                       fontSize: "11px",
@@ -5315,7 +5392,7 @@ export default function App() {
                 {dashboardData.treinosMes}/{dashboardData.metaMensalSegura} dias ({dashboardData.metaMensalPct}%)
               </div>
               <div style={{ height: "4px", background: "rgba(148, 163, 184, 0.18)", borderRadius: "999px", overflow: "hidden" }}>
-                <div style={{ width: `${dashboardData.metaMensalPct}%`, height: "100%", background: "#7dd3fc" }} />
+                <div style={{ width: `${dashboardData.metaMensalPct}%`, height: "100%", background: "#C7A9EF" }} />
               </div>
             </div>
 
@@ -5324,9 +5401,9 @@ export default function App() {
               <div style={{ fontSize: "13px", fontWeight: 600, marginTop: "6px" }}>
                 {dashboardData.volume7dAtual.toLocaleString("pt-BR")} kg
               </div>
-              <div style={{ fontSize: "11px", color: "#a8b6ca", marginTop: "4px" }}>
+              <div style={{ fontSize: "11px", color: "#9E96AD", marginTop: "4px" }}>
                 vs 7d anteriores:{" "}
-                <span style={{ color: dashboardData.diffVolumeSemanal >= 0 ? "#22c55e" : "#f87171" }}>
+                <span style={{ color: dashboardData.diffVolumeSemanal >= 0 ? "#9ADFC2" : "#F19AAB" }}>
                   {dashboardData.diffVolumeSemanal >= 0 ? "+" : ""}
                   {dashboardData.diffVolumeSemanal.toLocaleString("pt-BR")} kg
                   {dashboardData.pctVolumeSemanal !== null
@@ -5353,8 +5430,8 @@ export default function App() {
                     key={item.dataISO}
                     title={`${item.dataISO}: ${item.ml} ml`}
                     style={{
-                      background: "rgba(38, 54, 75, 0.62)",
-                      border: "1px solid rgba(148, 190, 215, 0.16)",
+                      background: "rgba(29, 27, 39, 0.72)",
+                      border: "1px solid rgba(190, 170, 225, 0.14)",
                       borderRadius: "7px",
                       padding: "6px 4px",
                       display: "flex",
@@ -5363,7 +5440,7 @@ export default function App() {
                       gap: "4px",
                     }}
                   >
-                    <span style={{ fontSize: "10px", color: "#a8b6ca" }}>{item.rotulo}</span>
+                    <span style={{ fontSize: "10px", color: "#9E96AD" }}>{item.rotulo}</span>
                     <div
                       style={{
                         width: "100%",
@@ -5376,9 +5453,9 @@ export default function App() {
                         overflow: "hidden",
                       }}
                     >
-                      <div style={{ width: "100%", height: `${pct}%`, background: "#38bdf8" }} />
+                      <div style={{ width: "100%", height: `${pct}%`, background: "#C4A5EC" }} />
                     </div>
-                    <span style={{ fontSize: "10px", color: "#c0cce0" }}>{item.ml}</span>
+                    <span style={{ fontSize: "10px", color: "#BEB7CA" }}>{item.ml}</span>
                   </div>
                 );
               })}
@@ -5388,36 +5465,36 @@ export default function App() {
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "12px" }}>
             <div>
               <div style={{ fontSize: "13px", fontWeight: 700 }}>Painel geral de atividades</div>
-              <div style={{ fontSize: "11px", color: "#a8b6ca", marginTop: "3px" }}>Visão dos registros dos últimos 7 dias. Cada linha mostra os dados disponíveis daquele dia.</div>
+              <div style={{ fontSize: "11px", color: "#9E96AD", marginTop: "3px" }}>Visão dos registros dos últimos 7 dias. Cada linha mostra os dados disponíveis daquele dia.</div>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: ehDesktop ? "repeat(4, 1fr)" : "repeat(2, 1fr)", gap: "8px" }}>
-              <div style={{ background: "rgba(38, 54, 75, 0.62)", border: "1px solid rgba(148, 190, 215, 0.16)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>Refeições marcadas</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.refeicoes7d}</div></div>
-              <div style={{ background: "rgba(38, 54, 75, 0.62)", border: "1px solid rgba(148, 190, 215, 0.16)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>Cafeína registrada</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.cafeina7d}</div></div>
-              <div style={{ background: "rgba(38, 54, 75, 0.62)", border: "1px solid rgba(148, 190, 215, 0.16)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>Mochila média</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.mochilaMedia7d}%</div></div>
-              <div style={{ background: "rgba(38, 54, 75, 0.62)", border: "1px solid rgba(148, 190, 215, 0.16)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>Suplementos ativos</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.suplementosAtivos}</div></div>
+              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>Refeições marcadas</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.refeicoes7d}</div></div>
+              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>Cafeína registrada</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.cafeina7d}</div></div>
+              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>Mochila média</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.mochilaMedia7d}%</div></div>
+              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>Suplementos ativos</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.suplementosAtivos}</div></div>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {dashboardData.atividade7Dias.map((dia) => {
                 const barras = [
-                  { nome: "Água", valor: dia.aguaMl, unidade: "ml", max: Math.max(metaAguaMl, ...dashboardData.atividade7Dias.map((x) => x.aguaMl), 1), cor: "#38bdf8" },
-                  { nome: "Tempo ativo", valor: dia.duracaoMin, unidade: "min", max: Math.max(60, ...dashboardData.atividade7Dias.map((x) => x.duracaoMin), 1), cor: "#7dd3fc" },
-                  { nome: "Cardio", valor: dia.cardioMin, unidade: "min", max: Math.max(30, ...dashboardData.atividade7Dias.map((x) => x.cardioMin), 1), cor: "#34d399" },
-                  { nome: "Volume", valor: dia.volumeKg, unidade: "kg", max: Math.max(100, ...dashboardData.atividade7Dias.map((x) => x.volumeKg), 1), cor: "#f59e0b" },
+                  { nome: "Água", valor: dia.aguaMl, unidade: "ml", max: Math.max(metaAguaMl, ...dashboardData.atividade7Dias.map((x) => x.aguaMl), 1), cor: "#C4A5EC" },
+                  { nome: "Tempo ativo", valor: dia.duracaoMin, unidade: "min", max: Math.max(60, ...dashboardData.atividade7Dias.map((x) => x.duracaoMin), 1), cor: "#C7A9EF" },
+                  { nome: "Cardio", valor: dia.cardioMin, unidade: "min", max: Math.max(30, ...dashboardData.atividade7Dias.map((x) => x.cardioMin), 1), cor: "#9DDFC8" },
+                  { nome: "Volume", valor: dia.volumeKg, unidade: "kg", max: Math.max(100, ...dashboardData.atividade7Dias.map((x) => x.volumeKg), 1), cor: "#E6C17C" },
                 ];
                 return (
-                  <div key={dia.dataISO} style={{ padding: "9px", borderRadius: "8px", background: "rgba(38, 54, 75, 0.62)", border: "1px solid rgba(148, 190, 215, 0.16)", display: "grid", gridTemplateColumns: ehDesktop ? "58px 1fr 1fr" : "42px 1fr", gap: "8px", alignItems: "center" }}>
-                    <div style={{ fontSize: "11px", color: "#c0cce0", fontWeight: 700 }}>{dia.rotulo}</div>
+                  <div key={dia.dataISO} style={{ padding: "9px", borderRadius: "8px", background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", display: "grid", gridTemplateColumns: ehDesktop ? "58px 1fr 1fr" : "42px 1fr", gap: "8px", alignItems: "center" }}>
+                    <div style={{ fontSize: "11px", color: "#BEB7CA", fontWeight: 700 }}>{dia.rotulo}</div>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "7px" }}>
-                      {barras.map((barra) => <div key={barra.nome} style={{ minWidth: 0 }}><div style={{ display: "flex", justifyContent: "space-between", gap: "4px", fontSize: "9px", color: "#a8b6ca", marginBottom: "3px" }}><span>{barra.nome}</span><strong style={{ color: "#e8edf5" }}>{barra.valor}{barra.unidade}</strong></div><div style={{ height: "5px", borderRadius: "99px", background: "rgba(148, 163, 184, 0.20)", overflow: "hidden" }}><div style={{ width: `${Math.min(100, Math.round((barra.valor / barra.max) * 100))}%`, height: "100%", background: barra.cor, borderRadius: "99px" }} /></div></div>)}
+                      {barras.map((barra) => <div key={barra.nome} style={{ minWidth: 0 }}><div style={{ display: "flex", justifyContent: "space-between", gap: "4px", fontSize: "9px", color: "#9E96AD", marginBottom: "3px" }}><span>{barra.nome}</span><strong style={{ color: "#EEEAF5" }}>{barra.valor}{barra.unidade}</strong></div><div style={{ height: "5px", borderRadius: "99px", background: "rgba(148, 163, 184, 0.20)", overflow: "hidden" }}><div style={{ width: `${Math.min(100, Math.round((barra.valor / barra.max) * 100))}%`, height: "100%", background: barra.cor, borderRadius: "99px" }} /></div></div>)}
                     </div>
-                    <div style={{ gridColumn: ehDesktop ? "auto" : "2", display: "flex", flexWrap: "wrap", gap: "5px", fontSize: "9px", color: "#a8b6ca" }}>
+                    <div style={{ gridColumn: ehDesktop ? "auto" : "2", display: "flex", flexWrap: "wrap", gap: "5px", fontSize: "9px", color: "#9E96AD" }}>
                       <span>{dia.treino ? "✓ Treino" : "— Treino"}</span><span>• {dia.refeicoes} refeições</span><span>• {dia.cafeina} cafeína</span><span>• Mochila {dia.mochilaPct}%</span><span>• {dia.aquecimento ? "Aquecimento ✓" : "Sem aquecimento"}</span><span>• {dia.sinais} sinais</span><span>• Sono: {dia.sono}</span>
                     </div>
                   </div>
                 );
               })}
             </div>
-            <div style={{ fontSize: "10px", color: "#a8b6ca" }}>Os itens sem registro aparecem como zero ou “Não registrado”; suplementos ativos representam sua lista atual, não um consumo diário.</div>
+            <div style={{ fontSize: "10px", color: "#9E96AD" }}>Os itens sem registro aparecem como zero ou “Não registrado”; suplementos ativos representam sua lista atual, não um consumo diário.</div>
           </div>
 
           <div
@@ -5443,7 +5520,7 @@ export default function App() {
                       borderRadius: "6px",
                       border: "none",
                       background: periodoFiltro === p.id ? "#222228" : "#111827",
-                      color: periodoFiltro === p.id ? "#edf1f7" : "#a8b6ca",
+                      color: periodoFiltro === p.id ? "#F1EEF7" : "#9E96AD",
                       fontSize: "11px",
                       cursor: "pointer",
                     }}
@@ -5474,7 +5551,7 @@ export default function App() {
               </div>
 
               {dashboardData.historico.length === 0 ? (
-                <div style={{ fontSize: "12px", color: "#a8b6ca" }}>Sem treinos concluídos no filtro.</div>
+                <div style={{ fontSize: "12px", color: "#9E96AD" }}>Sem treinos concluídos no filtro.</div>
               ) : (
                 dashboardData.historico.map((item, i) => (
                   <div key={`${item.dataISO}-${i}`}>
@@ -5483,7 +5560,7 @@ export default function App() {
                         display: "flex",
                         justifyContent: "space-between",
                         fontSize: "11px",
-                        color: "#c0cce0",
+                        color: "#BEB7CA",
                         marginBottom: "3px",
                       }}
                     >
@@ -5497,7 +5574,7 @@ export default function App() {
                         style={{
                           width: `${Math.max(10, Math.round((item.carga / dashboardData.maxCarga) * 100))}%`,
                           height: "100%",
-                          background: "#edf1f7",
+                          background: "#F1EEF7",
                           borderRadius: "999px",
                         }}
                       />
@@ -5516,11 +5593,11 @@ export default function App() {
                 style={campoTexto}
               />
               {notas.length === 0 ? (
-                <div style={{ fontSize: "12px", color: "#a8b6ca" }}>Nenhuma nota.</div>
+                <div style={{ fontSize: "12px", color: "#9E96AD" }}>Nenhuma nota.</div>
               ) : (
                 notas.map((n) => (
-                  <div key={n.dataISO} style={{ fontSize: "12px", paddingTop: "6px", borderTop: "1px solid rgba(148, 190, 215, 0.16)" }}>
-                    <span style={{ color: "#c0cce0", marginRight: "8px" }}>{n.dataISO}</span>
+                  <div key={n.dataISO} style={{ fontSize: "12px", paddingTop: "6px", borderTop: "1px solid rgba(190, 170, 225, 0.14)" }}>
+                    <span style={{ color: "#BEB7CA", marginRight: "8px" }}>{n.dataISO}</span>
                     <span>{n.texto}</span>
                   </div>
                 ))
@@ -5554,16 +5631,16 @@ export default function App() {
               onChange={(e) => setTextoBackup(e.target.value)}
               style={campoTexto}
             />
-            {statusBackup && <div style={{ fontSize: "11px", color: "#c0cce0" }}>{statusBackup}</div>}
+            {statusBackup && <div style={{ fontSize: "11px", color: "#BEB7CA" }}>{statusBackup}</div>}
           </div>
 
           {/* Gráficos integrados: evolução real dos registros */}
           {(() => {
             const painel = { ...cardClean, background: "rgba(44,67,96,.42)", border: "1px solid rgba(96,165,250,.20)", backdropFilter: "blur(14px)", display: "grid", gap: 12 };
-            const barras = (titulo, dados, unidade = "", cor = "#60a5fa") => {
+            const barras = (titulo, dados, unidade = "", cor = "#B99AE7") => {
               const validos = (dados || []).filter((x) => Number.isFinite(Number(x.valor)));
               const max = Math.max(1, ...validos.map((x) => Number(x.valor)));
-              return <div style={painel}><div style={{fontWeight:800,fontSize:13}}>{titulo}</div>{validos.length ? <div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(validos.length,8)},minmax(0,1fr))`,gap:7,alignItems:"end",minHeight:125}}>{validos.slice(-8).map((x,i)=><div key={`${x.rotulo}-${i}`} title={`${x.rotulo}: ${x.valor}${unidade}`} style={{display:"grid",gap:5,justifyItems:"center",minWidth:0}}><strong style={{fontSize:9,color:"#dbeafe",whiteSpace:"nowrap"}}>{Number(x.valor).toLocaleString("pt-BR")}{unidade}</strong><div style={{height:78,width:"100%",maxWidth:34,display:"flex",alignItems:"end",background:"rgba(148,163,184,.12)",borderRadius:7,overflow:"hidden"}}><div style={{width:"100%",height:`${Math.max(3,Number(x.valor)/max*100)}%`,background:cor,borderRadius:7}}/></div><span style={{fontSize:9,color:"#aebed2",textAlign:"center",overflowWrap:"anywhere"}}>{x.rotulo}</span></div>)}</div> : <div style={{fontSize:11,color:"#aebed2"}}>Ainda não há registros suficientes para este gráfico.</div>}</div>;
+              return <div style={painel}><div style={{fontWeight:800,fontSize:13}}>{titulo}</div>{validos.length ? <div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(validos.length,8)},minmax(0,1fr))`,gap:7,alignItems:"end",minHeight:125}}>{validos.slice(-8).map((x,i)=><div key={`${x.rotulo}-${i}`} title={`${x.rotulo}: ${x.valor}${unidade}`} style={{display:"grid",gap:5,justifyItems:"center",minWidth:0}}><strong style={{fontSize:9,color:"#E9DFFC",whiteSpace:"nowrap"}}>{Number(x.valor).toLocaleString("pt-BR")}{unidade}</strong><div style={{height:78,width:"100%",maxWidth:34,display:"flex",alignItems:"end",background:"rgba(148,163,184,.12)",borderRadius:7,overflow:"hidden"}}><div style={{width:"100%",height:`${Math.max(3,Number(x.valor)/max*100)}%`,background:cor,borderRadius:7}}/></div><span style={{fontSize:9,color:"#AAA1B8",textAlign:"center",overflowWrap:"anywhere"}}>{x.rotulo}</span></div>)}</div> : <div style={{fontSize:11,color:"#AAA1B8"}}>Ainda não há registros suficientes para este gráfico.</div>}</div>;
             };
             const ultimosPR = registrosPR.slice().sort((a,b)=>(a.data||"").localeCompare(b.data||"")).slice(-8).map(x=>({rotulo:(x.exercicio||"PR").slice(0,9),valor:Number(x.carga)}));
             const medidas = medidasCorporais.slice().sort((a,b)=>(a.data||"").localeCompare(b.data||"")).slice(-8);
@@ -5572,7 +5649,7 @@ export default function App() {
             const treinos = dashboardData.atividade7Dias.map(x=>({rotulo:x.rotulo,valor:x.treino?1:0}));
             const cardio = dashboardData.atividade7Dias.map(x=>({rotulo:x.rotulo,valor:Number(x.cardioMin)||0}));
             const cargasTreino = (dashboardData.historico || []).slice(-8).map(x=>({rotulo:(x.dataISO||x.nome||"Treino").slice(5,10),valor:Number(x.carga)||0}));
-            return <div style={{display:"grid",gap:12}}><div><h3 style={{margin:"2px 0 4px",fontSize:16}}>Gráficos de evolução</h3><p style={{...labelMini,margin:0}}>Visualizações calculadas a partir dos registros reais. Os gráficos ganham histórico conforme você registra atividades.</p></div><div style={{display:"grid",gridTemplateColumns:ehDesktop?"repeat(2,minmax(0,1fr))":"1fr",gap:12}}>{barras("Recordes pessoais por exercício",ultimosPR," kg","#60a5fa")}{barras("Cargas dos treinos registrados",cargasTreino," kg","#818cf8")}{barras("Peso corporal (últimas medições)",medidas.filter(x=>x.peso).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peso)}))," kg","#38bdf8")}{barras("Cintura (últimas medições)",medidas.filter(x=>x.cintura).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.cintura)}))," cm","#a78bfa")}{barras("Peito (últimas medições)",medidas.filter(x=>x.peito).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peito)}))," cm","#34d399")}{barras("Hidratação diária — 7 dias",agua," ml","#38bdf8")}{barras("Volume de treino — 7 dias",volume," kg","#f59e0b")}{barras("Dias com treino — 7 dias",treinos,"","#34d399")}{barras("Cardio — 7 dias",cardio," min","#a78bfa")}</div><div style={painel}><strong style={{fontSize:13}}>Metas pessoais</strong>{metasPessoais.length?metasPessoais.map(m=><div key={m.id} style={{display:"flex",justifyContent:"space-between",gap:8,fontSize:11,borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7}}><span>{m.nome}</span><strong style={{color:m.concluida?"#86efac":"#93c5fd"}}>{m.concluida?"Concluída":"Em andamento"}</strong></div>):<span style={labelMini}>Nenhuma meta cadastrada.</span>}</div></div>;
+            return <div style={{display:"grid",gap:12}}><div><h3 style={{margin:"2px 0 4px",fontSize:16}}>Gráficos de evolução</h3><p style={{...labelMini,margin:0}}>Visualizações calculadas a partir dos registros reais. Os gráficos ganham histórico conforme você registra atividades.</p></div><div style={{display:"grid",gridTemplateColumns:ehDesktop?"repeat(2,minmax(0,1fr))":"1fr",gap:12}}>{barras("Recordes pessoais por exercício",ultimosPR," kg","#B99AE7")}{barras("Cargas dos treinos registrados",cargasTreino," kg","#B89AE7")}{barras("Peso corporal (últimas medições)",medidas.filter(x=>x.peso).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peso)}))," kg","#C4A5EC")}{barras("Cintura (últimas medições)",medidas.filter(x=>x.cintura).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.cintura)}))," cm","#a78bfa")}{barras("Peito (últimas medições)",medidas.filter(x=>x.peito).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peito)}))," cm","#9DDFC8")}{barras("Hidratação diária — 7 dias",agua," ml","#C4A5EC")}{barras("Volume de treino — 7 dias",volume," kg","#E6C17C")}{barras("Dias com treino — 7 dias",treinos,"","#9DDFC8")}{barras("Cardio — 7 dias",cardio," min","#a78bfa")}</div><div style={painel}><strong style={{fontSize:13}}>Metas pessoais</strong>{metasPessoais.length?metasPessoais.map(m=><div key={m.id} style={{display:"flex",justifyContent:"space-between",gap:8,fontSize:11,borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7}}><span>{m.nome}</span><strong style={{color:m.concluida?"#B7EBD0":"#D6C4F1"}}>{m.concluida?"Concluída":"Em andamento"}</strong></div>):<span style={labelMini}>Nenhuma meta cadastrada.</span>}</div></div>;
           })()}
         </div>
       )}
@@ -5581,16 +5658,16 @@ export default function App() {
       {abaAtiva === "desempenho" && (() => {
         const totalTreinos = Object.values(estadoDiaPorData || {}).filter((v) => v === "treino" || v?.treino === true || v?.status === "treino").length;
         const ultimoPeso = medidasCorporais.length ? medidasCorporais[medidasCorporais.length - 1] : null;
-        const card = { ...cardClean, background: "rgba(44, 67, 96, 0.48)", border: "1px solid rgba(96, 165, 250, 0.22)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderRadius: "14px", boxShadow: "0 12px 30px rgba(4, 12, 25, .16)" };
+        const card = { ...cardClean, background: "rgba(44, 67, 96, 0.48)", border: "1px solid rgba(190, 160, 232, 0.25)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderRadius: "14px", boxShadow: "0 12px 30px rgba(4, 12, 25, .16)" };
         const campo = { ...campoTexto, background: "rgba(19, 35, 55, .58)", border: "1px solid rgba(96,165,250,.25)", borderRadius: "10px" };
         return <div style={{ display: "grid", gap: "14px" }}>
-          <div style={{ ...card, padding: "18px" }}><div style={{ color: "#93c5fd", fontSize: "11px", letterSpacing: ".12em", fontWeight: 800 }}>CAVEIRA • PERFORMANCE</div><h2 style={{ margin: "7px 0", fontSize: "22px" }}>Sua evolução em um só lugar</h2><p style={{ color: "#aebed2", fontSize: "12px", margin: 0 }}>Acompanhe seus recordes, medidas e metas com base nos registros que você inserir.</p></div>
+          <div style={{ ...card, padding: "18px" }}><div style={{ color: "#D6C4F1", fontSize: "11px", letterSpacing: ".12em", fontWeight: 800 }}>CAVEIRA • PERFORMANCE</div><h2 style={{ margin: "7px 0", fontSize: "22px" }}>Sua evolução em um só lugar</h2><p style={{ color: "#AAA1B8", fontSize: "12px", margin: 0 }}>Acompanhe seus recordes, medidas e metas com base nos registros que você inserir.</p></div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(135px,1fr))", gap: "10px" }}>
-            {[{ t: "Recordes registrados", v: registrosPR.length }, { t: "Medições", v: medidasCorporais.length }, { t: "Metas pessoais", v: metasPessoais.length }, { t: "Peso mais recente", v: ultimoPeso?.peso ? `${ultimoPeso.peso} kg` : "—" }].map((x) => <div key={x.t} style={card}><div style={labelMini}>{x.t}</div><div style={{ fontSize: "22px", fontWeight: 800, color: "#bfdbfe", marginTop: "7px" }}>{x.v}</div></div>)}
+            {[{ t: "Recordes registrados", v: registrosPR.length }, { t: "Medições", v: medidasCorporais.length }, { t: "Metas pessoais", v: metasPessoais.length }, { t: "Peso mais recente", v: ultimoPeso?.peso ? `${ultimoPeso.peso} kg` : "—" }].map((x) => <div key={x.t} style={card}><div style={labelMini}>{x.t}</div><div style={{ fontSize: "22px", fontWeight: 800, color: "#E4D8F7", marginTop: "7px" }}>{x.v}</div></div>)}
           </div>
-          <div style={card}><h3 style={{ margin: "0 0 12px", fontSize: "15px" }}>Registrar recorde pessoal</h3><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: "8px" }}><input value={novoPRExercicio} onChange={(e) => setNovoPRExercicio(e.target.value)} placeholder="Exercício" style={campo}/><input type="number" min="0" step="0.5" value={novoPRCarga} onChange={(e) => setNovoPRCarga(e.target.value)} placeholder="Carga (kg)" style={campo}/><button type="button" onClick={() => { if (!novoPRExercicio.trim() || !(Number(novoPRCarga) > 0) || dataSelecionada !== hojeISO) return; setRegistrosPR((p) => [...p, { id: `pr-${Date.now()}`, exercicio: novoPRExercicio.trim(), carga: Number(novoPRCarga), data: hojeISO }]); setNovoPRExercicio(""); setNovoPRCarga(""); }} style={{ ...btnSecundario, background: "#3b82f6", color: "#071426", border: 0, fontWeight: 800 }}>Salvar recorde</button></div><p style={{ ...labelMini, marginBottom: 0 }}>Novos registros respeitam o bloqueio de datas: só podem ser adicionados hoje.</p>{registrosPR.slice().reverse().map((r) => <div key={r.id} style={{ display: "flex", justifyContent: "space-between", gap: 8, borderTop: "1px solid rgba(148,190,215,.14)", padding: "10px 0", fontSize: "12px" }}><span>{r.exercicio} • {r.data}</span><strong style={{ color: "#93c5fd" }}>{r.carga} kg</strong></div>)}</div>
-          <div style={card}><h3 style={{ margin: "0 0 12px", fontSize: "15px" }}>Evolução corporal</h3><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))", gap: 8 }}><input type="number" min="0" step="0.1" value={novaMedidaPeso} onChange={(e) => setNovaMedidaPeso(e.target.value)} placeholder="Peso kg" style={campo}/><input type="number" min="0" step="0.1" value={novaMedidaCintura} onChange={(e) => setNovaMedidaCintura(e.target.value)} placeholder="Cintura cm" style={campo}/><input type="number" min="0" step="0.1" value={novaMedidaPeito} onChange={(e) => setNovaMedidaPeito(e.target.value)} placeholder="Peito cm" style={campo}/><button type="button" onClick={() => { if ((!novaMedidaPeso && !novaMedidaCintura && !novaMedidaPeito) || dataSelecionada !== hojeISO) return; setMedidasCorporais((p) => [...p, { id: `med-${Date.now()}`, data: hojeISO, peso: novaMedidaPeso ? Number(novaMedidaPeso) : null, cintura: novaMedidaCintura ? Number(novaMedidaCintura) : null, peito: novaMedidaPeito ? Number(novaMedidaPeito) : null }]); setNovaMedidaPeso(""); setNovaMedidaCintura(""); setNovaMedidaPeito(""); }} style={{ ...btnSecundario, background: "#3b82f6", color: "#071426", border: 0, fontWeight: 800 }}>Registrar medidas</button></div>{medidasCorporais.slice().reverse().map((m) => <div key={m.id} style={{ borderTop: "1px solid rgba(148,190,215,.14)", padding: "9px 0", fontSize: "12px", color: "#cbd5e1" }}>{m.data} • {m.peso ? `${m.peso} kg` : ""} {m.cintura ? `• Cintura ${m.cintura} cm` : ""} {m.peito ? `• Peito ${m.peito} cm` : ""}</div>)}</div>
-          <div style={card}><h3 style={{ margin: "0 0 12px", fontSize: "15px" }}>Metas pessoais</h3><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))", gap: 8 }}><input value={novaMetaNome} onChange={(e) => setNovaMetaNome(e.target.value)} placeholder="Ex.: Treinar 4x por semana" style={campo}/><input value={novaMetaAlvo} onChange={(e) => setNovaMetaAlvo(e.target.value)} placeholder="Alvo / observação" style={campo}/><button type="button" onClick={() => { if (!novaMetaNome.trim()) return; setMetasPessoais((p) => [...p, { id: `meta-${Date.now()}`, nome: novaMetaNome.trim(), alvo: novaMetaAlvo.trim(), concluida: false }]); setNovaMetaNome(""); setNovaMetaAlvo(""); }} style={{ ...btnSecundario, background: "#3b82f6", color: "#071426", border: 0, fontWeight: 800 }}>Adicionar meta</button></div>{metasPessoais.map((m) => <div key={m.id} style={{ display: "flex", alignItems: "center", gap: 8, borderTop: "1px solid rgba(148,190,215,.14)", padding: "9px 0", fontSize: "12px" }}><input type="checkbox" checked={!!m.concluida} onChange={(e) => setMetasPessoais((p) => p.map((x) => x.id === m.id ? { ...x, concluida: e.target.checked } : x))}/><span style={{ flex: 1, textDecoration: m.concluida ? "line-through" : "none" }}>{m.nome} {m.alvo ? `— ${m.alvo}` : ""}</span><button type="button" onClick={() => setMetasPessoais((p) => p.filter((x) => x.id !== m.id))} style={{ ...btnCarga, color: "#fca5a5" }}>×</button></div>)}</div>
+          <div style={card}><h3 style={{ margin: "0 0 12px", fontSize: "15px" }}>Registrar recorde pessoal</h3><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: "8px" }}><input value={novoPRExercicio} onChange={(e) => setNovoPRExercicio(e.target.value)} placeholder="Exercício" style={campo}/><input type="number" min="0" step="0.5" value={novoPRCarga} onChange={(e) => setNovoPRCarga(e.target.value)} placeholder="Carga (kg)" style={campo}/><button type="button" onClick={() => { if (!novoPRExercicio.trim() || !(Number(novoPRCarga) > 0) || dataSelecionada !== hojeISO) return; setRegistrosPR((p) => [...p, { id: `pr-${Date.now()}`, exercicio: novoPRExercicio.trim(), carga: Number(novoPRCarga), data: hojeISO }]); setNovoPRExercicio(""); setNovoPRCarga(""); }} style={{ ...btnSecundario, background: "#A98BDD", color: "#15131C", border: 0, fontWeight: 800 }}>Salvar recorde</button></div><p style={{ ...labelMini, marginBottom: 0 }}>Novos registros respeitam o bloqueio de datas: só podem ser adicionados hoje.</p>{registrosPR.slice().reverse().map((r) => <div key={r.id} style={{ display: "flex", justifyContent: "space-between", gap: 8, borderTop: "1px solid rgba(148,190,215,.14)", padding: "10px 0", fontSize: "12px" }}><span>{r.exercicio} • {r.data}</span><strong style={{ color: "#D6C4F1" }}>{r.carga} kg</strong></div>)}</div>
+          <div style={card}><h3 style={{ margin: "0 0 12px", fontSize: "15px" }}>Evolução corporal</h3><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))", gap: 8 }}><input type="number" min="0" step="0.1" value={novaMedidaPeso} onChange={(e) => setNovaMedidaPeso(e.target.value)} placeholder="Peso kg" style={campo}/><input type="number" min="0" step="0.1" value={novaMedidaCintura} onChange={(e) => setNovaMedidaCintura(e.target.value)} placeholder="Cintura cm" style={campo}/><input type="number" min="0" step="0.1" value={novaMedidaPeito} onChange={(e) => setNovaMedidaPeito(e.target.value)} placeholder="Peito cm" style={campo}/><button type="button" onClick={() => { if ((!novaMedidaPeso && !novaMedidaCintura && !novaMedidaPeito) || dataSelecionada !== hojeISO) return; setMedidasCorporais((p) => [...p, { id: `med-${Date.now()}`, data: hojeISO, peso: novaMedidaPeso ? Number(novaMedidaPeso) : null, cintura: novaMedidaCintura ? Number(novaMedidaCintura) : null, peito: novaMedidaPeito ? Number(novaMedidaPeito) : null }]); setNovaMedidaPeso(""); setNovaMedidaCintura(""); setNovaMedidaPeito(""); }} style={{ ...btnSecundario, background: "#A98BDD", color: "#15131C", border: 0, fontWeight: 800 }}>Registrar medidas</button></div>{medidasCorporais.slice().reverse().map((m) => <div key={m.id} style={{ borderTop: "1px solid rgba(148,190,215,.14)", padding: "9px 0", fontSize: "12px", color: "#cbd5e1" }}>{m.data} • {m.peso ? `${m.peso} kg` : ""} {m.cintura ? `• Cintura ${m.cintura} cm` : ""} {m.peito ? `• Peito ${m.peito} cm` : ""}</div>)}</div>
+          <div style={card}><h3 style={{ margin: "0 0 12px", fontSize: "15px" }}>Metas pessoais</h3><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))", gap: 8 }}><input value={novaMetaNome} onChange={(e) => setNovaMetaNome(e.target.value)} placeholder="Ex.: Treinar 4x por semana" style={campo}/><input value={novaMetaAlvo} onChange={(e) => setNovaMetaAlvo(e.target.value)} placeholder="Alvo / observação" style={campo}/><button type="button" onClick={() => { if (!novaMetaNome.trim()) return; setMetasPessoais((p) => [...p, { id: `meta-${Date.now()}`, nome: novaMetaNome.trim(), alvo: novaMetaAlvo.trim(), concluida: false }]); setNovaMetaNome(""); setNovaMetaAlvo(""); }} style={{ ...btnSecundario, background: "#A98BDD", color: "#15131C", border: 0, fontWeight: 800 }}>Adicionar meta</button></div>{metasPessoais.map((m) => <div key={m.id} style={{ display: "flex", alignItems: "center", gap: 8, borderTop: "1px solid rgba(148,190,215,.14)", padding: "9px 0", fontSize: "12px" }}><input type="checkbox" checked={!!m.concluida} onChange={(e) => setMetasPessoais((p) => p.map((x) => x.id === m.id ? { ...x, concluida: e.target.checked } : x))}/><span style={{ flex: 1, textDecoration: m.concluida ? "line-through" : "none" }}>{m.nome} {m.alvo ? `— ${m.alvo}` : ""}</span><button type="button" onClick={() => setMetasPessoais((p) => p.filter((x) => x.id !== m.id))} style={{ ...btnCarga, color: "#F4B8C2" }}>×</button></div>)}</div>
         </div>;
       })()}
 
@@ -5673,10 +5750,10 @@ export default function App() {
           ["Kettlebell swing", "Posterior e glúteos", "Kettlebell", "Inicie com dobradiça de quadril. Impulsione o kettlebell estendendo quadris, sem levantar com os braços ou hiperestender a lombar. Aprenda a técnica antes de acelerar."]
         ];
         const filtrados = biblioteca.filter((e) => e.join(" ").toLowerCase().includes(buscaBiblioteca.toLowerCase()));
-        return <div style={{ display: "grid", gap: 12 }}><div style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.22)", backdropFilter: "blur(16px)" }}><h2 style={{ margin: "0 0 6px", fontSize: 19 }}>Biblioteca de exercícios</h2><p style={labelMini}>Referência rápida de grupos musculares e execução. Ajuste exercícios à sua condição e orientação profissional.</p><input value={buscaBiblioteca} onChange={(e) => setBuscaBiblioteca(e.target.value)} placeholder="Buscar exercício ou grupo muscular..." style={campoTexto}/></div><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 10 }}>{filtrados.map((e) => <div key={e[0]} style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.18)", backdropFilter: "blur(14px)" }}><div style={{ color: "#93c5fd", fontSize: 10, fontWeight: 800, letterSpacing: ".08em" }}>{e[1].toUpperCase()}</div><strong style={{ display: "block", margin: "6px 0", fontSize: 14 }}>{e[0]}</strong><div style={{ color: "#93c5fd", fontSize: 10, marginBottom: 7 }}>Equipamento: {e[2]}</div><p style={{ color: "#aebed2", fontSize: 12, lineHeight: 1.55, margin: 0 }}>{e[3]}</p></div>)}</div>{!filtrados.length && <p style={labelMini}>Nenhum exercício encontrado.</p>}</div>;
+        return <div style={{ display: "grid", gap: 12 }}><div style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.22)", backdropFilter: "blur(16px)" }}><h2 style={{ margin: "0 0 6px", fontSize: 19 }}>Biblioteca de exercícios</h2><p style={labelMini}>Referência rápida de grupos musculares e execução. Ajuste exercícios à sua condição e orientação profissional.</p><input value={buscaBiblioteca} onChange={(e) => setBuscaBiblioteca(e.target.value)} placeholder="Buscar exercício ou grupo muscular..." style={campoTexto}/></div><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 10 }}>{filtrados.map((e) => <div key={e[0]} style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.18)", backdropFilter: "blur(14px)" }}><div style={{ color: "#D6C4F1", fontSize: 10, fontWeight: 800, letterSpacing: ".08em" }}>{e[1].toUpperCase()}</div><strong style={{ display: "block", margin: "6px 0", fontSize: 14 }}>{e[0]}</strong><div style={{ color: "#D6C4F1", fontSize: 10, marginBottom: 7 }}>Equipamento: {e[2]}</div><p style={{ color: "#AAA1B8", fontSize: 12, lineHeight: 1.55, margin: 0 }}>{e[3]}</p></div>)}</div>{!filtrados.length && <p style={labelMini}>Nenhum exercício encontrado.</p>}</div>;
       })()}
 
-      {abaAtiva === "conquistas" && <div style={{ display: "grid", gap: 12 }}><div style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.22)", backdropFilter: "blur(16px)" }}><h2 style={{ margin: "0 0 6px", fontSize: 19 }}>Suas conquistas</h2><p style={labelMini}>Marcos calculados a partir dos registros existentes.</p></div><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 10 }}>{[{n:"Primeiro recorde",ok:registrosPR.length>=1,d:"Registre seu primeiro PR"},{n:"Colecionador",ok:registrosPR.length>=5,d:"Registre 5 recordes"},{n:"Acompanhamento",ok:medidasCorporais.length>=3,d:"Registre 3 medições"},{n:"Planejador",ok:metasPessoais.length>=3,d:"Crie 3 metas pessoais"},{n:"Hidratação",ok:Object.keys(aguaPorData||{}).length>=7,d:"Registre água em 7 dias"},{n:"Constância",ok:Object.keys(logsPorData||{}).length>=10,d:"Tenha registros em 10 dias"}].map((x)=><div key={x.n} style={{ ...cardClean, background:x.ok?"rgba(59,130,246,.18)":"rgba(44,67,96,.38)", border:`1px solid ${x.ok?"rgba(96,165,250,.45)":"rgba(148,190,215,.14)"}` }}><div style={{fontSize:24,marginBottom:8}}>{x.ok?"🏆":"◇"}</div><strong style={{fontSize:13}}>{x.n}</strong><div style={{fontSize:11,color:"#aebed2",marginTop:5}}>{x.ok?"Conquistado":x.d}</div></div>)}</div></div>}
+      {abaAtiva === "conquistas" && <div style={{ display: "grid", gap: 12 }}><div style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.22)", backdropFilter: "blur(16px)" }}><h2 style={{ margin: "0 0 6px", fontSize: 19 }}>Suas conquistas</h2><p style={labelMini}>Marcos calculados a partir dos registros existentes.</p></div><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 10 }}>{[{n:"Primeiro recorde",ok:registrosPR.length>=1,d:"Registre seu primeiro PR"},{n:"Colecionador",ok:registrosPR.length>=5,d:"Registre 5 recordes"},{n:"Acompanhamento",ok:medidasCorporais.length>=3,d:"Registre 3 medições"},{n:"Planejador",ok:metasPessoais.length>=3,d:"Crie 3 metas pessoais"},{n:"Hidratação",ok:Object.keys(aguaPorData||{}).length>=7,d:"Registre água em 7 dias"},{n:"Constância",ok:Object.keys(logsPorData||{}).length>=10,d:"Tenha registros em 10 dias"}].map((x)=><div key={x.n} style={{ ...cardClean, background:x.ok?"rgba(59,130,246,.18)":"rgba(44,67,96,.38)", border:`1px solid ${x.ok?"rgba(96,165,250,.45)":"rgba(148,190,215,.14)"}` }}><div style={{fontSize:24,marginBottom:8}}>{x.ok?"🏆":"◇"}</div><strong style={{fontSize:13}}>{x.n}</strong><div style={{fontSize:11,color:"#AAA1B8",marginTop:5}}>{x.ok?"Conquistado":x.d}</div></div>)}</div></div>}
 
       {abaAtiva === "relatorios" && (() => {
         const cardRel = { ...cardClean, background: "rgba(44,67,96,.46)", border: "1px solid rgba(96,165,250,.20)", backdropFilter: "blur(14px)", display: "grid", gap: 10 };
@@ -5685,15 +5762,15 @@ export default function App() {
         const totalAgua = Object.values(aguaPorData || {}).reduce((a,v)=>a+(Number(typeof v === "object" ? v?.total ?? v?.ml ?? 0 : v)||0),0);
         const refeicoesTotal = Object.values(refeicoesFeitasPorData || {}).reduce((a,v)=>a+(Array.isArray(v)?v.length:Object.values(v||{}).filter(Boolean).length),0);
         const cards = [{n:"Dias com registros de treino",v:diasTreino},{n:"Dias com hidratação",v:diasAgua},{n:"Água acumulada registrada",v:`${totalAgua.toLocaleString("pt-BR")} ml`},{n:"Recordes pessoais",v:registrosPR.length},{n:"Medições corporais",v:medidasCorporais.length},{n:"Metas concluídas",v:metasPessoais.filter(m=>m.concluida).length},{n:"Metas em andamento",v:metasPessoais.filter(m=>!m.concluida).length},{n:"Refeições marcadas",v:refeicoesTotal},{n:"Suplementos cadastrados",v:(suplementos||[]).length},{n:"Dias com cardio",v:Object.keys(cardioPorData||{}).length},{n:"Dias com sono registrado",v:Object.keys(sonoPorData||{}).length},{n:"Dias com mochila",v:Object.keys(mochilaMarcadaPorData||{}).length}];
-        const chart=(titulo,dados,unidade="",cor="#60a5fa")=>{const xs=(dados||[]).filter(x=>Number.isFinite(Number(x.valor)));const max=Math.max(1,...xs.map(x=>Number(x.valor)));return <div style={cardRel}><strong style={{fontSize:13}}>{titulo}</strong>{xs.length?<div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(xs.length,10)},minmax(0,1fr))`,gap:6,alignItems:"end",minHeight:125}}>{xs.slice(-10).map((x,i)=><div key={`${x.rotulo}-${i}`} style={{display:"grid",gap:5,justifyItems:"center",minWidth:0}}><b style={{fontSize:9}}>{Number(x.valor).toLocaleString("pt-BR")}{unidade}</b><div style={{height:76,width:"100%",maxWidth:32,background:"rgba(148,163,184,.12)",borderRadius:6,display:"flex",alignItems:"end",overflow:"hidden"}}><div style={{height:`${Math.max(3,Number(x.valor)/max*100)}%`,width:"100%",background:cor}}/></div><span style={{fontSize:9,color:"#aebed2",textAlign:"center"}}>{x.rotulo}</span></div>)}</div>:<span style={labelMini}>Sem dados suficientes para gerar este gráfico.</span>}</div>};
+        const chart=(titulo,dados,unidade="",cor="#B99AE7")=>{const xs=(dados||[]).filter(x=>Number.isFinite(Number(x.valor)));const max=Math.max(1,...xs.map(x=>Number(x.valor)));return <div style={cardRel}><strong style={{fontSize:13}}>{titulo}</strong>{xs.length?<div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(xs.length,10)},minmax(0,1fr))`,gap:6,alignItems:"end",minHeight:125}}>{xs.slice(-10).map((x,i)=><div key={`${x.rotulo}-${i}`} style={{display:"grid",gap:5,justifyItems:"center",minWidth:0}}><b style={{fontSize:9}}>{Number(x.valor).toLocaleString("pt-BR")}{unidade}</b><div style={{height:76,width:"100%",maxWidth:32,background:"rgba(148,163,184,.12)",borderRadius:6,display:"flex",alignItems:"end",overflow:"hidden"}}><div style={{height:`${Math.max(3,Number(x.valor)/max*100)}%`,width:"100%",background:cor}}/></div><span style={{fontSize:9,color:"#AAA1B8",textAlign:"center"}}>{x.rotulo}</span></div>)}</div>:<span style={labelMini}>Sem dados suficientes para gerar este gráfico.</span>}</div>};
         const med=medidasCorporais.slice().sort((a,b)=>(a.data||"").localeCompare(b.data||""));
         const pr=registrosPR.slice().sort((a,b)=>(a.data||"").localeCompare(b.data||""));
         const atividade=dashboardData.atividade7Dias||[];
-        return <div style={{display:"grid",gap:14}}><div style={cardRel}><div style={{color:"#93c5fd",fontSize:10,fontWeight:800,letterSpacing:".12em"}}>CAVEIRA APP • RELATÓRIO COMPLETO</div><h2 style={{margin:0,fontSize:21}}>Relatório geral de desempenho</h2><p style={{...labelMini,margin:0}}>Consolidação dos dados disponíveis na sua conta. Períodos sem registro não são estimados nem preenchidos artificialmente.</p><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(135px,1fr))",gap:9}}>{cards.map(x=><div key={x.n} style={{...cardClean,minWidth:0}}><div style={labelMini}>{x.n}</div><strong style={{fontSize:20,color:"#bfdbfe"}}>{x.v}</strong></div>)}</div><button type="button" onClick={()=>window.print()} style={{...btnSecundario,flex:"none",maxWidth:240,background:"#3b82f6",color:"#071426",border:0,fontWeight:800}}>Imprimir / Salvar relatório em PDF</button></div>
-          <h3 style={{margin:"2px 0 -5px",fontSize:16}}>Gráficos de desempenho</h3><div style={{display:"grid",gridTemplateColumns:ehDesktop?"repeat(2,minmax(0,1fr))":"1fr",gap:10}}>{chart("Recordes pessoais — cargas registradas",pr.slice(-10).map(x=>({rotulo:(x.exercicio||"PR").slice(0,9),valor:Number(x.carga)}))," kg","#60a5fa")}{chart("Cargas dos treinos registrados",(dashboardData.historico||[]).slice(-10).map(x=>({rotulo:(x.dataISO||x.nome||"Treino").slice(5,10),valor:Number(x.carga)||0}))," kg","#818cf8")}{chart("Peso corporal",med.filter(x=>x.peso).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peso)}))," kg","#38bdf8")}{chart("Cintura",med.filter(x=>x.cintura).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.cintura)}))," cm","#a78bfa")}{chart("Peito",med.filter(x=>x.peito).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peito)}))," cm","#34d399")}{chart("Hidratação — últimos 7 dias",(dashboardData.agua7Dias||[]).map(x=>({rotulo:x.rotulo,valor:Number(x.ml)||0}))," ml","#38bdf8")}{chart("Volume de treino — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.volumeKg)||0}))," kg","#f59e0b")}{chart("Cardio — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.cardioMin)||0}))," min","#a78bfa")}{chart("Tempo ativo — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.duracaoMin)||0}))," min","#34d399")}{chart("Refeições marcadas — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.refeicoes)||0})),"","#fb923c")}{chart("Cafeína registrada — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.cafeina)||0})),"","#fbbf24")}{chart("Mochila — percentual de preparo",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.mochilaPct)||0})),"%","#60a5fa")}{chart("Dias com treino — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:x.treino?1:0})),"","#34d399")}</div>
+        return <div style={{display:"grid",gap:14}}><div style={cardRel}><div style={{color:"#D6C4F1",fontSize:10,fontWeight:800,letterSpacing:".12em"}}>CAVEIRA APP • RELATÓRIO COMPLETO</div><h2 style={{margin:0,fontSize:21}}>Relatório geral de desempenho</h2><p style={{...labelMini,margin:0}}>Consolidação dos dados disponíveis na sua conta. Períodos sem registro não são estimados nem preenchidos artificialmente.</p><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(135px,1fr))",gap:9}}>{cards.map(x=><div key={x.n} style={{...cardClean,minWidth:0}}><div style={labelMini}>{x.n}</div><strong style={{fontSize:20,color:"#E4D8F7"}}>{x.v}</strong></div>)}</div><button type="button" onClick={()=>window.print()} style={{...btnSecundario,flex:"none",maxWidth:240,background:"#A98BDD",color:"#15131C",border:0,fontWeight:800}}>Imprimir / Salvar relatório em PDF</button></div>
+          <h3 style={{margin:"2px 0 -5px",fontSize:16}}>Gráficos de desempenho</h3><div style={{display:"grid",gridTemplateColumns:ehDesktop?"repeat(2,minmax(0,1fr))":"1fr",gap:10}}>{chart("Recordes pessoais — cargas registradas",pr.slice(-10).map(x=>({rotulo:(x.exercicio||"PR").slice(0,9),valor:Number(x.carga)}))," kg","#B99AE7")}{chart("Cargas dos treinos registrados",(dashboardData.historico||[]).slice(-10).map(x=>({rotulo:(x.dataISO||x.nome||"Treino").slice(5,10),valor:Number(x.carga)||0}))," kg","#B89AE7")}{chart("Peso corporal",med.filter(x=>x.peso).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peso)}))," kg","#C4A5EC")}{chart("Cintura",med.filter(x=>x.cintura).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.cintura)}))," cm","#a78bfa")}{chart("Peito",med.filter(x=>x.peito).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peito)}))," cm","#9DDFC8")}{chart("Hidratação — últimos 7 dias",(dashboardData.agua7Dias||[]).map(x=>({rotulo:x.rotulo,valor:Number(x.ml)||0}))," ml","#C4A5EC")}{chart("Volume de treino — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.volumeKg)||0}))," kg","#E6C17C")}{chart("Cardio — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.cardioMin)||0}))," min","#a78bfa")}{chart("Tempo ativo — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.duracaoMin)||0}))," min","#9DDFC8")}{chart("Refeições marcadas — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.refeicoes)||0})),"","#E9B18D")}{chart("Cafeína registrada — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.cafeina)||0})),"","#E9C987")}{chart("Mochila — percentual de preparo",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.mochilaPct)||0})),"%","#B99AE7")}{chart("Dias com treino — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:x.treino?1:0})),"","#9DDFC8")}</div>
           <div style={cardRel}><h3 style={{margin:0,fontSize:14}}>Histórico de recordes</h3>{pr.length?pr.map(x=><div key={x.id} style={{display:"flex",justifyContent:"space-between",gap:8,borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7,fontSize:11}}><span>{x.data} • {x.exercicio}</span><strong>{x.carga} kg</strong></div>):<span style={labelMini}>Nenhum recorde cadastrado.</span>}</div>
           <div style={cardRel}><h3 style={{margin:0,fontSize:14}}>Histórico de medidas corporais</h3>{med.length?med.map(x=><div key={x.id} style={{borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7,fontSize:11}}>{x.data} • {x.peso?`Peso ${x.peso} kg`:""} {x.cintura?`• Cintura ${x.cintura} cm`:""} {x.peito?`• Peito ${x.peito} cm`:""}</div>):<span style={labelMini}>Nenhuma medição cadastrada.</span>}</div>
-          <div style={cardRel}><h3 style={{margin:0,fontSize:14}}>Metas pessoais</h3>{metasPessoais.length?metasPessoais.map(m=><div key={m.id} style={{display:"flex",justifyContent:"space-between",gap:8,borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7,fontSize:11}}><span>{m.nome}{m.alvo?` — ${m.alvo}`:""}</span><strong style={{color:m.concluida?"#86efac":"#93c5fd"}}>{m.concluida?"Concluída":"Em andamento"}</strong></div>):<span style={labelMini}>Nenhuma meta cadastrada.</span>}</div>
+          <div style={cardRel}><h3 style={{margin:0,fontSize:14}}>Metas pessoais</h3>{metasPessoais.length?metasPessoais.map(m=><div key={m.id} style={{display:"flex",justifyContent:"space-between",gap:8,borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7,fontSize:11}}><span>{m.nome}{m.alvo?` — ${m.alvo}`:""}</span><strong style={{color:m.concluida?"#B7EBD0":"#D6C4F1"}}>{m.concluida?"Concluída":"Em andamento"}</strong></div>):<span style={labelMini}>Nenhuma meta cadastrada.</span>}</div>
           <p style={labelMini}>O relatório reúne os dados disponíveis: treino, volume, cardio, água, alimentação, cafeína, mochila, sono, suplementos, recordes, medidas e metas. Alguns detalhes antigos dependem de terem sido registrados no período e no formato atual do app.</p></div>;
       })()}
 
@@ -5709,7 +5786,7 @@ export default function App() {
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
           background: "rgba(34, 50, 73, 0.88)",
-          borderTop: "1px solid rgba(148, 190, 215, 0.19)",
+          borderTop: "1px solid rgba(190, 170, 225, 0.15)",
           padding: "8px 12px",
           boxSizing: "border-box",
           transition: "max-width 0.2s ease",
@@ -5731,8 +5808,8 @@ export default function App() {
                 padding: "8px",
                 borderRadius: "8px",
                 border: "none",
-                background: ativa ? "#243149" : "transparent",
-                color: ativa ? "#edf1f7" : "#a8b6ca",
+                background: ativa ? "#282432" : "transparent",
+                color: ativa ? "#F1EEF7" : "#9E96AD",
                 fontSize: "12px",
                 fontWeight: ativa ? 700 : 500,
                 cursor: "pointer",
@@ -5751,7 +5828,7 @@ const rotuloSecaoMenu = {
   fontSize: "10px",
   letterSpacing: "0.02em",
   textTransform: "none",
-  color: "#a8b6ca",
+  color: "#9E96AD",
   padding: "0 10px 7px",
   fontWeight: 600,
 };
@@ -5765,7 +5842,7 @@ const btnMenu = {
   borderRadius: "8px",
   border: "1px solid transparent",
   background: "transparent",
-  color: "#c0cce0",
+  color: "#BEB7CA",
   fontSize: "13px",
   fontWeight: 400,
   letterSpacing: "0.01em",
@@ -5775,9 +5852,9 @@ const btnMenu = {
 const estiloMenuAtivo = (pagina, paginaAtiva) => ({
   ...btnMenu,
   background: paginaAtiva === pagina ? "rgba(96, 165, 250, 0.18)" : "transparent",
-  color: paginaAtiva === pagina ? "#eff6ff" : "#c0cce0",
+  color: paginaAtiva === pagina ? "#eff6ff" : "#BEB7CA",
   border: paginaAtiva === pagina ? "1px solid rgba(125, 211, 252, 0.24)" : "1px solid transparent",
-  borderLeft: paginaAtiva === pagina ? "3px solid #60a5fa" : "3px solid transparent",
+  borderLeft: paginaAtiva === pagina ? "3px solid #B99AE7" : "3px solid transparent",
   boxShadow: paginaAtiva === pagina ? "inset 0 0 18px rgba(96, 165, 250, 0.08)" : "none",
   fontWeight: paginaAtiva === pagina ? 650 : 400,
 });
@@ -5786,9 +5863,9 @@ const btnCarga = {
   width: "22px",
   height: "22px",
   borderRadius: "6px",
-  border: "1px solid rgba(148, 190, 215, 0.24)",
-  background: "rgba(38, 54, 75, 0.62)",
-  color: "#edf1f7",
+  border: "1px solid rgba(190, 170, 225, 0.19)",
+  background: "rgba(29, 27, 39, 0.72)",
+  color: "#F1EEF7",
   cursor: "pointer",
   fontSize: "12px",
   flexShrink: 0,
@@ -5798,9 +5875,9 @@ const btnSecundario = {
   flex: 1,
   padding: "8px",
   borderRadius: "8px",
-  border: "1px solid rgba(148, 190, 215, 0.24)",
-  background: "rgba(38, 54, 75, 0.62)",
-  color: "#edf1f7",
+  border: "1px solid rgba(190, 170, 225, 0.19)",
+  background: "rgba(29, 27, 39, 0.72)",
+  color: "#F1EEF7",
   fontSize: "12px",
   cursor: "pointer",
 };
@@ -5809,7 +5886,7 @@ const rotuloCampo = {
   display: "block",
   fontSize: "11px",
   fontWeight: 300,
-  color: "#c0cce0",
+  color: "#BEB7CA",
   marginBottom: "5px",
   letterSpacing: "0.02em",
 };
@@ -5818,9 +5895,9 @@ const campoTexto = {
   width: "100%",
   padding: "9px 10px",
   borderRadius: "8px",
-  border: "1px solid rgba(148, 190, 215, 0.19)",
-  background: "rgba(38, 54, 75, 0.62)",
-  color: "#edf1f7",
+  border: "1px solid rgba(190, 170, 225, 0.15)",
+  background: "rgba(29, 27, 39, 0.72)",
+  color: "#F1EEF7",
   fontSize: "12px",
   boxSizing: "border-box",
 };
@@ -5828,13 +5905,13 @@ const campoTexto = {
 const cardClean = {
   padding: "12px",
   borderRadius: "10px",
-  background: "rgba(52, 70, 94, 0.46)",
-  border: "1px solid rgba(148, 190, 215, 0.16)",
+  background: "rgba(49, 43, 63, 0.58)",
+  border: "1px solid rgba(190, 170, 225, 0.14)",
 };
 
 const labelMini = {
   fontSize: "11px",
-  color: "#a8b6ca",
+  color: "#9E96AD",
 };
 
 const valorMini = {
