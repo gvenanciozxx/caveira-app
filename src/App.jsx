@@ -2889,6 +2889,35 @@ export default function App() {
         @media (prefers-reduced-motion: reduce) {
           *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
+
+        /* Correção de uniformidade: aplica a paleta escura também ao conteúdo
+           que ainda possuía fundos inline herdados do tema anterior. */
+        div[style*="linear-gradient(145deg"] {
+          background: #090a0e !important;
+        }
+        div[style*="rgba(44,67,96"],
+        div[style*="rgba(44, 67, 96"],
+        div[style*="rgba(38,54,75"],
+        div[style*="rgba(38, 54, 75"],
+        div[style*="rgba(34,50,73"],
+        div[style*="rgba(34, 50, 73"],
+        div[style*="rgba(27,41,60"],
+        div[style*="rgba(27, 41, 60"],
+        div[style*="rgba(49, 43, 63"],
+        div[style*="rgba(35, 32, 46"],
+        div[style*="rgba(31, 29, 42"] {
+          background: #101218 !important;
+          border-color: #252a34 !important;
+          box-shadow: none !important;
+          -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+        }
+        /* Mantém a barra de status legível, sem reintroduzir o fundo azulado. */
+        div[role="status"] {
+          background: rgba(16, 18, 24, .96) !important;
+          border-color: #252a34 !important;
+          color: #d9dce4 !important;
+        }
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
         <span style={{ width: 6, height: 6, borderRadius: "50%", background: estaOnline ? "#B99AE7" : "#E9C987" }} />
