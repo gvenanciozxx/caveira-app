@@ -2676,6 +2676,60 @@ export default function App() {
             transition: transform .18s ease, background .18s ease, border-color .18s ease;
           }
           .caveira-entrada-botao:active { transform: scale(.985); }
+          .caveira-manual-area {
+            flex: 1;
+            min-height: 0;
+            width: 100%;
+            max-width: 1040px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            scrollbar-width: thin;
+            padding: 18px 0;
+            box-sizing: border-box;
+          }
+          .caveira-manual-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin: 22px 0 24px;
+          }
+          .caveira-manual-item {
+            padding: 17px 16px;
+            border: 1px solid rgba(255,255,255,.14);
+            border-radius: 16px;
+            background: rgba(12,12,16,.48);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+          }
+          .caveira-manual-item strong {
+            display: block;
+            margin: 0 0 7px;
+            color: #F5F1FA;
+            font-family: 'Manrope', 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 650;
+            letter-spacing: -.025em;
+          }
+          .caveira-manual-item span {
+            display: block;
+            color: rgba(245,242,248,.70);
+            font-size: 12px;
+            line-height: 1.55;
+          }
+          @media (max-width: 700px) {
+            .caveira-manual-area { justify-content: flex-start; padding: 22px 0 16px; }
+            .caveira-manual-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin: 17px 0 20px; }
+            .caveira-manual-item { padding: 14px 12px; border-radius: 13px; }
+            .caveira-manual-item strong { font-size: 12px; }
+            .caveira-manual-item span { font-size: 11px; }
+          }
+          @media (max-width: 380px) {
+            .caveira-manual-grid { grid-template-columns: 1fr 1fr; }
+          }
           @media (max-width: 380px) {
             .caveira-entrada-conteudo { padding-left: 22px; padding-right: 22px; }
           }
@@ -2722,7 +2776,7 @@ export default function App() {
                   DISCIPLINA • CONSTÂNCIA • EVOLUÇÃO
                 </div>
                 <h1 style={{ fontSize: "clamp(34px, 9vw, 46px)", lineHeight: 1.04, letterSpacing: "-.055em", fontWeight: 850, margin: "0 0 14px" }}>
-                  Seja bem-vindo<span style={{ color: "#C7A9EF" }}>.</span>
+                  CAVEIRA
                 </h1>
                 <p style={{ maxWidth: "300px", margin: "0 auto 25px", color: "rgba(245,242,248,.82)", fontSize: "14px", lineHeight: 1.7 }}>
                   Seu espaço para organizar os treinos, acompanhar sua evolução e manter a constância.
@@ -2730,7 +2784,7 @@ export default function App() {
                 <button
                   type="button"
                   className="caveira-entrada-botao"
-                  onClick={() => setEtapaEntrada("acesso")}
+                  onClick={() => setEtapaEntrada("manual")}
                   style={{
                     maxWidth: "290px",
                     border: "1px solid rgba(230,215,250,.42)",
@@ -2740,8 +2794,67 @@ export default function App() {
                     backdropFilter: "blur(12px)",
                   }}
                 >
-                  Prosseguir <span aria-hidden="true" style={{ marginLeft: "10px" }}>→</span>
+                  Bem-vindo <span aria-hidden="true" style={{ marginLeft: "10px" }}>→</span>
                 </button>
+              </div>
+            ) : etapaEntrada === "manual" ? (
+              <div className="caveira-manual-area">
+                <div style={{ textAlign: "center", maxWidth: "760px", width: "100%", margin: "0 auto" }}>
+                  <div style={{ color: "#D8C5F2", fontSize: "10px", fontWeight: 700, letterSpacing: ".22em", marginBottom: "12px" }}>
+                    CONHEÇA SUA NOVA ROTINA
+                  </div>
+                  <h1 style={{ fontSize: "clamp(29px, 5vw, 48px)", lineHeight: 1.08, margin: "0 0 12px" }}>
+                    Mais organização. <span style={{ color: "#C7A9EF" }}>Mais evolução.</span>
+                  </h1>
+                  <p style={{ maxWidth: "620px", margin: "0 auto", color: "rgba(245,242,248,.82)", fontSize: "clamp(13px, 1.5vw, 16px)", lineHeight: 1.7 }}>
+                    O Caveira App reúne ferramentas para você cuidar da sua rotina de treino, acompanhar seus resultados e construir constância — tudo em um só lugar.
+                  </p>
+                </div>
+
+                <div className="caveira-manual-grid">
+                  <article className="caveira-manual-item">
+                    <strong>Treinos organizados</strong>
+                    <span>Monte sua rotina, organize exercícios, séries e cargas e acompanhe o que já realizou.</span>
+                  </article>
+                  <article className="caveira-manual-item">
+                    <strong>Timer e descanso</strong>
+                    <span>Use cronômetros e intervalos para manter o ritmo durante cada sessão.</span>
+                  </article>
+                  <article className="caveira-manual-item">
+                    <strong>Evolução visível</strong>
+                    <span>Consulte seu painel, relatórios, recordes, medidas e metas pessoais.</span>
+                  </article>
+                  <article className="caveira-manual-item">
+                    <strong>Hábitos e bem-estar</strong>
+                    <span>Registre alimentação, hidratação, cafeína e suplementos na sua rotina.</span>
+                  </article>
+                  <article className="caveira-manual-item">
+                    <strong>Planejamento prático</strong>
+                    <span>Salve modelos de treino, consulte a biblioteca de exercícios e organize sua mochila.</span>
+                  </article>
+                  <article className="caveira-manual-item">
+                    <strong>Seus dados com você</strong>
+                    <span>Acesse recursos offline e sincronize seus registros quando estiver conectado.</span>
+                  </article>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "9px", paddingBottom: "3px" }}>
+                  <button
+                    type="button"
+                    className="caveira-entrada-botao"
+                    onClick={() => setEtapaEntrada("acesso")}
+                    style={{ maxWidth: "330px", border: "1px solid rgba(230,215,250,.42)", background: "rgba(199,169,239,.92)", color: "#17131F", boxShadow: "0 10px 28px rgba(0,0,0,.24)" }}
+                  >
+                    Prosseguir para acesso <span aria-hidden="true" style={{ marginLeft: "9px" }}>→</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEtapaEntrada("boas-vindas")}
+                    style={{ padding: "7px 12px", border: 0, background: "transparent", color: "rgba(245,242,248,.68)", fontSize: "12px", cursor: "pointer" }}
+                  >
+                    Voltar
+                  </button>
+                </div>
               </div>
             ) : (
               <div
@@ -2782,7 +2895,7 @@ export default function App() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => setEtapaEntrada("boas-vindas")}
+                  onClick={() => setEtapaEntrada("manual")}
                   style={{ display: "block", margin: "13px auto 0", padding: "8px 12px", border: 0, background: "transparent", color: "rgba(245,242,248,.68)", fontSize: "12px", cursor: "pointer" }}
                 >
                   Voltar
