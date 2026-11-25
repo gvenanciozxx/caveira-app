@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from "react";
 
 export default function EfeitoRelevoPastel({ modo = "aberto" }) {
@@ -44,39 +45,44 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
       tempo += 0.014;
       ctx.clearRect(0, 0, w, h);
 
-      // Fundo base na tonalidade ligeiramente mais escura da barra lateral Premium
-      ctx.fillStyle = "#1B293C";
+      // Fundo grafite escuro, sem tonalidade azulada
+      ctx.fillStyle = "#1B1B22";
       ctx.fillRect(0, 0, w, h);
 
-      // Calcula a borda esquerda/superior da escultura que sobe em diagonal e ondas
+      // Calcula a borda esquerda/superior da escultura
       const passos = Math.max(32, Math.floor(h / 8));
       const pontosBorda = [];
 
       for (let i = 0; i <= passos; i++) {
-        const ny = i / passos; // 0 (topo) -> 1 (base)
+        const ny = i / passos;
         const y = ny * h;
 
-        // Sobe mais alto na direita e desce para a esquerda, com curvas suaves em ondas
         const baseX =
           w * (1.08 - ny * 0.92) +
           Math.sin(ny * Math.PI * 3.2 + tempo) * (w * 0.11) +
           Math.cos(ny * Math.PI * 1.8 - tempo * 0.75) * (w * 0.06);
 
-        pontosBorda.push({ x: Math.max(0, Math.min(w, baseX)), y, ny });
+        pontosBorda.push({
+          x: Math.max(0, Math.min(w, baseX)),
+          y,
+          ny,
+        });
       }
 
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(pontosBorda[0].x, pontosBorda[0].y);
+
       for (let i = 1; i < pontosBorda.length; i++) {
         ctx.lineTo(pontosBorda[i].x, pontosBorda[i].y);
       }
+
       ctx.lineTo(w, h);
       ctx.lineTo(w, 0);
       ctx.closePath();
       ctx.clip();
 
-      // Gradiente pastel rico e vibrante (rosa, pêssego, amarelo, menta, azul-bebê, lilás)
+      // Gradiente pastel
       const gradPastel = ctx.createLinearGradient(0, h, w, 0);
       gradPastel.addColorStop(0.0, "#f472b6");
       gradPastel.addColorStop(0.2, "#fb923c");
@@ -88,14 +94,16 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
       ctx.fillStyle = gradPastel;
       ctx.fillRect(0, 0, w, h);
 
-      // Dobras/ondas internas com alto relevo 3D (luz clara + sombra profunda)
+      // Dobras e ondas internas com relevo 3D
       const dobras = 6;
+
       for (let d = 0; d < dobras; d++) {
         const offsetBase = (h / dobras) * d;
         const amp = Math.max(14, h * 0.065);
 
         ctx.beginPath();
         ctx.moveTo(0, h);
+
         for (let p = 0; p <= 40; p++) {
           const nx = p / 40;
           const x = nx * w;
@@ -103,12 +111,20 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
             offsetBase +
             Math.sin(nx * Math.PI * 2.2 + tempo + d * 1.15) * amp +
             Math.cos(nx * Math.PI * 1.4 - tempo * 0.8 + d) * (amp * 0.5);
+
           ctx.lineTo(x, y);
         }
+
         ctx.lineTo(w, h);
         ctx.closePath();
 
-        const gradDobra = ctx.createLinearGradient(0, offsetBase - amp, 0, offsetBase + amp * 2.5);
+        const gradDobra = ctx.createLinearGradient(
+          0,
+          offsetBase - amp,
+          0,
+          offsetBase + amp * 2.5
+        );
+
         gradDobra.addColorStop(0, "rgba(255, 255, 255, 0.42)");
         gradDobra.addColorStop(0.45, "rgba(255, 255, 255, 0.05)");
         gradDobra.addColorStop(1, "rgba(10, 10, 14, 0.34)");
@@ -118,6 +134,7 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
 
         // Linha de destaque na crista da onda
         ctx.beginPath();
+
         for (let p = 0; p <= 40; p++) {
           const nx = p / 40;
           const x = nx * w;
@@ -125,24 +142,28 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
             offsetBase +
             Math.sin(nx * Math.PI * 2.2 + tempo + d * 1.15) * amp +
             Math.cos(nx * Math.PI * 1.4 - tempo * 0.8 + d) * (amp * 0.5);
+
           if (p === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
+
         ctx.strokeStyle = "rgba(255, 255, 255, 0.52)";
         ctx.lineWidth = 1.5;
         ctx.stroke();
       }
 
-      // Luz direcional lateral para dar volume 3D escultórico
+      // Luz direcional lateral
       const luzLateral = ctx.createLinearGradient(0, 0, w, h);
       luzLateral.addColorStop(0, "rgba(255, 255, 255, 0.28)");
       luzLateral.addColorStop(0.5, "rgba(255, 255, 255, 0.0)");
       luzLateral.addColorStop(1, "rgba(0, 0, 0, 0.24)");
+
       ctx.fillStyle = luzLateral;
       ctx.fillRect(0, 0, w, h);
 
       // Micro-pontos discretos por cima da escultura
       const pattern = ctx.createPattern(padraoPontos, "repeat");
+
       if (pattern) {
         ctx.fillStyle = pattern;
         ctx.fillRect(0, 0, w, h);
@@ -153,9 +174,11 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
       // Contorno suave na borda esculpida
       ctx.beginPath();
       ctx.moveTo(pontosBorda[0].x, pontosBorda[0].y);
+
       for (let i = 1; i < pontosBorda.length; i++) {
         ctx.lineTo(pontosBorda[i].x, pontosBorda[i].y);
       }
+
       ctx.strokeStyle = "rgba(255, 255, 255, 0.45)";
       ctx.lineWidth = modo === "linha" ? 2 : 1.6;
       ctx.stroke();
@@ -183,10 +206,19 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
         height: "100%",
         overflow: "hidden",
         pointerEvents: "none",
-        boxShadow: ehLinha ? "1px 0 10px rgba(244, 114, 182, 0.35)" : "none",
+        boxShadow: ehLinha
+          ? "1px 0 10px rgba(244, 114, 182, 0.35)"
+          : "none",
       }}
     >
-      <canvas ref={canvasRef} style={{ width: "100%", height: "100%", display: "block" }} />
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "block",
+        }}
+      />
     </div>
   );
 }
