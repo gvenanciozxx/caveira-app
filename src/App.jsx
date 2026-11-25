@@ -392,6 +392,13 @@ export default function App() {
   const ehDesktopPainel = larguraTela >= 900;
 
   const [menuAberto, setMenuAberto] = useState(false);
+  const [perfilFoto, setPerfilFoto] = useState("");
+  const [resetModalAberto, setResetModalAberto] = useState(false);
+  const [resetSenha, setResetSenha] = useState("");
+  const [resetErro, setResetErro] = useState("");
+  const [resetProcessando, setResetProcessando] = useState(false);
+  const [perfilFotoErro, setPerfilFotoErro] = useState("");
+  const perfilFotoInputRef = useRef(null);
   const [authSession, setAuthSession] = useState(null);
   const [authCarregando, setAuthCarregando] = useState(true);
   const [authModo, setAuthModo] = useState("login");
@@ -770,6 +777,7 @@ export default function App() {
     registrosPR,
     medidasCorporais,
     metasPessoais,
+    perfilFoto,
   };
 
   // Aplica um snapshot tanto vindo da nuvem quanto do cache offline.
@@ -818,6 +826,7 @@ export default function App() {
     if (Array.isArray(d.registrosPR)) setRegistrosPR(d.registrosPR);
     if (Array.isArray(d.medidasCorporais)) setMedidasCorporais(d.medidasCorporais);
     if (Array.isArray(d.metasPessoais)) setMetasPessoais(d.metasPessoais);
+    if (typeof d.perfilFoto === "string") setPerfilFoto(d.perfilFoto);
   }
 
   // Carrega primeiro a nuvem; se não houver conexão, usa o último snapshot local.
@@ -974,7 +983,7 @@ export default function App() {
     refeicoesModelos, refeicoesFeitasPorData, refeicaoLivrePorData, janelaTreinoPorData,
     cafeinaPorData, cardioPorData, suplementos, itensMochila, mochilaMarcadaPorData,
     metaTreinosSemana, ultimoBackupISO, modoTempo, totalConfigTimerSeg, intervaloTrabalhoSeg,
-    intervaloDescansoSeg, intervaloRodadasTotal, pesoKg, aguaPorData, metaTreinosMes, registrosPR, medidasCorporais, metasPessoais]);
+    intervaloDescansoSeg, intervaloRodadasTotal, pesoKg, aguaPorData, metaTreinosMes, registrosPR, medidasCorporais, metasPessoais, perfilFoto]);
 
   // Ao voltar a conexão, o efeito de persistência envia o snapshot pendente.
   useEffect(() => {
@@ -1149,30 +1158,29 @@ export default function App() {
     }, 80);
   }
 
-  function resetarDados() {
-    const mapasDiarios = [
-      logsPorData, observacoes, duracaoPorData, tempoAtivoPorData, aquecimentoPorData,
-      estadoDiaPorData, checklistPorData, sinaisCorpoPorData, sonoPorData,
-      motivoSemTreinoPorData, refeicoesFeitasPorData, refeicaoLivrePorData,
-      janelaTreinoPorData, cafeinaPorData, cardioPorData, mochilaMarcadaPorData, aguaPorData,
-    ];
-    const existeHistoricoFechado = mapasDiarios.some((mapa) =>
-      Object.entries(mapa || {}).some(([dataISO, valor]) => {
-        if (dataISO === hojeISO) return false;
-        if (Array.isArray(valor)) return valor.length > 0;
-        if (valor && typeof valor === "object") return Object.keys(valor).length > 0;
-        return valor !== undefined && valor !== null && valor !== "" && valor !== 0 && valor !== false;
-      })
-    );
-    if (existeHistoricoFechado) {
-      window.alert("O histórico de dias fechados não pode ser apagado. O reset geral foi cancelado.");
-      return;
-    }
+  async function resetarDados() {
+    // Reset total do snapshot do usuário: histórico, rotina, Dashboard e métricas.
+    if (salvamentoTimerRef.current) { clearTimeout(salvamentoTimerRef.current); salvamentoTimerRef.current = null; }
+    salvamentoPendenteRef.current = null;
     pararSomAlarme();
     setCronometroRodando(false);
     setTimerRodando(false);
     setIntervaloRodando(false);
     setTimerRestante(0);
+    setMiniDescansoAberto(false);
+    setMiniDescansoExercicio("");
+    setMiniDescansoDuracao(60);
+    setCalcAberta(false);
+    setModoTempo("cronometro");
+    setTimerHoras(0);
+    setTimerMinutos(1);
+    setTimerSegundos(0);
+    setIntervaloTrabalhoSeg(40);
+    setIntervaloDescansoSeg(20);
+    setIntervaloRodadasTotal(4);
+    setIntervaloRodadaAtual(1);
+    setIntervaloFase("trabalho");
+    setIntervaloRestante(40);
     setRotina(ROTINA_INICIAL);
     setFocoDiasPorChave({});
     setPresets(PRESETS_INICIAIS);
@@ -1200,10 +1208,78 @@ export default function App() {
     setPesoKg(75);
     setAguaPorData({});
     setMetaTreinosMes(16);
+    setRegistrosPR([]);
+    setMedidasCorporais([]);
+    setMetasPessoais([]);
     setDataSelecionada(hojeISO);
     setExercicioHistoricoAberto(null);
     setEditandoId(null);
+    setTextoBackup("");
+    setStatusBackup("Todos os dados do aplicativo foram resetados.");
+    setAbaAtiva("hoje");
     setMenuAberto(false);
+    setResetModalAberto(false);
+    setResetSenha("");
+    setResetErro("");
+    setStatusDadosNuvem("Resetando e sincronizando seus dados...");
+    const snapshotResetado = {
+      rotina: ROTINA_INICIAL, focoDiasPorChave: {}, presets: PRESETS_INICIAIS,
+      logsPorData: {}, observacoes: {}, duracaoPorData: {}, tempoAtivoPorData: {},
+      aquecimentoPorData: {}, estadoDiaPorData: {}, checklistPorData: {}, sinaisCorpoPorData: {},
+      sonoPorData: {}, motivoSemTreinoPorData: {}, refeicoesModelos: REFEICOES_PADRAO_INICIAIS,
+      refeicoesFeitasPorData: {}, refeicaoLivrePorData: {}, janelaTreinoPorData: {}, cafeinaPorData: {},
+      cardioPorData: {}, suplementos: [], itensMochila: MOCHILA_PADRAO_INICIAIS, mochilaMarcadaPorData: {},
+      metaTreinosSemana: 4, ultimoBackupISO: null, modoTempo: "cronometro", duracaoTimerConfig: 60,
+      intervaloTrabalhoSeg: 40, intervaloDescansoSeg: 20, intervaloRodadasTotal: 4,
+      pesoKg: 75, aguaPorData: {}, metaTreinosMes: 16, registrosPR: [], medidasCorporais: [],
+      metasPessoais: [], perfilFoto,
+    };
+    const userId = authSession?.user?.id;
+    if (userId) {
+      const timestampReset = new Date().toISOString();
+      try {
+        await gravarSnapshotOffline({ userId, data: snapshotResetado, salvoEm: timestampReset, cloudUpdatedAt: timestampReset, pendente: true });
+        const { error: erroNuvemReset } = await supabase.from("caveira_app_data").upsert({ user_id: userId, data: snapshotResetado, updated_at: timestampReset }, { onConflict: "user_id" });
+        if (erroNuvemReset) throw erroNuvemReset;
+        await gravarSnapshotOffline({ userId, data: snapshotResetado, salvoEm: timestampReset, cloudUpdatedAt: timestampReset, pendente: false });
+        setStatusDadosNuvem("Todos os dados foram resetados e sincronizados.");
+      } catch (erroPersistenciaReset) {
+        setErroDadosNuvem(erroPersistenciaReset?.message || "Reset aplicado localmente, mas a sincronização precisa ser conferida.");
+        setStatusDadosNuvem("Reset aplicado localmente • sincronização pendente");
+      }
+    }
+  }
+
+  async function confirmarResetComSenha() {
+    setResetErro("");
+    if (!resetSenha.trim()) { setResetErro("Digite sua senha para confirmar."); return; }
+    if (!estaOnline) { setResetErro("Para validar sua senha e sincronizar o reset completo, conecte-se à internet."); return; }
+    setResetProcessando(true);
+    try {
+      const email = authSession?.user?.email;
+      if (!email) throw new Error("Não foi possível identificar o email da conta.");
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password: resetSenha });
+      if (error) throw new Error("Senha incorreta. Nenhum dado foi apagado.");
+      if (data?.user?.id !== authSession?.user?.id) throw new Error("A validação retornou uma conta diferente. Reset cancelado.");
+      await resetarDados();
+    } catch (error) {
+      setResetErro(error?.message || "Não foi possível validar a senha. Nenhum dado foi apagado.");
+    } finally {
+      setResetProcessando(false);
+    }
+  }
+
+  async function atualizarFotoPerfil(arquivo) {
+    setPerfilFotoErro("");
+    if (!arquivo) return;
+    if (!arquivo.type?.startsWith("image/")) { setPerfilFotoErro("Escolha um arquivo de imagem."); return; }
+    if (arquivo.size > 8 * 1024 * 1024) { setPerfilFotoErro("A imagem deve ter até 8 MB."); return; }
+    try {
+      const comprimida = await comprimirImagemParaBase64(arquivo, 420, 0.68);
+      setPerfilFoto(comprimida);
+      setPerfilFotoErro("Foto atualizada. Será sincronizada com seus dados.");
+    } catch { setPerfilFotoErro("Não foi possível processar essa imagem."); }
+    if (perfilFotoInputRef.current) perfilFotoInputRef.current.value = "";
   }
 
   const diaPodeEditar = dataSelecionada === hojeISO;
@@ -2407,6 +2483,7 @@ export default function App() {
       relatorios: <><path d="M5 3h10l4 4v14H5z"/><path d="M15 3v5h4"/><path d="M8 16v-3"/><path d="M11 16v-5"/><path d="M14 16v-2"/></>,
       foco: <><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 2v2M22 12h-2M12 22v-2M2 12h2"/></>,
       backup: <><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"/></>,
+      configuracoes: <><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06-1.6 1.6-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V20h-2.3v-.31a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06-1.6-1.6.06-.06A1.7 1.7 0 0 0 7.1 15a1.7 1.7 0 0 0-1.56-1.03H5.2v-2.3h.34A1.7 1.7 0 0 0 7.1 10a1.7 1.7 0 0 0-.34-1.87L6.7 8.07l1.6-1.6.06.06a1.7 1.7 0 0 0 1.87.34A1.7 1.7 0 0 0 11.26 5.3V5h2.3v.3a1.7 1.7 0 0 0 1.03 1.57 1.7 1.7 0 0 0 1.87-.34l.06-.06 1.6 1.6-.06.06A1.7 1.7 0 0 0 17.72 10a1.7 1.7 0 0 0 1.56 1.03h.34v2.3h-.34A1.7 1.7 0 0 0 19.4 15z"/></>,
       painel: <><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="m14 9 3 3-3 3"/></>,
       sair: <><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M21 3v18"/></>,
       pontos: <><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></>,
@@ -3133,7 +3210,7 @@ export default function App() {
           <button type="button" onClick={() => setMenuAberto(true)} title={`${authSession.user.user_metadata?.nome || "Usuário"} — ${authSession.user.email}`}
             aria-label="Abrir perfil e menu"
             style={{ width: 34, height: 34, borderRadius: "50%", display: "grid", placeItems: "center", background: "linear-gradient(135deg,#d8a9ed,#a7b9ff)", border: 0, color: "#17141d", fontWeight: 800, cursor: "pointer", marginBottom: 14 }}>
-            {(authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0, 1).toUpperCase()}
+            {perfilFoto ? <img src={perfilFoto} alt="Foto de perfil" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} /> : (authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0, 1).toUpperCase()}
           </button>
           <button type="button" onClick={sairDaConta} title="Sair" aria-label="Sair da conta"
             style={{ border: 0, background: "transparent", color: "#89909c", cursor: "pointer", padding: 8 }}>
@@ -3240,16 +3317,16 @@ export default function App() {
                 <div style={{ height: 1, background: "rgba(148,163,184,.14)", margin: "10px 2px 8px", flexShrink: 0 }} />
                 <span style={rotuloSecaoMenu}>SISTEMA</span>
                 <button type="button" onClick={abrirBackupMenu} style={btnMenu}>{renderIconeMenu("backup", 17)}<span>Backup & Dados</span></button>
+                <button type="button" onClick={() => abrirPagina("configuracoes")} style={estiloMenuAtivo("configuracoes", abaAtiva)}>{renderIconeMenu("configuracoes", 17)}<span>Configurações</span></button>
               </div>
             </div>
 
             <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "9px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 8px", background: "transparent", borderTop: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: 0, minWidth: 0, paddingTop: "16px" }}>
-                <div style={{ width: "34px", height: "34px", borderRadius: "50%", flexShrink: 0, display: "grid", placeItems: "center", background: "#342B46", border: "1px solid #74618F", color: "#DCCCF5", fontWeight: 800, fontSize: "13px" }}>{(authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0, 1).toUpperCase()}</div>
+                <div style={{ width: "34px", height: "34px", borderRadius: "50%", flexShrink: 0, overflow: "hidden", display: "grid", placeItems: "center", background: "#342B46", border: "1px solid #74618F", color: "#DCCCF5", fontWeight: 800, fontSize: "13px" }}>{perfilFoto ? <img src={perfilFoto} alt="Foto de perfil" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : (authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0, 1).toUpperCase()}</div>
                 <div style={{ minWidth: 0, flex: 1 }}><div style={{ color: "#F1EEF7", fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.user_metadata?.nome || "Usuário"}</div><div style={{ color: "#BEB7CA", fontSize: "10px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.email}</div></div>
                 <button type="button" onClick={sairDaConta} title="Sair da conta" aria-label="Sair da conta" style={{ border: 0, background: "transparent", color: "#89909c", cursor: "pointer", display: "grid", placeItems: "center", padding: 8 }}>{renderIconeMenu("sair", 18)}</button>
               </div>
-              <button type="button" onClick={resetarDados} style={{ ...btnMenu, color: "#F19AAB", padding: "6px 8px", fontSize: "11px", opacity: 0.85 }}>Resetar dados do app</button>
             </div>
           </aside>
         </div>
@@ -3308,13 +3385,14 @@ export default function App() {
             {abaAtiva === "exercicios" && "Biblioteca de Exercícios."}
             {abaAtiva === "conquistas" && "Conquistas."}
             {abaAtiva === "relatorios" && "Relatórios."}
+            {abaAtiva === "configuracoes" && "Configurações."}
           </h1>
 
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "6px", flexWrap: "wrap" }}>
             <span style={{ fontSize: "12px", color: "#9E96AD" }}>
               {abaAtiva === "montar"
                 ? "Uma semana bem planejada começa aqui."
-                : `${infoDia?.nome}, ${diaSel} de ${MESES_CURTOS[(mesSel || 1) - 1]?.toLowerCase()}${focoDiasPorChave[chaveDia] ? ` • Foco: ${focoDiasPorChave[chaveDia]}` : ""}`}
+                : abaAtiva === "configuracoes" ? "Gerencie seu perfil e as opções de segurança do aplicativo." : `${infoDia?.nome}, ${diaSel} de ${MESES_CURTOS[(mesSel || 1) - 1]?.toLowerCase()}${focoDiasPorChave[chaveDia] ? ` • Foco: ${focoDiasPorChave[chaveDia]}` : ""}`}
             </span>
             {abaAtiva === "hoje" && dataSelecionada !== hojeISO && (
               <button
@@ -3390,6 +3468,26 @@ export default function App() {
           >
             Parar som
           </button>
+        </div>
+      )}
+
+      {resetModalAberto && (
+        <div role="presentation" onClick={() => { if (!resetProcessando) { setResetModalAberto(false); setResetSenha(""); setResetErro(""); } }} style={{ position: "fixed", inset: 0, zIndex: 12000, background: "rgba(4,6,10,.76)", display: "grid", placeItems: "center", padding: 16, backdropFilter: "blur(8px)" }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="titulo-reset" onClick={(e) => e.stopPropagation()} style={{ width: "min(440px, 100%)", background: "#15171e", border: "1px solid rgba(241,168,184,.28)", borderRadius: 16, padding: 20, boxSizing: "border-box", boxShadow: "0 24px 70px rgba(0,0,0,.5)", display: "grid", gap: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ width: 38, height: 38, borderRadius: 10, background: "rgba(241,168,184,.1)", display: "grid", placeItems: "center", color: "#F1A8B8" }}>{renderIconeMenu("configuracoes", 20)}</div>
+              <h2 id="titulo-reset" style={{ margin: 0, fontSize: 17 }}>Confirmar reset completo</h2>
+            </div>
+            <p style={{ margin: 0, color: "#BEB7CA", fontSize: 12, lineHeight: 1.6 }}>Todos os dados do app serão apagados e o Dashboard voltará ao zero. A conta, login e foto de perfil serão mantidos. Esta ação não pode ser desfeita.</p>
+            <label style={{ fontSize: 12, color: "#DCCCF5", display: "grid", gap: 6 }}>Senha da sua conta
+              <input type="password" autoComplete="current-password" value={resetSenha} onChange={(e) => setResetSenha(e.target.value)} placeholder="Digite sua senha para autorizar" style={{ ...campoTexto, fontSize: 16, padding: "12px" }} />
+            </label>
+            {resetErro && <div role="alert" style={{ padding: 9, borderRadius: 8, background: "rgba(248,113,113,.1)", border: "1px solid rgba(248,113,113,.2)", color: "#F4B8C2", fontSize: 11 }}>{resetErro}</div>}
+            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", flexWrap: "wrap" }}>
+              <button type="button" disabled={resetProcessando} onClick={() => { setResetModalAberto(false); setResetSenha(""); setResetErro(""); }} style={{ ...btnSecundario, flex: "none", padding: "9px 12px" }}>Cancelar</button>
+              <button type="button" disabled={resetProcessando || !resetSenha || !estaOnline} onClick={confirmarResetComSenha} style={{ ...btnSecundario, flex: "none", padding: "9px 12px", background: "rgba(139,42,59,.4)", borderColor: "rgba(241,168,184,.3)", color: "#F1A8B8", opacity: resetProcessando || !resetSenha || !estaOnline ? .55 : 1 }}>{resetProcessando ? "Validando…" : "Confirmar e apagar tudo"}</button>
+            </div>
+          </section>
         </div>
       )}
 
@@ -5634,6 +5732,39 @@ export default function App() {
       )}
 
       {/* DASHBOARD */}
+      {abaAtiva === "configuracoes" && (
+        <div style={{ display: "grid", gap: 14, maxWidth: 720 }}>
+          <section style={{ ...cardClean, background: "rgba(20,22,28,.38)", border: "1px solid rgba(190,170,225,.13)", display: "grid", gap: 12 }}>
+            <div>
+              <div style={{ fontSize: 10, letterSpacing: ".12em", color: "#BEB7CA", marginBottom: 5 }}>USUÁRIO</div>
+              <h2 style={{ margin: 0, fontSize: 16 }}>Foto de perfil</h2>
+              <p style={{ color: "#9E96AD", fontSize: 12, margin: "6px 0 0", lineHeight: 1.5 }}>A imagem será exibida no avatar do menu lateral e sincronizada com seus dados do aplicativo.</p>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+              <div style={{ width: 76, height: 76, borderRadius: "50%", overflow: "hidden", border: "1px solid rgba(199,169,239,.5)", background: "#342B46", display: "grid", placeItems: "center", color: "#DCCCF5", fontWeight: 800, fontSize: 22, flexShrink: 0 }}>
+                {perfilFoto ? <img src={perfilFoto} alt="Foto de perfil atual" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : (authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0,1).toUpperCase()}
+              </div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <button type="button" onClick={() => perfilFotoInputRef.current?.click()} style={{ ...btnSecundario, flex: "none", padding: "9px 12px" }}>Escolher foto</button>
+                {perfilFoto && <button type="button" onClick={() => { setPerfilFoto(""); setPerfilFotoErro("Foto removida. A alteração será sincronizada."); }} style={{ ...btnSecundario, flex: "none", padding: "9px 12px", color: "#E9A8B6" }}>Remover foto</button>}
+                <input ref={perfilFotoInputRef} type="file" accept="image/*" onChange={(e) => atualizarFotoPerfil(e.target.files?.[0])} style={{ display: "none" }} />
+              </div>
+            </div>
+            {perfilFotoErro && <div role="status" style={{ fontSize: 11, color: perfilFotoErro.includes("Não") || perfilFotoErro.includes("Escolha") || perfilFotoErro.includes("8 MB") ? "#F4B8C2" : "#BEB7CA" }}>{perfilFotoErro}</div>}
+            <div style={{ fontSize: 11, color: "#9E96AD" }}>Formatos de imagem aceitos · até 8 MB (a imagem é reduzida para economizar armazenamento).</div>
+          </section>
+
+          <section style={{ ...cardClean, background: "rgba(20,22,28,.38)", border: "1px solid rgba(190,170,225,.13)", display: "grid", gap: 12 }}>
+            <div>
+              <div style={{ fontSize: 10, letterSpacing: ".12em", color: "#BEB7CA", marginBottom: 5 }}>DADOS & SEGURANÇA</div>
+              <h2 style={{ margin: 0, fontSize: 16, color: "#F1EEF7" }}>Resetar dados do aplicativo</h2>
+              <p style={{ color: "#9E96AD", fontSize: 12, margin: "6px 0 0", lineHeight: 1.55 }}>Apaga treinos, registros, histórico, Dashboard, relatórios, recordes, metas, água e demais dados do aplicativo. Sua conta e foto de perfil serão preservadas. Esta ação é irreversível.</p>
+            </div>
+            <button type="button" onClick={() => { setResetModalAberto(true); setResetSenha(""); setResetErro(""); }} style={{ ...btnSecundario, flex: "none", width: "fit-content", padding: "10px 14px", color: "#F1A8B8", borderColor: "rgba(241,168,184,.25)" }}>Resetar dados do app</button>
+          </section>
+        </div>
+      )}
+
       {abaAtiva === "dashboard" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           {(dashboardData.diasSemBackup === null || dashboardData.diasSemBackup >= 7) && (
