@@ -2399,6 +2399,14 @@ export default function App() {
       montar: <><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/><path d="M8 4v4"/><path d="M15 10v4"/><path d="M11 16v4"/></>,
       dashboard: <><path d="M3 20h18"/><path d="m5 16 4-4 3 2 6-7"/><path d="M17 7h3v3"/></>,
       suplementos: <><path d="m4 7 13 10"/><path d="m7 4 4 4-3 3-4-4z"/><path d="m17 13 4 4-3 3-4-4z"/></>,
+      alimentacao: <><path d="M4 3v7a3 3 0 0 0 3 3h1V3"/><path d="M6 3v7"/><path d="M8 3v7"/><path d="M7 13v8"/><path d="M16 3v18"/><path d="M16 3c3 2 4 5 4 8h-4"/></>,
+      mochila: <><rect x="5" y="6" width="14" height="15" rx="3"/><path d="M9 6V4a3 3 0 0 1 6 0v2"/><path d="M5 11h14"/><path d="M9 11v3h6v-3"/></>,
+      desempenho: <><path d="M3 20h18"/><path d="m5 16 4-4 3 2 6-7"/><path d="M17 7h3v3"/></>,
+      biblioteca: <><path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H20v18H7.5A2.5 2.5 0 0 1 5 17.5z"/><path d="M5 5h15"/><path d="M8 9h8"/><path d="M8 13h8"/><path d="M5 17.5A2.5 2.5 0 0 0 7.5 20"/></>,
+      conquistas: <><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H4v2a4 4 0 0 0 4 4"/><path d="M16 6h4v2a4 4 0 0 1-4 4"/><path d="M12 13v4"/><path d="M9 21h6"/><path d="M10 17h4"/></>,
+      relatorios: <><path d="M5 3h10l4 4v14H5z"/><path d="M15 3v5h4"/><path d="M8 16v-3"/><path d="M11 16v-5"/><path d="M14 16v-2"/></>,
+      foco: <><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 2v2M22 12h-2M12 22v-2M2 12h2"/></>,
+      backup: <><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"/></>,
       painel: <><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/><path d="m14 9 3 3-3 3"/></>,
       sair: <><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M21 3v18"/></>,
       pontos: <><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></>,
@@ -3192,8 +3200,8 @@ export default function App() {
           >
             <EfeitoRelevoPastel modo="aberto" />
 
-            <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "14px" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "14px", flex: 1, minHeight: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                   {renderLogo(28)}
                   <span style={{ fontWeight: 750, letterSpacing: "-0.02em", fontSize: "15px" }}>Caveira App</span>
@@ -3218,43 +3226,23 @@ export default function App() {
                 </button>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <span style={rotuloSecaoMenu}>Menu principal</span>
-                <button type="button" onClick={() => abrirPagina("hoje")} style={estiloMenuAtivo("hoje", abaAtiva)}>{renderIconeMenu("hoje", 18)}<span>Treino de Hoje</span></button>
-                <button type="button" onClick={() => abrirPagina("montar")} style={estiloMenuAtivo("montar", abaAtiva)}>{renderIconeMenu("montar", 18)}<span>Montar Treinos</span></button>
-                <button type="button" onClick={() => abrirPagina("dashboard")} style={estiloMenuAtivo("dashboard", abaAtiva)}>{renderIconeMenu("dashboard", 18)}<span>Dashboard</span></button>
-                <div style={{ height: "1px", background: "rgba(148, 163, 184, 0.20)", margin: "9px 2px 7px" }} />
-                <span style={rotuloSecaoMenu}>Páginas e ferramentas</span>
-                <button type="button" onClick={() => abrirPagina("suplementos")} style={estiloMenuAtivo("suplementos", abaAtiva)}>
-                  Suplementos
-                </button>
-                <button type="button" onClick={() => abrirPagina("alimentacao")} style={estiloMenuAtivo("alimentacao", abaAtiva)}>
-                  Alimentação & Rotina
-                </button>
-                <button type="button" onClick={() => abrirPagina("mochila")} style={estiloMenuAtivo("mochila", abaAtiva)}>
-                  Mochila & Ritmo
-                </button>
-                <button type="button" onClick={() => abrirPagina("desempenho")} style={estiloMenuAtivo("desempenho", abaAtiva)}>Central de Desempenho</button>
-                <button type="button" onClick={() => abrirPagina("exercicios")} style={estiloMenuAtivo("exercicios", abaAtiva)}>Biblioteca de Exercícios</button>
-                <button type="button" onClick={() => abrirPagina("conquistas")} style={estiloMenuAtivo("conquistas", abaAtiva)}>Conquistas</button>
-                <button type="button" onClick={() => abrirPagina("relatorios")} style={estiloMenuAtivo("relatorios", abaAtiva)}>Relatórios</button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMenuAberto(false);
-                    setModoFocoLimpo(true);
-                  }}
-                  style={btnMenu}
-                >
-                  Modo Foco
-                </button>
-              </div>
+              <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "4px", flex: 1, minHeight: 0, overflowY: "auto", paddingRight: 2, scrollbarWidth: "thin", scrollbarColor: "rgba(148,163,184,.22) transparent" }}>
+                <span style={rotuloSecaoMenu}>ROTINA</span>
+                <button type="button" onClick={() => abrirPagina("alimentacao")} style={estiloMenuAtivo("alimentacao", abaAtiva)}>{renderIconeMenu("alimentacao", 17)}<span>Alimentação & Rotina</span></button>
+                <button type="button" onClick={() => abrirPagina("suplementos")} style={estiloMenuAtivo("suplementos", abaAtiva)}>{renderIconeMenu("suplementos", 17)}<span>Suplementos</span></button>
+                <button type="button" onClick={() => abrirPagina("mochila")} style={estiloMenuAtivo("mochila", abaAtiva)}>{renderIconeMenu("mochila", 17)}<span>Mochila & Ritmo</span></button>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <div style={{ height: 1, background: "rgba(148,163,184,.14)", margin: "10px 2px 8px", flexShrink: 0 }} />
+                <span style={rotuloSecaoMenu}>TREINO & DESEMPENHO</span>
+                <button type="button" onClick={() => abrirPagina("exercicios")} style={estiloMenuAtivo("exercicios", abaAtiva)}>{renderIconeMenu("biblioteca", 17)}<span>Biblioteca de Exercícios</span></button>
+                <button type="button" onClick={() => abrirPagina("desempenho")} style={estiloMenuAtivo("desempenho", abaAtiva)}>{renderIconeMenu("desempenho", 17)}<span>Central de Desempenho</span></button>
+                <button type="button" onClick={() => abrirPagina("relatorios")} style={estiloMenuAtivo("relatorios", abaAtiva)}>{renderIconeMenu("relatorios", 17)}<span>Relatórios</span></button>
+                <button type="button" onClick={() => abrirPagina("conquistas")} style={estiloMenuAtivo("conquistas", abaAtiva)}>{renderIconeMenu("conquistas", 17)}<span>Conquistas</span></button>
+                <button type="button" onClick={() => { setMenuAberto(false); setModoFocoLimpo(true); }} style={btnMenu}>{renderIconeMenu("foco", 17)}<span>Modo Foco</span></button>
+
+                <div style={{ height: 1, background: "rgba(148,163,184,.14)", margin: "10px 2px 8px", flexShrink: 0 }} />
                 <span style={rotuloSecaoMenu}>SISTEMA</span>
-                <button type="button" onClick={abrirBackupMenu} style={btnMenu}>
-                  Backup & Dados
-                </button>
+                <button type="button" onClick={abrirBackupMenu} style={btnMenu}>{renderIconeMenu("backup", 17)}<span>Backup & Dados</span></button>
               </div>
             </div>
 
@@ -6222,6 +6210,7 @@ const btnMenu = {
   letterSpacing: "0.01em",
   cursor: "pointer",
   gap: "12px",
+  flexShrink: 0,
   transition: "background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease",
 };
 
