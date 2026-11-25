@@ -402,6 +402,7 @@ export default function App() {
   const [authSession, setAuthSession] = useState(null);
   const [authCarregando, setAuthCarregando] = useState(true);
   const [authModo, setAuthModo] = useState("login");
+  const [etapaEntrada, setEtapaEntrada] = useState("boas-vindas");
   const [authNome, setAuthNome] = useState("");
   const [authEmail, setAuthEmail] = useState("");
   const [authSenha, setAuthSenha] = useState("");
@@ -2562,6 +2563,55 @@ export default function App() {
 
   if (authCarregando) {
     return <div style={{ minHeight: "100vh", background: "rgba(29, 27, 39, 0.72)", color: "#BEB7CA", display: "grid", placeItems: "center", fontFamily: "inherit" }}>{textoUi("Carregando sua conta...", "Loading your account...")}</div>;
+  }
+
+  if (!authSession && etapaEntrada !== "auth") {
+    const entrarNaAutenticacao = (modo) => {
+      setAuthModo(modo);
+      setAuthErro("");
+      setAuthMensagem("");
+      setEtapaEntrada("auth");
+    };
+
+    const fundoEntrada = (
+      <>
+        <div aria-hidden="true" style={{ position: "absolute", inset: 0, backgroundImage: "url('/CaveiraBoasVindas.jpeg')", backgroundSize: "cover", backgroundPosition: "center 42%", opacity: 0.48, filter: "saturate(0.72)", transform: "scale(1.015)" }} />
+        <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(5,6,8,.88) 0%, rgba(5,6,8,.68) 48%, rgba(5,6,8,.34) 100%), linear-gradient(0deg, rgba(5,6,8,.42), rgba(5,6,8,.12))" }} />
+      </>
+    );
+
+    return (
+      <main style={{ minHeight: "100vh", minHeight: "100svh", position: "relative", overflow: "hidden", isolation: "isolate", background: "#08090B", color: "#F4F2F7", display: "flex", alignItems: "center", justifyContent: "flex-start", padding: "clamp(24px, 7vw, 88px)", boxSizing: "border-box", fontFamily: "inherit" }}>
+        {fundoEntrada}
+        <section style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: etapaEntrada === "boas-vindas" ? "560px" : "440px", margin: "0 auto 0 0", animation: "caveiraEntradaAparecer .45s ease both" }}>
+          <style>{`@keyframes caveiraEntradaAparecer { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } } @media (max-width: 640px) { .caveira-entrada-titulo { font-size: clamp(36px, 11vw, 54px) !important; } .caveira-entrada-painel { padding: 22px !important; } } button, a { touch-action: manipulation; }`}</style>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "clamp(44px, 10vh, 90px)" }}>
+            <img src="/LogoCaveira.png" alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} style={{ width: "42px", height: "42px", objectFit: "contain" }} />
+            <div><div style={{ fontSize: "14px", fontWeight: 900, letterSpacing: ".2em" }}>CAVEIRA APP</div><div style={{ color: "rgba(225,220,234,.62)", fontSize: "10px", letterSpacing: ".16em", marginTop: "4px" }}>UM DIA DE CADA VEZ</div></div>
+          </div>
+
+          {etapaEntrada === "boas-vindas" ? (
+            <>
+              <div style={{ color: "#C7A9EF", fontSize: "11px", fontWeight: 800, letterSpacing: ".24em", textTransform: "uppercase", marginBottom: "16px" }}>DISCIPLINA • CONSTÂNCIA • EVOLUÇÃO</div>
+              <h1 className="caveira-entrada-titulo" style={{ fontSize: "clamp(42px, 6vw, 66px)", lineHeight: 1.02, letterSpacing: "-.055em", fontWeight: 850, margin: "0 0 20px", maxWidth: "560px" }}>Seja bem-vindo<span style={{ color: "#C7A9EF" }}>.</span></h1>
+              <p style={{ maxWidth: "430px", color: "rgba(235,232,241,.76)", fontSize: "15px", lineHeight: 1.8, margin: "0 0 30px" }}>Seu espaço para organizar os treinos, acompanhar sua evolução e manter a constância. Um dia de cada vez.</p>
+              <button type="button" onClick={() => setEtapaEntrada("acesso")} style={{ minWidth: "176px", padding: "14px 22px", border: "1px solid rgba(220,204,245,.42)", borderRadius: "11px", background: "rgba(199,169,239,.16)", color: "#F5F0FC", fontSize: "14px", fontWeight: 750, letterSpacing: ".02em", cursor: "pointer", backdropFilter: "blur(12px)", boxShadow: "0 10px 32px rgba(0,0,0,.16)" }}>Prosseguir <span aria-hidden="true" style={{ marginLeft: "12px" }}>→</span></button>
+            </>
+          ) : (
+            <div className="caveira-entrada-painel" style={{ maxWidth: "410px", padding: "28px", borderRadius: "18px", background: "rgba(18,18,23,.56)", border: "1px solid rgba(220,204,245,.16)", boxShadow: "0 18px 60px rgba(0,0,0,.22)", backdropFilter: "blur(16px)" }}>
+              <div style={{ color: "#C7A9EF", fontSize: "10px", fontWeight: 800, letterSpacing: ".2em", marginBottom: "12px" }}>CAVEIRA APP</div>
+              <h1 style={{ fontSize: "30px", lineHeight: 1.15, letterSpacing: "-.04em", margin: "0 0 10px" }}>Vamos começar?</h1>
+              <p style={{ color: "rgba(235,232,241,.68)", fontSize: "13px", lineHeight: 1.65, margin: "0 0 24px" }}>Entre na sua conta ou crie seu cadastro para continuar.</p>
+              <div style={{ display: "grid", gap: "11px" }}>
+                <button type="button" onClick={() => entrarNaAutenticacao("login")} style={{ width: "100%", padding: "14px", border: "0", borderRadius: "10px", background: "#C7A9EF", color: "#17131F", fontSize: "14px", fontWeight: 800, cursor: "pointer" }}>Entrar</button>
+                <button type="button" onClick={() => entrarNaAutenticacao("cadastro")} style={{ width: "100%", padding: "14px", border: "1px solid rgba(220,204,245,.3)", borderRadius: "10px", background: "rgba(255,255,255,.045)", color: "#F4F0FA", fontSize: "14px", fontWeight: 700, cursor: "pointer" }}>Criar conta</button>
+              </div>
+              <button type="button" onClick={() => setEtapaEntrada("boas-vindas")} style={{ display: "block", margin: "18px auto 0", padding: "7px 12px", border: 0, background: "transparent", color: "rgba(235,232,241,.62)", fontSize: "12px", cursor: "pointer" }}>Voltar</button>
+            </div>
+          )}
+        </section>
+      </main>
+    );
   }
 
   if (!authSession) {
