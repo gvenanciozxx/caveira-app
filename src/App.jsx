@@ -2607,13 +2607,15 @@ export default function App() {
             border: 1px solid rgba(255,255,255,.14);
             border-radius: 28px;
             background: #111114;
+            isolation: isolate;
             box-shadow: 0 24px 80px rgba(0,0,0,.42);
             animation: caveiraEntradaAparecer .5s ease both;
           }
           .caveira-entrada-imagem {
             position: absolute;
             inset: 0;
-            z-index: -2;
+            z-index: 0;
+            display: block;
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -2624,13 +2626,15 @@ export default function App() {
           .caveira-entrada-sombra {
             position: absolute;
             inset: 0;
-            z-index: -1;
+            z-index: 1;
+            pointer-events: none;
             background:
               linear-gradient(180deg, rgba(0,0,0,.48) 0%, rgba(0,0,0,.12) 34%, rgba(0,0,0,.42) 63%, rgba(0,0,0,.88) 100%),
               linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.04));
           }
           .caveira-entrada-conteudo {
             position: relative;
+            z-index: 2;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -2667,9 +2671,11 @@ export default function App() {
           <img
             className="caveira-entrada-imagem"
             src="/CaveiraBoasVindas.jpeg"
-            alt=""
+            alt="Imagem de fundo da tela de boas-vindas do Caveira App"
             onError={(e) => {
               e.currentTarget.style.display = "none";
+              const card = e.currentTarget.closest(".caveira-entrada-card");
+              if (card) card.style.background = "radial-gradient(ellipse at 50% 32%, rgba(117,91,151,.32), transparent 58%), linear-gradient(145deg, #191722, #09090d)";
             }}
           />
           <div className="caveira-entrada-sombra" aria-hidden="true" />
