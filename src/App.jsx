@@ -673,9 +673,10 @@ export default function App() {
   const [presetSelecionadoId, setPresetSelecionadoId] = useState(PRESETS_INICIAIS[0].id);
   const [novoPresetNome, setNovoPresetNome] = useState("");
   const [editandoId, setEditandoId] = useState(null);
-  const [editForm, setEditForm] = useState({ nome: "", seriesReps: "", descanso: 60, carga: 0 });
+  const [editForm, setEditForm] = useState({ nome: "", grupoMuscular: "superior", seriesReps: "", descanso: 60, carga: 0 });
 
   const [novoNome, setNovoNome] = useState("");
+  const [novoGrupoMuscular, setNovoGrupoMuscular] = useState("superior");
   const [novoSeriesReps, setNovoSeriesReps] = useState("4x10");
   const [novoDescanso, setNovoDescanso] = useState(60);
   const [novoCarga, setNovoCarga] = useState(20);
@@ -1389,7 +1390,10 @@ export default function App() {
     { id: "mobilidade", nome: "MOBILIDADE E ALONGAMENTO", descricao: "Flexibilidade, mobilidade articular e alongamentos.", cor: "#EBC9A8", figura: "mobilidade" },
   ];
   const identificarGrupoTreino = (exercicio) => {
-    const texto = [exercicio?.nome, exercicio?.grupoMuscular, exercicio?.grupo, exercicio?.musculo, exercicio?.musculos, exercicio?.categoria]
+    // A categoria escolhida manualmente ao montar/editar o treino sempre prevalece.
+    const grupoEscolhido = String(exercicio?.grupoMuscular || "").trim().toLowerCase();
+    if (gruposMuscularesCards.some((grupo) => grupo.id === grupoEscolhido)) return grupoEscolhido;
+    const texto = [exercicio?.nome, exercicio?.grupo, exercicio?.musculo, exercicio?.musculos, exercicio?.categoria]
       .filter(Boolean).join(" ").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     if (/antebraco|punho|wrist|rosca inversa|flexao de punho|extensao de punho|pegada|farmer/.test(texto)) return "antebracos";
     if (/abdomen|abdominal|core|prancha|obl(i|í)quo|dead bug|hollow|lombar/.test(texto)) return "core";
@@ -1867,6 +1871,7 @@ export default function App() {
         {
           id: Date.now() + Math.random(),
           nome: novoNome.trim(),
+          grupoMuscular: novoGrupoMuscular,
           seriesReps: novoSeriesReps.trim() || "4x10",
           descanso: Math.max(5, Number(novoDescanso) || 60),
           carga: Math.max(0, Number(novoCarga) || 0),
@@ -1874,6 +1879,7 @@ export default function App() {
       ],
     }));
     setNovoNome("");
+    setNovoGrupoMuscular("superior");
     setFormAdicionarExercicioAberto(false);
   }
 
@@ -1881,6 +1887,7 @@ export default function App() {
     setEditandoId(item.id);
     setEditForm({
       nome: item.nome,
+      grupoMuscular: item.grupoMuscular || identificarGrupoTreino(item),
       seriesReps: item.seriesReps,
       descanso: item.descanso,
       carga: item.carga,
@@ -1896,6 +1903,7 @@ export default function App() {
           ? {
               ...item,
               nome: editForm.nome.trim(),
+              grupoMuscular: editForm.grupoMuscular || "superior",
               seriesReps: editForm.seriesReps.trim() || "4x10",
               descanso: Math.max(5, Number(editForm.descanso) || 60),
               carga: Math.max(0, Number(editForm.carga) || 0),
@@ -4401,8 +4409,8 @@ export default function App() {
             </div>
           </div>
 
-          {/* Carrossel fixo dos seis grupos musculares: navegação visual sem alterar a rotina salva. */}
-          <div style={{ marginTop: "14px", marginBottom: "14px" }}>
+          {/* Tela inicial: somente os seis cards. A lista aparece na página do grupo selecionado. */}
+          {!grupoTreinoAtual && <div style={{ marginTop: "14px", marginBottom: "14px" }}>
             <div
               aria-label="Grupos musculares do treino"
               style={{ display: "flex", gap: "10px", overflowX: "auto", overflowY: "hidden", padding: "3px 2px 12px", scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", scrollbarWidth: "thin" }}
@@ -4415,7 +4423,7 @@ export default function App() {
                     key={grupo.id}
                     type="button"
                     aria-pressed={ativo}
-                    onClick={() => setGrupoTreinoSelecionado(ativo ? null : grupo.id)}
+                    onClick={() => setGrupoTreinoSelecionado(grupo.id)}
                     style={{ flex: "0 0 clamp(190px, 27vw, 230px)", minHeight: "142px", scrollSnapAlign: "start", textAlign: "left", padding: "13px 14px", borderRadius: "13px", border: `1px solid ${ativo ? grupo.cor : "rgba(190,170,225,.18)"}`, background: ativo ? `linear-gradient(145deg, ${grupo.cor}20, rgba(20,22,31,.96))` : "linear-gradient(145deg, rgba(35,34,47,.94), rgba(17,19,27,.96))", color: "#E6E8ED", cursor: "pointer", boxShadow: ativo ? `0 0 0 1px ${grupo.cor}22, 0 8px 22px rgba(0,0,0,.18)` : "0 6px 18px rgba(0,0,0,.12)", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px", transition: "border-color .18s, background .18s", boxSizing: "border-box" }}
                   >
                     <span aria-hidden="true" style={{ width: "43px", height: "43px", display: "grid", placeItems: "center", borderRadius: "12px", background: `${grupo.cor}18`, border: `1px solid ${grupo.cor}38`, flexShrink: 0 }}>
@@ -4435,54 +4443,30 @@ export default function App() {
                 );
               })}
             </div>
-            {grupoTreinoAtual && (
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", margin: "2px 2px 10px" }}>
-                <div style={{ fontSize: "12px", color: "#DCCCF5", fontWeight: 750 }}>{grupoTreinoAtual.nome} <span style={{ color: "#92909D", fontWeight: 500 }}>— {exerciciosVisiveisTreino.length} {exerciciosVisiveisTreino.length === 1 ? "exercício" : "exercícios"}</span></div>
-                <button type="button" onClick={() => setGrupoTreinoSelecionado(null)} style={{ border: "1px solid rgba(190,170,225,.22)", background: "rgba(190,170,225,.08)", color: "#DCCCF5", borderRadius: "7px", padding: "5px 9px", fontSize: "10px", cursor: "pointer" }}>Ver todos</button>
-              </div>
-            )}
-          </div>
+          </div>}
 
-          {exercicios.length === 0 ? (
-            <div style={{ ...cardClean, textAlign: "center", padding: "20px 14px", display: "flex", flexDirection: "column", gap: "10px" }}>
-              <div style={{ color: "#9E96AD", fontSize: "13px" }}>{textoUi('Sem exercícios para este dia.', 'No exercises for this day.')}</div>
-              <div style={{ display: "flex", justifyContent: "center", gap: "6px", flexWrap: "wrap" }}>
-                {MOTIVOS_SEM_TREINO.map((motivo) => {
-                  const ativo = motivoSemTreinoDia === motivo;
-                  return (
-                    <button
-                      key={motivo}
-                      type="button"
-                      onClick={() => selecionarMotivoSemTreino(motivo)}
-                      style={{
-                        padding: "5px 10px",
-                        borderRadius: "7px",
-                        border: "1px solid rgba(190, 170, 225, 0.19)",
-                        background: ativo ? "rgba(190, 170, 225, 0.14)" : "#111827",
-                        color: ativo ? "#DCCCF5" : "#BEB7CA",
-                        fontSize: "11px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {motivo}
-                    </button>
-                  );
-                })}
+          {grupoTreinoAtual && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "14px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", flexWrap: "wrap" }}>
+                <div>
+                  <div style={{ fontSize: "10px", color: "#9E96AD", letterSpacing: ".06em" }}>GRUPO MUSCULAR</div>
+                  <div style={{ fontSize: "18px", color: "#DCCCF5", fontWeight: 800, marginTop: 4 }}>{grupoTreinoAtual.nome}</div>
+                  <div style={{ fontSize: "11px", color: "#A8A4B2", marginTop: 3 }}>{grupoTreinoAtual.descricao}</div>
+                </div>
+                <button type="button" onClick={() => setGrupoTreinoSelecionado(null)} style={{ border: "1px solid rgba(190,170,225,.22)", background: "rgba(190,170,225,.08)", color: "#DCCCF5", borderRadius: "7px", padding: "8px 12px", fontSize: "11px", cursor: "pointer" }}>← Voltar aos grupos</button>
               </div>
             </div>
-          ) : (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr",
-                gap: "8px",
-              }}
-            >
-              {exerciciosVisiveisTreino.length === 0 ? (
-                <div style={{ ...cardClean, textAlign: "center", padding: "18px 12px", color: "#9E96AD", fontSize: "12px" }}>
-                  Nenhum exercício deste grupo está cadastrado neste treino.
-                </div>
-              ) : exerciciosVisiveisTreino.map((ex, indiceExercicio) => {
+          )}
+
+          {grupoTreinoAtual && (
+            exerciciosVisiveisTreino.length === 0 ? (
+              <div style={{ ...cardClean, textAlign: "center", padding: "20px 14px", color: "#9E96AD", fontSize: "12px" }}>
+                Nenhum exercício deste grupo está cadastrado neste treino.
+              </div>
+            ) : (
+              <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "8px" }}>
+                {exerciciosVisiveisTreino.map((ex, indiceExercicio) => {
+
                 const chaveHist = ex.nome.trim().toLowerCase();
                 const histEx = (historicoPorExercicio[chaveHist] || []).filter(
                   (h) => h.dataISO !== dataSelecionada
@@ -4702,8 +4686,9 @@ export default function App() {
                     )}
                   </div>
                 );
-              })}
-            </div>
+                })}
+              </div>
+            )
           )}
 
           {/* Sinais do corpo */}
@@ -5939,6 +5924,19 @@ export default function App() {
               />
             </div>
 
+            <div>
+              <label style={rotuloCampo}>Grupo muscular / categoria</label>
+              <select value={novoGrupoMuscular} onChange={(e) => setNovoGrupoMuscular(e.target.value)} style={campoTexto}>
+                <option value="superior">SUPERIOR — Peito, costas, ombros, bíceps e tríceps</option>
+                <option value="inferior">INFERIOR — Quadríceps, posteriores, glúteos, adutores e panturrilhas</option>
+                <option value="core">ABDÔMEN E CORE — Reto abdominal, oblíquos e estabilizadores do tronco</option>
+                <option value="antebracos">ANTEBRAÇOS — Flexores, extensores e pegada</option>
+                <option value="cardio">CARDIO — Esteira, bicicleta, corrida, escada e condicionamento</option>
+                <option value="mobilidade">MOBILIDADE E ALONGAMENTO — Flexibilidade, mobilidade articular e alongamentos</option>
+              </select>
+              <span style={{ display: "block", marginTop: 5, color: "#9E96AD", fontSize: 10 }}>Essa escolha define em qual card o exercício será exibido.</span>
+            </div>
+
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }}>
               <div>
                 <label style={rotuloCampo}>{textoUi('Séries x Reps', 'Sets x Reps')}</label>
@@ -6072,6 +6070,18 @@ export default function App() {
                         onChange={(e) => setEditForm((f) => ({ ...f, nome: e.target.value }))}
                         style={{ ...campoTexto, padding: "6px 8px" }}
                       />
+                      <select
+                        value={editForm.grupoMuscular || "superior"}
+                        onChange={(e) => setEditForm((f) => ({ ...f, grupoMuscular: e.target.value }))}
+                        style={{ ...campoTexto, padding: "7px 8px" }}
+                      >
+                        <option value="superior">SUPERIOR — Peito, costas, ombros, bíceps e tríceps</option>
+                        <option value="inferior">INFERIOR — Quadríceps, posteriores, glúteos, adutores e panturrilhas</option>
+                        <option value="core">ABDÔMEN E CORE — Reto abdominal, oblíquos e estabilizadores do tronco</option>
+                        <option value="antebracos">ANTEBRAÇOS — Flexores, extensores e pegada</option>
+                        <option value="cardio">CARDIO — Esteira, bicicleta, corrida, escada e condicionamento</option>
+                        <option value="mobilidade">MOBILIDADE E ALONGAMENTO — Flexibilidade, mobilidade articular e alongamentos</option>
+                      </select>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "6px" }}>
                         <input
                           type="text"
