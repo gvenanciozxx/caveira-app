@@ -5785,7 +5785,7 @@ export default function App() {
           maxWidth: larguraContainer,
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
-          background: "rgba(34, 50, 73, 0.88)",
+          background: "rgba(28, 27, 34, 0.88)",
           borderTop: "1px solid rgba(190, 170, 225, 0.15)",
           padding: "8px 12px",
           boxSizing: "border-box",
