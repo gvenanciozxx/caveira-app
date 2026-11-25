@@ -421,6 +421,8 @@ export default function App() {
   const [statusOffline, setStatusOffline] = useState("Conectado");
   const salvamentoPendenteRef = useRef(null);
   const salvamentoTimerRef = useRef(null);
+  const sincronizacaoAutomaticaTimerRef = useRef(null);
+  const sincronizacaoEmAndamentoRef = useRef(false);
   const salvamentoEmAndamentoRef = useRef(false);
   const ultimoUsuarioNuvemRef = useRef(null);
 
@@ -938,24 +940,35 @@ export default function App() {
     return () => { cancelado = true; };
   }, [authSession?.user?.id, tentativaNuvem, estaOnline]);
 
-  // Persistência local automática: alterações ficam pendentes até o usuário sincronizar manualmente.
+  // Nuvem como destino principal: estando online, alterações são enviadas diretamente ao Supabase.
+  // O cache local é usado como contingência offline ou quando a nuvem rejeita a gravação.
   useEffect(() => {
     const userId = authSession?.user?.id;
     if (!userId || !dadosNuvemCarregados || ultimoUsuarioNuvemRef.current !== userId) return;
     if (salvamentoTimerRef.current) clearTimeout(salvamentoTimerRef.current);
+    if (sincronizacaoAutomaticaTimerRef.current) clearTimeout(sincronizacaoAutomaticaTimerRef.current);
     salvamentoTimerRef.current = setTimeout(async () => {
       salvamentoTimerRef.current = null;
-      try {
-        const cacheAnterior = await lerSnapshotOffline(userId).catch(() => null);
-        const mudou = JSON.stringify(cacheAnterior?.data || {}) !== JSON.stringify(estadoPersistido || {});
-        if (!mudou && cacheAnterior?.pendente !== true) return;
-        await gravarSnapshotOffline({ userId, data: estadoPersistido, salvoEm: new Date().toISOString(), cloudUpdatedAt: cacheAnterior?.cloudUpdatedAt || null, pendente: true });
-        setStatusDadosNuvem(estaOnline ? "Alterações salvas localmente • sincronização pendente" : "Salvo neste dispositivo • aguardando internet");
-      } catch (error) {
-        setErroDadosNuvem(error?.message || "Não foi possível salvar os dados neste dispositivo.");
-        setStatusDadosNuvem("Falha ao salvar localmente");
+      const cacheAnterior = await lerSnapshotOffline(userId).catch(() => null);
+      const mudou = JSON.stringify(cacheAnterior?.data || {}) !== JSON.stringify(estadoPersistido || {});
+      if (!mudou && cacheAnterior?.pendente !== true) return;
+      if (estaOnline && navigator.onLine) {
+        setStatusDadosNuvem("Enviando alterações diretamente para a nuvem...");
+        sincronizacaoAutomaticaTimerRef.current = setTimeout(() => {
+          sincronizacaoAutomaticaTimerRef.current = null;
+          sincronizarDadosManualmente();
+        }, 600);
+      } else {
+        try {
+          const salvoEm = new Date().toISOString();
+          await gravarSnapshotOffline({ userId, data: estadoPersistido, salvoEm, cloudUpdatedAt: cacheAnterior?.cloudUpdatedAt || null, pendente: true });
+          setStatusDadosNuvem("Offline • salvo neste dispositivo, aguardando envio à nuvem");
+        } catch (error) {
+          setErroDadosNuvem(error?.message || "Não foi possível preservar os dados offline.");
+          setStatusDadosNuvem("Falha ao salvar dados offline");
+        }
       }
-    }, 500);
+    }, 300);
     return () => {};
   }, [authSession?.user?.id, dadosNuvemCarregados, estaOnline, rotina, focoDiasPorChave, presets, logsPorData,
     observacoes, duracaoPorData, tempoAtivoPorData, aquecimentoPorData, estadoDiaPorData,
@@ -967,6 +980,7 @@ export default function App() {
 
   async function sincronizarDadosManualmente() {
     const userId = authSession?.user?.id;
+    if (sincronizacaoEmAndamentoRef.current) return;
     if (!userId || !dadosNuvemCarregados) {
       setStatusDadosNuvem("Entre na conta para sincronizar");
       return;
@@ -977,15 +991,16 @@ export default function App() {
       setErroDadosNuvem("Conecte-se à internet para enviar seus dados ao Supabase.");
       return;
     }
+    sincronizacaoEmAndamentoRef.current = true;
     setSincronizacaoManualEmAndamento(true);
     setErroDadosNuvem("");
     setStatusDadosNuvem("Sincronizando dados com o Supabase...");
     try {
       const snapshotAtual = estadoPersistido;
       const timestamp = new Date().toISOString();
-      await gravarSnapshotOffline({ userId, data: snapshotAtual, salvoEm: timestamp, cloudUpdatedAt: null, pendente: true });
-      // Sync writes only the saved snapshot; it never calls daily-edit handlers.
-      // A database trigger enforcing past-day edits may still reject this row write.
+      // Online: envia o estado atual direto à nuvem primeiro. O cache local só é atualizado
+      // depois do sucesso; em falha, grava como pendente para não perder alterações.
+      // Esta gravação de snapshot não aciona handlers de edição de datas.
       const { data: existente, error: leituraErro } = await supabase.from("caveira_app_data").select("user_id").eq("user_id", userId).maybeSingle();
       if (leituraErro) throw leituraErro;
       const gravacao = existente
@@ -1000,25 +1015,36 @@ export default function App() {
     } catch (error) {
       const mensagemErro = error?.message || "Falha ao enviar dados ao Supabase.";
       const erroBloqueioData = /está fechada|está fechado|somente o dia atual|closed date|only today/i.test(mensagemErro);
+      // Se a nuvem não aceitar, preserva cópia offline e sinaliza claramente que não sincronizou.
+      await gravarSnapshotOffline({ userId, data: snapshotAtual, salvoEm: timestamp, cloudUpdatedAt: null, pendente: true }).catch(() => null);
       setErroDadosNuvem(erroBloqueioData
-        ? (emIngles ? "The database is applying the past-day editing restriction to this sync. Local data was preserved; a database-side sync-safe policy is required." : "O banco está aplicando a restrição de edição de dias passados à sincronização. Os dados locais foram preservados; é necessária uma regra no banco que permita sincronizar sem editar datas.")
+        ? (emIngles ? "The database is applying the past-day editing restriction to this sync. Changes were saved offline; a database-side sync-safe policy is required." : "O banco está aplicando a restrição de edição de dias passados à sincronização. As alterações foram preservadas offline; é necessária uma regra no banco que permita sincronizar sem editar datas.")
         : mensagemErro);
       setStatusDadosNuvem("Sincronização pendente • falha no envio");
       setMensagemSincronizacaoManual("");
     } finally {
+      sincronizacaoEmAndamentoRef.current = false;
       setSincronizacaoManualEmAndamento(false);
     }
   }
 
-  // Ao voltar a conexão, o efeito de persistência envia o snapshot pendente.
+  // Ao voltar a conexão, envia automaticamente os dados locais pendentes.
+  // O botão manual permanece disponível para forçar uma sincronização.
   useEffect(() => {
-    if (estaOnline && authSession?.user?.id && dadosNuvemCarregados) {
+    let cancelado = false;
+    async function sincronizarPendenciasAoReconectar() {
+      if (!estaOnline || !authSession?.user?.id || !dadosNuvemCarregados) return;
       setStatusOffline("Conexão disponível • verificando sincronização");
+      const cache = await lerSnapshotOffline(authSession.user.id).catch(() => null);
+      if (!cancelado && cache?.pendente === true) sincronizarDadosManualmente();
     }
+    sincronizarPendenciasAoReconectar();
+    return () => { cancelado = true; };
   }, [estaOnline, authSession?.user?.id, dadosNuvemCarregados]);
 
   useEffect(() => () => {
     if (salvamentoTimerRef.current) clearTimeout(salvamentoTimerRef.current);
+    if (sincronizacaoAutomaticaTimerRef.current) clearTimeout(sincronizacaoAutomaticaTimerRef.current);
   }, []);
 
   // Cronômetro da sessão + tempo ativo
