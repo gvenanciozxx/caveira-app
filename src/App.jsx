@@ -2354,8 +2354,8 @@ export default function App() {
     );
   };
 
-  const larguraColunaFechada = 56;
-  const larguraDrawer = ehDesktop ? 250 : 252;
+  const larguraColunaFechada = 72;
+  const larguraDrawer = ehDesktop ? 248 : 252;
   const larguraMenuDesktop = menuAberto ? larguraDrawer : larguraColunaFechada;
   const larguraContainer = ehDesktop ? "100%" : "460px";
   const paddingContainer = ehDesktop
@@ -2677,6 +2677,115 @@ export default function App() {
         }
         @media (max-width: 639px) {
           input, select, textarea { font-size: 16px !important; }
+        }
+
+        /* Identidade visual Caveira App — alinhada à referência Lovable.
+           Esta camada altera somente cores, superfícies, bordas e acabamento visual. */
+        :root {
+          --background: oklch(0.155 0.01 265);
+          --card: oklch(0.19 0.014 268);
+          --popover: oklch(0.21 0.014 268);
+          --border: oklch(0.26 0.022 270);
+          --input: oklch(0.3 0.022 270);
+          --foreground: oklch(0.967 0.003 265);
+          --muted-foreground: oklch(0.714 0.019 261);
+          --secondary: oklch(0.24 0.016 268);
+          --muted: oklch(0.21 0.014 268);
+          --pastel-pink: oklch(0.82 0.11 345);
+          --pastel-lilac: oklch(0.81 0.1 293);
+          --pastel-sky: oklch(0.81 0.09 252);
+          --pastel-mint: oklch(0.87 0.13 152);
+          --pastel-peach: oklch(0.92 0.11 96);
+          --primary: var(--pastel-lilac);
+          --primary-foreground: oklch(0.18 0.03 285);
+          --accent: color-mix(in oklab, var(--pastel-lilac) 12%, transparent);
+          --accent-foreground: var(--pastel-lilac);
+          --ring: var(--pastel-lilac);
+          --success: var(--pastel-mint);
+          --caveira-bg: oklch(0.155 0.01 265);
+          --caveira-surface: rgba(35, 33, 45, .78);
+          --caveira-surface-strong: rgba(31, 29, 42, .96);
+          --caveira-border: rgba(190, 170, 225, .14);
+          --caveira-lilac: oklch(0.81 0.1 293);
+          --caveira-muted: oklch(0.714 0.019 261);
+          --caveira-text: oklch(0.967 0.003 265);
+        }
+        html, body, #root {
+          background: var(--caveira-bg) !important;
+          color: var(--caveira-text) !important;
+          font-family: Geist, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        body {
+          background-image:
+            radial-gradient(ellipse 58% 44% at 100% 100%, color-mix(in oklab, var(--pastel-lilac) 13%, transparent), transparent 72%),
+            radial-gradient(ellipse 42% 34% at 0% 100%, color-mix(in oklab, var(--pastel-mint) 7%, transparent), transparent 72%);
+          background-attachment: fixed;
+        }
+        /* Sidebar e menu compacto: grafite profundo e transparência suave. */
+        aside {
+          background: linear-gradient(160deg, rgba(27, 26, 35, .98), rgba(34, 31, 44, .97)) !important;
+          border-right: 1px solid var(--caveira-border) !important;
+          box-shadow: 18px 0 52px rgba(0, 0, 0, .30) !important;
+          -webkit-backdrop-filter: blur(22px);
+          backdrop-filter: blur(22px);
+        }
+        div[style*="linear-gradient(145deg, #191720"] {
+          background: linear-gradient(160deg, rgba(27, 26, 35, .98), rgba(34, 31, 44, .97)) !important;
+          border-right-color: var(--caveira-border) !important;
+        }
+        /* Cards azuis antigos passam a usar a superfície grafite/lilás da referência. */
+        div[style*="rgba(44,67,96"],
+        div[style*="rgba(44, 67, 96"],
+        div[style*="rgba(38, 54, 75"],
+        div[style*="rgba(34, 50, 73"],
+        div[style*="rgba(27, 41, 60"] {
+          background: var(--caveira-surface) !important;
+          border-color: var(--caveira-border) !important;
+          color: var(--caveira-text);
+          -webkit-backdrop-filter: blur(16px);
+          backdrop-filter: blur(16px);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, .16);
+        }
+        div[style*="rgba(49, 43, 63"],
+        div[style*="rgba(35, 32, 46"],
+        div[style*="rgba(31, 29, 42"] {
+          border-color: var(--caveira-border);
+          -webkit-backdrop-filter: blur(16px);
+          backdrop-filter: blur(16px);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, .14);
+        }
+        /* Faixa inferior e cabeçalhos translúcidos. */
+        nav[style*="position: fixed"] {
+          background: rgba(25, 24, 33, .82) !important;
+          border-top-color: var(--caveira-border) !important;
+          -webkit-backdrop-filter: blur(18px);
+          backdrop-filter: blur(18px);
+          box-shadow: 0 -8px 30px rgba(0, 0, 0, .16);
+        }
+        header {
+          background: rgba(25, 24, 33, .72) !important;
+          border-bottom-color: var(--caveira-border) !important;
+          -webkit-backdrop-filter: blur(14px);
+          backdrop-filter: blur(14px);
+        }
+        button, a, [role="button"] {
+          -webkit-tap-highlight-color: transparent;
+          transition: background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease;
+        }
+        button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
+          outline: 2px solid color-mix(in oklab, var(--pastel-lilac) 72%, transparent) !important;
+          outline-offset: 3px;
+        }
+        input, select, textarea {
+          background: rgba(29, 27, 38, .78) !important;
+          border-color: rgba(190, 170, 225, .18) !important;
+          color: var(--caveira-text) !important;
+          border-radius: 10px;
+        }
+        input::placeholder, textarea::placeholder { color: var(--caveira-muted) !important; }
+        ::selection { background: color-mix(in oklab, var(--pastel-lilac) 28%, transparent); color: #fff; }
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
@@ -5851,11 +5960,11 @@ const btnMenu = {
 
 const estiloMenuAtivo = (pagina, paginaAtiva) => ({
   ...btnMenu,
-  background: paginaAtiva === pagina ? "rgba(96, 165, 250, 0.18)" : "transparent",
+  background: paginaAtiva === pagina ? "rgba(199, 169, 239, 0.13)" : "transparent",
   color: paginaAtiva === pagina ? "#eff6ff" : "#BEB7CA",
-  border: paginaAtiva === pagina ? "1px solid rgba(125, 211, 252, 0.24)" : "1px solid transparent",
+  border: paginaAtiva === pagina ? "1px solid rgba(199, 169, 239, 0.24)" : "1px solid transparent",
   borderLeft: paginaAtiva === pagina ? "3px solid #B99AE7" : "3px solid transparent",
-  boxShadow: paginaAtiva === pagina ? "inset 0 0 18px rgba(96, 165, 250, 0.08)" : "none",
+  boxShadow: paginaAtiva === pagina ? "inset 0 0 18px rgba(199, 169, 239, 0.08)" : "none",
   fontWeight: paginaAtiva === pagina ? 650 : 400,
 });
 
@@ -5903,10 +6012,10 @@ const campoTexto = {
 };
 
 const cardClean = {
-  padding: "12px",
-  borderRadius: "10px",
-  background: "rgba(49, 43, 63, 0.58)",
-  border: "1px solid rgba(190, 170, 225, 0.14)",
+  padding: "14px",
+  borderRadius: "14px",
+  background: "rgba(35, 32, 46, 0.76)",
+  border: "1px solid rgba(190, 170, 225, 0.13)",
 };
 
 const labelMini = {
