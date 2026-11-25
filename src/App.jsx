@@ -2573,42 +2573,201 @@ export default function App() {
       setEtapaEntrada("auth");
     };
 
-    const fundoEntrada = (
-      <>
-        <div aria-hidden="true" style={{ position: "absolute", inset: 0, backgroundImage: "url('/CaveiraBoasVindas.jpeg')", backgroundSize: "cover", backgroundPosition: "center 42%", opacity: 0.48, filter: "saturate(0.72)", transform: "scale(1.015)" }} />
-        <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(5,6,8,.88) 0%, rgba(5,6,8,.68) 48%, rgba(5,6,8,.34) 100%), linear-gradient(0deg, rgba(5,6,8,.42), rgba(5,6,8,.12))" }} />
-      </>
-    );
-
     return (
-      <main style={{ minHeight: "100vh", minHeight: "100svh", position: "relative", overflow: "hidden", isolation: "isolate", background: "#08090B", color: "#F4F2F7", display: "flex", alignItems: "center", justifyContent: "flex-start", padding: "clamp(24px, 7vw, 88px)", boxSizing: "border-box", fontFamily: "inherit" }}>
-        {fundoEntrada}
-        <section style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: etapaEntrada === "boas-vindas" ? "560px" : "440px", margin: "0 auto 0 0", animation: "caveiraEntradaAparecer .45s ease both" }}>
-          <style>{`@keyframes caveiraEntradaAparecer { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } } @media (max-width: 640px) { .caveira-entrada-titulo { font-size: clamp(36px, 11vw, 54px) !important; } .caveira-entrada-painel { padding: 22px !important; } } button, a { touch-action: manipulation; }`}</style>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "clamp(44px, 10vh, 90px)" }}>
-            <img src="/LogoCaveira.png" alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} style={{ width: "42px", height: "42px", objectFit: "contain" }} />
-            <div><div style={{ fontSize: "14px", fontWeight: 900, letterSpacing: ".2em" }}>CAVEIRA APP</div><div style={{ color: "rgba(225,220,234,.62)", fontSize: "10px", letterSpacing: ".16em", marginTop: "4px" }}>UM DIA DE CADA VEZ</div></div>
-          </div>
+      <main
+        style={{
+          minHeight: "100vh",
+          minHeight: "100svh",
+          width: "100%",
+          position: "relative",
+          overflow: "hidden",
+          isolation: "isolate",
+          background: "#050506",
+          color: "#F4F2F7",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "max(18px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom))",
+          boxSizing: "border-box",
+          fontFamily: "inherit",
+        }}
+      >
+        <style>{`
+          @keyframes caveiraEntradaAparecer {
+            from { opacity: 0; transform: translateY(12px) scale(.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+          }
+          .caveira-entrada-card {
+            position: relative;
+            width: min(100%, 430px);
+            height: min(82svh, 790px);
+            min-height: 570px;
+            overflow: hidden;
+            isolation: isolate;
+            border: 1px solid rgba(255,255,255,.14);
+            border-radius: 28px;
+            background: #111114;
+            box-shadow: 0 24px 80px rgba(0,0,0,.42);
+            animation: caveiraEntradaAparecer .5s ease both;
+          }
+          .caveira-entrada-imagem {
+            position: absolute;
+            inset: 0;
+            z-index: -2;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 66% center;
+            opacity: .72;
+            filter: grayscale(1) brightness(.78);
+          }
+          .caveira-entrada-sombra {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background:
+              linear-gradient(180deg, rgba(0,0,0,.48) 0%, rgba(0,0,0,.12) 34%, rgba(0,0,0,.42) 63%, rgba(0,0,0,.88) 100%),
+              linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.04));
+          }
+          .caveira-entrada-conteudo {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: 28px 24px 26px;
+          }
+          .caveira-entrada-botao {
+            width: 100%;
+            min-height: 50px;
+            border-radius: 13px;
+            font-size: 14px;
+            font-weight: 750;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: transform .18s ease, background .18s ease;
+          }
+          .caveira-entrada-botao:active { transform: scale(.985); }
+          @media (max-width: 380px) {
+            .caveira-entrada-card { height: 80svh; min-height: 520px; border-radius: 23px; }
+            .caveira-entrada-conteudo { padding: 23px 19px 21px; }
+          }
+          @media (min-width: 700px) {
+            .caveira-entrada-card { height: min(84svh, 820px); }
+          }
+          @media (max-height: 650px) {
+            .caveira-entrada-card { height: 88svh; min-height: 0; }
+          }
+          button, a { touch-action: manipulation; }
+        `}</style>
 
-          {etapaEntrada === "boas-vindas" ? (
-            <>
-              <div style={{ color: "#C7A9EF", fontSize: "11px", fontWeight: 800, letterSpacing: ".24em", textTransform: "uppercase", marginBottom: "16px" }}>DISCIPLINA • CONSTÂNCIA • EVOLUÇÃO</div>
-              <h1 className="caveira-entrada-titulo" style={{ fontSize: "clamp(42px, 6vw, 66px)", lineHeight: 1.02, letterSpacing: "-.055em", fontWeight: 850, margin: "0 0 20px", maxWidth: "560px" }}>Seja bem-vindo<span style={{ color: "#C7A9EF" }}>.</span></h1>
-              <p style={{ maxWidth: "430px", color: "rgba(235,232,241,.76)", fontSize: "15px", lineHeight: 1.8, margin: "0 0 30px" }}>Seu espaço para organizar os treinos, acompanhar sua evolução e manter a constância. Um dia de cada vez.</p>
-              <button type="button" onClick={() => setEtapaEntrada("acesso")} style={{ minWidth: "176px", padding: "14px 22px", border: "1px solid rgba(220,204,245,.42)", borderRadius: "11px", background: "rgba(199,169,239,.16)", color: "#F5F0FC", fontSize: "14px", fontWeight: 750, letterSpacing: ".02em", cursor: "pointer", backdropFilter: "blur(12px)", boxShadow: "0 10px 32px rgba(0,0,0,.16)" }}>Prosseguir <span aria-hidden="true" style={{ marginLeft: "12px" }}>→</span></button>
-            </>
-          ) : (
-            <div className="caveira-entrada-painel" style={{ maxWidth: "410px", padding: "28px", borderRadius: "18px", background: "rgba(18,18,23,.56)", border: "1px solid rgba(220,204,245,.16)", boxShadow: "0 18px 60px rgba(0,0,0,.22)", backdropFilter: "blur(16px)" }}>
-              <div style={{ color: "#C7A9EF", fontSize: "10px", fontWeight: 800, letterSpacing: ".2em", marginBottom: "12px" }}>CAVEIRA APP</div>
-              <h1 style={{ fontSize: "30px", lineHeight: 1.15, letterSpacing: "-.04em", margin: "0 0 10px" }}>Vamos começar?</h1>
-              <p style={{ color: "rgba(235,232,241,.68)", fontSize: "13px", lineHeight: 1.65, margin: "0 0 24px" }}>Entre na sua conta ou crie seu cadastro para continuar.</p>
-              <div style={{ display: "grid", gap: "11px" }}>
-                <button type="button" onClick={() => entrarNaAutenticacao("login")} style={{ width: "100%", padding: "14px", border: "0", borderRadius: "10px", background: "#C7A9EF", color: "#17131F", fontSize: "14px", fontWeight: 800, cursor: "pointer" }}>Entrar</button>
-                <button type="button" onClick={() => entrarNaAutenticacao("cadastro")} style={{ width: "100%", padding: "14px", border: "1px solid rgba(220,204,245,.3)", borderRadius: "10px", background: "rgba(255,255,255,.045)", color: "#F4F0FA", fontSize: "14px", fontWeight: 700, cursor: "pointer" }}>Criar conta</button>
+        <section className="caveira-entrada-card">
+          <img
+            className="caveira-entrada-imagem"
+            src="/CaveiraBoasVindas.jpeg"
+            alt=""
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
+          />
+          <div className="caveira-entrada-sombra" aria-hidden="true" />
+
+          <div className="caveira-entrada-conteudo">
+            <header style={{ display: "flex", alignItems: "center", gap: "11px" }}>
+              <img
+                src="/LogoCaveira.png"
+                alt=""
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+                style={{ width: "39px", height: "39px", objectFit: "contain" }}
+              />
+              <div>
+                <div style={{ fontSize: "13px", fontWeight: 900, letterSpacing: ".19em" }}>CAVEIRA APP</div>
+                <div style={{ color: "rgba(240,237,245,.68)", fontSize: "9px", letterSpacing: ".15em", marginTop: "4px" }}>UM DIA DE CADA VEZ</div>
               </div>
-              <button type="button" onClick={() => setEtapaEntrada("boas-vindas")} style={{ display: "block", margin: "18px auto 0", padding: "7px 12px", border: 0, background: "transparent", color: "rgba(235,232,241,.62)", fontSize: "12px", cursor: "pointer" }}>Voltar</button>
+            </header>
+
+            {etapaEntrada === "boas-vindas" ? (
+              <div style={{ textAlign: "center", padding: "0 2px 8px" }}>
+                <div style={{ color: "#D8C5F2", fontSize: "10px", fontWeight: 800, letterSpacing: ".22em", marginBottom: "13px" }}>
+                  DISCIPLINA • CONSTÂNCIA • EVOLUÇÃO
+                </div>
+                <h1 style={{ fontSize: "clamp(34px, 9vw, 46px)", lineHeight: 1.04, letterSpacing: "-.055em", fontWeight: 850, margin: "0 0 14px" }}>
+                  Seja bem-vindo<span style={{ color: "#C7A9EF" }}>.</span>
+                </h1>
+                <p style={{ maxWidth: "300px", margin: "0 auto 25px", color: "rgba(245,242,248,.82)", fontSize: "14px", lineHeight: 1.7 }}>
+                  Seu espaço para organizar os treinos, acompanhar sua evolução e manter a constância.
+                </p>
+                <button
+                  type="button"
+                  className="caveira-entrada-botao"
+                  onClick={() => setEtapaEntrada("acesso")}
+                  style={{
+                    maxWidth: "290px",
+                    border: "1px solid rgba(230,215,250,.42)",
+                    background: "rgba(199,169,239,.88)",
+                    color: "#17131F",
+                    boxShadow: "0 10px 28px rgba(0,0,0,.24)",
+                    backdropFilter: "blur(12px)",
+                  }}
+                >
+                  Prosseguir <span aria-hidden="true" style={{ marginLeft: "10px" }}>→</span>
+                </button>
+              </div>
+            ) : (
+              <div
+                style={{
+                  width: "100%",
+                  boxSizing: "border-box",
+                  padding: "23px 19px 19px",
+                  borderRadius: "19px",
+                  border: "1px solid rgba(255,255,255,.17)",
+                  background: "rgba(12,12,16,.58)",
+                  boxShadow: "0 16px 45px rgba(0,0,0,.22)",
+                  backdropFilter: "blur(18px)",
+                  WebkitBackdropFilter: "blur(18px)",
+                }}
+              >
+                <div style={{ color: "#D8C5F2", fontSize: "10px", fontWeight: 800, letterSpacing: ".2em", marginBottom: "10px" }}>CAVEIRA APP</div>
+                <h1 style={{ fontSize: "27px", lineHeight: 1.12, letterSpacing: "-.04em", margin: "0 0 9px" }}>Vamos começar?</h1>
+                <p style={{ color: "rgba(245,242,248,.73)", fontSize: "13px", lineHeight: 1.6, margin: "0 0 19px" }}>
+                  Entre na sua conta ou crie seu cadastro para continuar.
+                </p>
+                <div style={{ display: "grid", gap: "10px" }}>
+                  <button
+                    type="button"
+                    className="caveira-entrada-botao"
+                    onClick={() => entrarNaAutenticacao("login")}
+                    style={{ border: "0", background: "#C7A9EF", color: "#17131F" }}
+                  >
+                    Entrar
+                  </button>
+                  <button
+                    type="button"
+                    className="caveira-entrada-botao"
+                    onClick={() => entrarNaAutenticacao("cadastro")}
+                    style={{ border: "1px solid rgba(235,225,248,.34)", background: "rgba(255,255,255,.075)", color: "#F5F1FA" }}
+                  >
+                    Criar conta
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setEtapaEntrada("boas-vindas")}
+                  style={{ display: "block", margin: "13px auto 0", padding: "8px 12px", border: 0, background: "transparent", color: "rgba(245,242,248,.68)", fontSize: "12px", cursor: "pointer" }}
+                >
+                  Voltar
+                </button>
+              </div>
+            )}
+
+            <div style={{ textAlign: "center", color: "rgba(240,237,245,.48)", fontSize: "9px", letterSpacing: ".16em" }}>
+              FOCO NO PROCESSO · EVOLUA TODOS OS DIAS
             </div>
-          )}
+          </div>
         </section>
       </main>
     );
