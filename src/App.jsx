@@ -555,7 +555,8 @@ export default function App() {
     try { return localStorage.getItem("caveira-idioma") || "pt"; } catch { return "pt"; }
   });
   const emIngles = idiomaApp === "en";
-  const textoUi = (pt, en) => emIngles ? en : pt;
+  const TRADUCOES_UI = {'PRÓXIMO / ATUAL': 'NEXT / CURRENT', 'Descanso concluído.': 'Rest completed.', 'SESSÃO DE HOJE': 'TODAY’S SESSION', 'concluídos': 'completed', 'séries': 'sets', 'PRÓXIMA SESSÃO': 'NEXT SESSION', 'FORÇA NA CONSTÂNCIA.': 'STRENGTH THROUGH CONSISTENCY.', 'Dia fechado para alterações. Você pode consultar os registros, mas somente a data de hoje pode ser editada.': 'This day is closed for changes. You can view records, but only today can be edited.', 'Adiar para próximo dia': 'Move to next day', 'Dia cansado: priorize execução limpa e evite forçar carga máxima hoje.': 'Low-energy day: prioritize clean form and avoid maximum loads today.', 'Sem exercícios para este dia.': 'No exercises for this day.', 'Histórico de cargas:': 'Load history:', 'Sem registros anteriores para este exercício.': 'No previous records for this exercise.', 'Água do dia': 'Daily water', 'Meta diária atingida!': 'Daily goal reached!', 'Observação': 'Note', 'Cronômetro da sessão, contagem regressiva e intervalos de trabalho e descanso.': 'Session timer, countdown, and work/rest intervals.', 'DURAÇÃO TOTAL DA SESSÃO': 'TOTAL SESSION DURATION', 'Concluir sessão': 'Finish session', 'FASE DE AÇÃO': 'WORK PHASE', 'FASE DE DESCANSO': 'REST PHASE', 'Dose / horário': 'Dose / time', 'Marca / sabor / observação': 'Brand / flavor / note', 'Janela de treino & refeições': 'Workout & meal window', '✓ Pré-treino feito': '✓ Pre-workout done', 'Pré-treino pendente': 'Pre-workout pending', '✓ Pós-treino feito': '✓ Post-workout done', 'Pós-treino pendente': 'Post-workout pending', '✓ Refeição fora / livre': '✓ Free meal logged', 'Marcar refeição fora / livre': 'Log a free meal', 'Cafeína & pré-treino': 'Caffeine & pre-workout', 'Café': 'Coffee', 'Pré-treino': 'Pre-workout', 'Energético': 'Energy drink', 'Checklist da mochila / saída': 'Gear / departure checklist', 'Fechar': 'Close', 'Adicionar exercício': 'Add exercise', 'Exercício': 'Exercise', 'Séries x Reps': 'Sets x Reps', 'Modelos e opções da rotina': 'Routine templates and options', 'USUÁRIO': 'USER', 'Atenção à estagnação': 'Plateau alert', 'Volume nos últimos 7 dias': 'Volume over the last 7 days', 'Água nos últimos 7 dias': 'Water over the last 7 days', 'Refeições marcadas': 'Meals logged', 'Cafeína registrada': 'Caffeine logged', 'Mochila média': 'Average gear checklist', 'Todos os exercícios': 'All exercises', 'Sem treinos concluídos no filtro.': 'No completed workouts in this filter.', 'Ainda não há registros suficientes para este gráfico.': 'Not enough records for this chart yet.', 'Gráficos de evolução': 'Progress charts', 'Sua evolução em um só lugar': 'Your progress in one place', 'Evolução corporal': 'Body progress', 'Biblioteca de exercícios': 'Exercise library', 'Nenhum exercício encontrado.': 'No exercises found.', 'Sem dados suficientes para gerar este gráfico.': 'Not enough data to generate this chart.', 'CAVEIRA APP • RELATÓRIO COMPLETO': 'CAVEIRA APP • FULL REPORT', 'Relatório geral de desempenho': 'Overall performance report', 'Imprimir / Salvar relatório em PDF': 'Print / Save report as PDF', 'Gráficos de desempenho': 'Performance charts', 'Histórico de recordes': 'Personal records history', 'Histórico de medidas corporais': 'Body measurements history', 'Nenhuma medição cadastrada.': 'No measurements recorded.', 'Sincronização de dados': 'Data synchronization', 'Envie seus dados salvos neste dispositivo para sua conta Supabase. A sincronização é manual, iniciada por você.': 'Upload the data saved on this device to your Supabase account. Sync is manual and started by you.', 'Sincronização pendente': 'Sync pending', 'Sincronizando...': 'Syncing...', 'Falha na sincronização': 'Sync failed', 'Sincronizado': 'Synced', 'Enviando dados...': 'Uploading data...', 'Sincronizar meus dados': 'Sync my data', 'Aparência e idioma': 'Appearance and language', 'Ajuste o tamanho da interface e o idioma dos elementos principais.': 'Adjust interface size and language of main UI elements.', 'Tamanho da fonte': 'Font size', 'Pequena': 'Small', 'Padrão': 'Standard', 'Grande': 'Large', 'Idioma': 'Language', 'Foto de perfil': 'Profile photo', 'Escolher foto': 'Choose photo', 'Remover foto': 'Remove photo', 'DADOS & SEGURANÇA': 'DATA & SECURITY', 'Resetar dados do aplicativo': 'Reset app data', 'Resetar dados do app': 'Reset app data', 'Configurações': 'Settings', 'Relatórios': 'Reports', 'Conquistas': 'Achievements', 'Modo Foco': 'Focus mode', 'Backup & Dados': 'Backup & Data', 'Alimentação & Rotina': 'Nutrition & Routine', 'Suplementos': 'Supplements', 'Mochila & Ritmo': 'Gear & Pace', 'Biblioteca de Exercícios': 'Exercise Library', 'Central de Desempenho': 'Performance Center', 'Treino de hoje': 'Today’s workout', 'Montar treinos.': 'Build workouts.', 'Alimentação & Rotina.': 'Nutrition & Routine.', 'Mochila & Ritmo.': 'Gear & Pace.', 'Central de Desempenho.': 'Performance Center.', 'Biblioteca de Exercícios.': 'Exercise Library.', 'Conquistas.': 'Achievements.', 'Relatórios.': 'Reports.', 'Configurações.': 'Settings.', 'Voltar página anterior': 'Go back', 'Voltar': 'Back', 'Hoje': 'Today', 'Montar': 'Build', 'Offline • salvo neste dispositivo': 'Offline • saved on this device', 'Sincronização pendente • falha no envio': 'Sync pending • upload failed', 'Dados sincronizados': 'Data synced', 'Conectado': 'Connected', 'Modo offline': 'Offline mode', 'Entre na conta para sincronizar': 'Sign in to sync', 'Offline • sincronização pendente': 'Offline • sync pending', 'Conecte-se à internet para enviar seus dados ao Supabase.': 'Connect to the internet to upload your data to Supabase.', 'Seus dados foram sincronizados com sucesso no Supabase.': 'Your data was successfully synced to Supabase.', 'Falha ao enviar dados ao Supabase.': 'Failed to upload data to Supabase.', 'Salvo neste dispositivo • aguardando internet': 'Saved on this device • waiting for internet', 'Alterações salvas localmente • sincronização pendente': 'Changes saved locally • sync pending', 'Sem dados offline disponíveis': 'No offline data available', 'Carregando seus dados...': 'Loading your data...', 'Abrindo seus dados salvos neste dispositivo...': 'Opening data saved on this device...', 'Este dispositivo ainda não possui uma cópia offline. Conecte-se à internet uma vez para carregar seus dados.': 'This device has no offline copy yet. Connect to the internet once to load your data.', 'Não foi possível carregar os dados do Supabase.': 'Could not load data from Supabase.', 'Não foi possível salvar os dados neste dispositivo.': 'Could not save data on this device.', 'Falha ao salvar localmente': 'Local save failed', 'Conexão disponível • verificando sincronização': 'Connection available • checking sync', 'Dia fechado para alterações. Os registros podem ser consultados, mas não modificados.': 'This day is closed for changes. Records can be viewed but not modified.', 'Nenhum registro encontrado': 'No records found', 'Sem registros': 'No records', 'Salvar': 'Save', 'Cancelar': 'Cancel', 'Editar': 'Edit', 'Excluir': 'Delete', 'Adicionar': 'Add', 'Buscar': 'Search', 'Pesquisar': 'Search', 'Confirmar': 'Confirm', 'Abrir': 'Open', 'Atualizar': 'Update', 'Registrar': 'Log', 'Concluído': 'Done', 'Concluída': 'Done', 'Não registrado': 'Not recorded', 'Carregando': 'Loading', 'Desempenho': 'Performance', 'Treino': 'Workout', 'Treinos': 'Workouts', 'Histórico': 'History', 'Meta': 'Goal', 'Metas': 'Goals', 'Data': 'Date', 'Peso': 'Weight', 'Água': 'Water', 'Sono': 'Sleep', 'Alimentação': 'Nutrition', 'Refeições': 'Meals', 'Observações': 'Notes', 'Tempo': 'Time', 'Duração': 'Duration', 'Estatísticas': 'Statistics', 'Progresso': 'Progress', 'Relatório': 'Report', 'Detalhes': 'Details', 'Nome': 'Name', 'Quantidade': 'Amount', 'Unidade': 'Unit', 'Horário': 'Time', 'Ativo': 'Active', 'Inativo': 'Inactive', 'Pronto': 'Ready', 'Pendente': 'Pending', 'Semana': 'Week', 'Mês': 'Month', 'Dia': 'Day', 'Ontem': 'Yesterday', 'Amanhã': 'Tomorrow', 'Domingo': 'Sunday', 'Segunda-feira': 'Monday', 'Terça-feira': 'Tuesday', 'Quarta-feira': 'Wednesday', 'Quinta-feira': 'Thursday', 'Sexta-feira': 'Friday', 'Sábado': 'Saturday', 'Janeiro': 'January', 'Fevereiro': 'February', 'Março': 'March', 'Abril': 'April', 'Maio': 'May', 'Junho': 'June', 'Julho': 'July', 'Agosto': 'August', 'Setembro': 'September', 'Outubro': 'October', 'Novembro': 'November', 'Dezembro': 'December'};
+  const textoUi = (pt, en) => emIngles ? (en ?? TRADUCOES_UI[pt] ?? pt) : pt;
   useEffect(() => { try { localStorage.setItem("caveira-fonte", preferenciaFonte); } catch {} }, [preferenciaFonte]);
   useEffect(() => { try { localStorage.setItem("caveira-idioma", idiomaApp); } catch {} }, [idiomaApp]);
   const [dataSelecionada, setDataSelecionada] = useState(hojeISO);
@@ -981,15 +982,25 @@ export default function App() {
       const snapshotAtual = estadoPersistido;
       const timestamp = new Date().toISOString();
       await gravarSnapshotOffline({ userId, data: snapshotAtual, salvoEm: timestamp, cloudUpdatedAt: null, pendente: true });
-      const { error } = await supabase.from("caveira_app_data").upsert({ user_id: userId, data: snapshotAtual, updated_at: timestamp }, { onConflict: "user_id" });
-      if (error) throw error;
+      // Sync writes only the saved snapshot; it never calls daily-edit handlers.
+      // A database trigger enforcing past-day edits may still reject this row write.
+      const { data: existente, error: leituraErro } = await supabase.from("caveira_app_data").select("user_id").eq("user_id", userId).maybeSingle();
+      if (leituraErro) throw leituraErro;
+      const gravacao = existente
+        ? await supabase.from("caveira_app_data").update({ data: snapshotAtual, updated_at: timestamp }).eq("user_id", userId)
+        : await supabase.from("caveira_app_data").insert({ user_id: userId, data: snapshotAtual, updated_at: timestamp });
+      if (gravacao.error) throw gravacao.error;
       await gravarSnapshotOffline({ userId, data: snapshotAtual, salvoEm: timestamp, cloudUpdatedAt: timestamp, pendente: false });
       setStatusOffline("Conectado");
       setStatusDadosNuvem("Dados sincronizados");
       setErroDadosNuvem("");
       setMensagemSincronizacaoManual(emIngles ? "Your data was successfully synced to Supabase." : "Seus dados foram sincronizados com sucesso no Supabase.");
     } catch (error) {
-      setErroDadosNuvem(error?.message || "Falha ao enviar dados ao Supabase.");
+      const mensagemErro = error?.message || "Falha ao enviar dados ao Supabase.";
+      const erroBloqueioData = /está fechada|está fechado|somente o dia atual|closed date|only today/i.test(mensagemErro);
+      setErroDadosNuvem(erroBloqueioData
+        ? (emIngles ? "The database is applying the past-day editing restriction to this sync. Local data was preserved; a database-side sync-safe policy is required." : "O banco está aplicando a restrição de edição de dias passados à sincronização. Os dados locais foram preservados; é necessária uma regra no banco que permita sincronizar sem editar datas.")
+        : mensagemErro);
       setStatusDadosNuvem("Sincronização pendente • falha no envio");
       setMensagemSincronizacaoManual("");
     } finally {
@@ -2634,7 +2645,7 @@ export default function App() {
 
           {proximoExercicio && (
             <div style={{ ...cardClean, textAlign: "left" }}>
-              <div style={{ fontSize: "10px", color: "#9E96AD" }}>PRÓXIMO / ATUAL</div>
+              <div style={{ fontSize: "10px", color: "#9E96AD" }}>{textoUi('PRÓXIMO / ATUAL', 'NEXT / CURRENT')}</div>
               <div style={{ fontSize: "18px", fontWeight: 700, marginTop: "4px" }}>
                 {proximoExercicio.nome}
               </div>
@@ -3534,7 +3545,7 @@ export default function App() {
           }}
         >
           <span>
-            <strong>Tempo esgotado!</strong> Descanso concluído.
+            <strong>Tempo esgotado!</strong> {textoUi('Descanso concluído.', 'Rest completed.')}
           </span>
           <button
             type="button"
@@ -3568,7 +3579,7 @@ export default function App() {
             </label>
             {resetErro && <div role="alert" style={{ padding: 9, borderRadius: 8, background: "rgba(248,113,113,.1)", border: "1px solid rgba(248,113,113,.2)", color: "#F4B8C2", fontSize: 11 }}>{resetErro}</div>}
             <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", flexWrap: "wrap" }}>
-              <button type="button" disabled={resetProcessando} onClick={() => { setResetModalAberto(false); setResetSenha(""); setResetErro(""); }} style={{ ...btnSecundario, flex: "none", padding: "9px 12px" }}>Cancelar</button>
+              <button type="button" disabled={resetProcessando} onClick={() => { setResetModalAberto(false); setResetSenha(""); setResetErro(""); }} style={{ ...btnSecundario, flex: "none", padding: "9px 12px" }}>{textoUi('Cancelar', 'Cancel')}</button>
               <button type="button" disabled={resetProcessando || !resetSenha || !estaOnline} onClick={confirmarResetComSenha} style={{ ...btnSecundario, flex: "none", padding: "9px 12px", background: "rgba(139,42,59,.4)", borderColor: "rgba(241,168,184,.3)", color: "#F1A8B8", opacity: resetProcessando || !resetSenha || !estaOnline ? .55 : 1 }}>{resetProcessando ? "Validando…" : "Confirmar e apagar tudo"}</button>
             </div>
           </section>
@@ -3662,7 +3673,7 @@ export default function App() {
           {(
             <aside className="caveira-sessao-hoje" style={{ position: ehDesktopPainel ? "absolute" : "relative", top: ehDesktopPainel ? "0px" : "auto", right: ehDesktopPainel ? "0px" : "auto", width: ehDesktopPainel ? "270px" : "100%", maxWidth: ehDesktopPainel ? "none" : "none", minWidth: "0", minHeight: ehDesktopPainel ? "520px" : "0px", alignSelf: "center", boxSizing: "border-box", borderLeft: ehDesktopPainel ? "1px solid rgba(148,163,184,.12)" : "none", paddingLeft: ehDesktopPainel ? "24px" : "0px", paddingRight: ehDesktopPainel ? "0px" : "0px", margin: ehDesktopPainel ? "0px" : "0px auto 8px", color: "#9AA1AE", display: "flex", flexDirection: "column", gap: "24px", background: "transparent", backdropFilter: "none", WebkitBackdropFilter: "none", overflow: "visible" }}>
               <section style={{ display: "flex", width: "100%", minWidth: "0", boxSizing: "border-box", flexDirection: "column", alignItems: "center", gap: "10px" }}>
-                <div style={{ alignSelf: "stretch", textAlign: ehDesktopPainel ? "left" : "center", fontSize: "10px", fontWeight: 700, color: "#9AA1AE", letterSpacing: ".04em" }}>SESSÃO DE HOJE</div>
+                <div style={{ alignSelf: "stretch", textAlign: ehDesktopPainel ? "left" : "center", fontSize: "10px", fontWeight: 700, color: "#9AA1AE", letterSpacing: ".04em" }}>{textoUi('SESSÃO DE HOJE', 'TODAY’S SESSION')}</div>
                 <div style={{ position: "relative", width: "136px", height: "136px", flexShrink: 0, margin: "20px auto 8px", alignSelf: "center" }}>
                   <svg width="136" height="136" viewBox="0 0 136 136" style={{ transform: "rotate(-90deg)" }}>
                     <circle cx="68" cy="68" r="65" fill="none" stroke="#242833" strokeWidth="4" />
@@ -3670,11 +3681,11 @@ export default function App() {
                   </svg>
                   <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px" }}>
                     <div style={{ color: "#E6E8ED", fontSize: "44px", fontWeight: 750, lineHeight: 1 }}>{concluidosHoje}<span style={{ color: "#9AA1AE", fontSize: "20px" }}>/{exercicios.length}</span></div>
-                    <span style={{ fontSize: "10px", color: "#9AA1AE" }}>concluídos</span>
+                    <span style={{ fontSize: "10px", color: "#9AA1AE" }}>{textoUi('concluídos', 'completed')}</span>
                   </div>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", width: "100%", textAlign: "center", borderBottom: "1px solid rgba(148,163,184,.16)", paddingBottom: "22px" }}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "7px", borderRight: "1px solid rgba(148,163,184,.16)" }}><strong style={{ color: "#E6E8ED", fontSize: "18px" }}>{totalSeriesTreino}</strong><span style={{ fontSize: "10px" }}>séries</span></div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "7px", borderRight: "1px solid rgba(148,163,184,.16)" }}><strong style={{ color: "#E6E8ED", fontSize: "18px" }}>{totalSeriesTreino}</strong><span style={{ fontSize: "10px" }}>{textoUi('séries', 'sets')}</span></div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}><strong style={{ color: "#E6E8ED", fontSize: "18px" }}>{Math.max(0, Math.ceil(estimativaSessaoSeg / 60))}<small style={{ fontSize: "10px", fontWeight: 500 }}> min</small></strong><span style={{ fontSize: "10px" }}>estimativa</span></div>
                 </div>
               </section>
@@ -3695,7 +3706,7 @@ export default function App() {
               <section className="caveira-proxima-sessao" aria-label="Próxima sessão" style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px" }}>
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ color: "#9299A6", fontSize: "10px", fontWeight: 750, letterSpacing: ".04em", marginBottom: "10px" }}>PRÓXIMA SESSÃO</div>
+                    <div style={{ color: "#9299A6", fontSize: "10px", fontWeight: 750, letterSpacing: ".04em", marginBottom: "10px" }}>{textoUi('PRÓXIMA SESSÃO', 'NEXT SESSION')}</div>
                     <strong style={{ color: "#E6E8ED", fontSize: "14px", fontWeight: 700 }}>{proximaSessaoInfo?.nomeDia || "Descanso"}</strong>
                   </div>
                   <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#9AA1AE" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
@@ -3710,7 +3721,7 @@ export default function App() {
               <div className="caveira-assinatura-painel" aria-label="Caveira — Força na constância">
                 <img src="/LogoCaveira.png" alt="Caveira" onError={(e) => { e.currentTarget.style.display = "none"; }} style={{ width: "40px", height: "40px", objectFit: "contain", display: "block", marginBottom: "12px" }} />
                 <div style={{ color: "#9299A6", fontSize: "18px", fontWeight: 500, letterSpacing: ".04em", marginBottom: "5px" }}>CAVEIRA</div>
-                <div style={{ color: "#727A88", fontSize: "9px", letterSpacing: ".08em", fontWeight: 650 }}>FORÇA NA CONSTÂNCIA.</div>
+                <div style={{ color: "#727A88", fontSize: "9px", letterSpacing: ".08em", fontWeight: 650 }}>{textoUi('FORÇA NA CONSTÂNCIA.', 'STRENGTH THROUGH CONSISTENCY.')}</div>
               </div>
             </aside>
           )}
@@ -3848,7 +3859,7 @@ export default function App() {
 
           {!diaPodeEditar && (
             <div style={{ padding: "10px 12px", borderRadius: "9px", background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.28)", color: "#E9C987", fontSize: "12px" }}>
-              Dia fechado para alterações. Você pode consultar os registros, mas somente a data de hoje pode ser editada.
+              {textoUi('Dia fechado para alterações. Você pode consultar os registros, mas somente a data de hoje pode ser editada.', 'This day is closed for changes. You can view records, but only today can be edited.')}
             </div>
           )}
           <fieldset disabled={!diaPodeEditar} style={{ border: 0, padding: 0, margin: 0, minWidth: 0, display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -3904,7 +3915,7 @@ export default function App() {
                   cursor: "pointer",
                 }}
               >
-                Adiar para próximo dia
+                {textoUi('Adiar para próximo dia', 'Move to next day')}
               </button>
             )}
           </div>
@@ -3920,7 +3931,7 @@ export default function App() {
                 border: "1px solid rgba(251, 191, 36, 0.25)",
               }}
             >
-              Dia cansado: priorize execução limpa e evite forçar carga máxima hoje.
+              {textoUi('Dia cansado: priorize execução limpa e evite forçar carga máxima hoje.', 'Low-energy day: prioritize clean form and avoid maximum loads today.')}
             </div>
           )}
 
@@ -3975,7 +3986,7 @@ export default function App() {
 
           {exercicios.length === 0 ? (
             <div style={{ ...cardClean, textAlign: "center", padding: "20px 14px", display: "flex", flexDirection: "column", gap: "10px" }}>
-              <div style={{ color: "#9E96AD", fontSize: "13px" }}>Sem exercícios para este dia.</div>
+              <div style={{ color: "#9E96AD", fontSize: "13px" }}>{textoUi('Sem exercícios para este dia.', 'No exercises for this day.')}</div>
               <div style={{ display: "flex", justifyContent: "center", gap: "6px", flexWrap: "wrap" }}>
                 {MOTIVOS_SEM_TREINO.map((motivo) => {
                   const ativo = motivoSemTreinoDia === motivo;
@@ -4203,9 +4214,9 @@ export default function App() {
                           color: "#BEB7CA",
                         }}
                       >
-                        <div style={{ marginBottom: "4px", color: "#9E96AD" }}>Histórico de cargas:</div>
+                        <div style={{ marginBottom: "4px", color: "#9E96AD" }}>{textoUi('Histórico de cargas:', 'Load history:')}</div>
                         {histEx.length === 0 ? (
-                          <div>Sem registros anteriores para este exercício.</div>
+                          <div>{textoUi('Sem registros anteriores para este exercício.', 'No previous records for this exercise.')}</div>
                         ) : (
                           <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                             {histEx.slice(0, 5).map((h, i) => (
@@ -4270,7 +4281,7 @@ export default function App() {
           >
             <div style={{ padding: "14px", borderRadius: "7px", background: "#0D0F14", border: "1px solid #252A35", display: "flex", flexDirection: "column", gap: "12px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "16px", fontWeight: 700, color: "#E6E8ED" }}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8FC7F4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3.5C9.2 7.1 6 10.2 6 14a6 6 0 0 0 12 0c0-3.8-3.2-6.9-6-10.5Z"/><path d="M4.5 10.5C3.2 12.2 2.5 13.6 2.5 15a4 4 0 0 0 4 4"/></svg>Água do dia</span>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "16px", fontWeight: 700, color: "#E6E8ED" }}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8FC7F4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3.5C9.2 7.1 6 10.2 6 14a6 6 0 0 0 12 0c0-3.8-3.2-6.9-6-10.5Z"/><path d="M4.5 10.5C3.2 12.2 2.5 13.6 2.5 15a4 4 0 0 0 4 4"/></svg>{textoUi('Água do dia', 'Daily water')}</span>
                 <label style={{ fontSize: "12px", color: "#BEB7CA" }}>
                   Peso{" "}
                   <input
@@ -4350,7 +4361,7 @@ export default function App() {
 
             <div style={{ padding: "14px", borderRadius: "10px", background: "rgba(49, 43, 63, 0.58)", border: "1px solid rgba(190, 170, 225, 0.14)", display: "flex", flexDirection: "column", gap: "8px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "13px", fontWeight: 600 }}>Observação</span>
+                <span style={{ fontSize: "13px", fontWeight: 600 }}>{textoUi('Observação', 'Note')}</span>
                 <button
                   type="button"
                   onClick={copiarResumoDoDia}
@@ -4380,7 +4391,7 @@ export default function App() {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", maxWidth: "760px", margin: "0 auto", width: "100%" }}>
           <div style={{ ...cardClean, padding: "14px", display: "flex", flexDirection: "column", gap: "6px" }}>
             <div style={{ fontSize: "13px", fontWeight: 700 }}>Central de tempo</div>
-            <div style={{ fontSize: "11px", color: "#9E96AD" }}>Cronômetro da sessão, contagem regressiva e intervalos de trabalho e descanso.</div>
+            <div style={{ fontSize: "11px", color: "#9E96AD" }}>{textoUi('Cronômetro da sessão, contagem regressiva e intervalos de trabalho e descanso.', 'Session timer, countdown, and work/rest intervals.')}</div>
           </div>
           {/* Central de Tempo */}
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -4466,7 +4477,7 @@ export default function App() {
               >
                 <div>
                   <div style={{ fontSize: "10px", letterSpacing: "0.1em", color: "#9E96AD" }}>
-                    DURAÇÃO TOTAL DA SESSÃO
+                    {textoUi('DURAÇÃO TOTAL DA SESSÃO', 'TOTAL SESSION DURATION')}
                   </div>
                   <div
                     style={{
@@ -4514,7 +4525,7 @@ export default function App() {
                       cursor: "pointer",
                     }}
                   >
-                    Concluir sessão
+                    {textoUi('Concluir sessão', 'Finish session')}
                   </button>
                   <button
                     type="button"
@@ -4770,7 +4781,7 @@ export default function App() {
               </div>
 
               <div>
-                <label style={rotuloCampo}>Dose / horário</label>
+                <label style={rotuloCampo}>{textoUi('Dose / horário', 'Dose / time')}</label>
                 <input
                   type="text"
                   placeholder="Ex.: 5g após o treino"
@@ -4783,7 +4794,7 @@ export default function App() {
 
             <div style={{ display: "grid", gridTemplateColumns: ehDesktop ? "1fr 180px" : "1fr", gap: "8px" }}>
               <div>
-                <label style={rotuloCampo}>Marca / sabor / observação</label>
+                <label style={rotuloCampo}>{textoUi('Marca / sabor / observação', 'Brand / flavor / note')}</label>
                 <input
                   type="text"
                   placeholder="Ex.: Neutro • pote de 300g"
@@ -4833,7 +4844,7 @@ export default function App() {
                     onClick={() => setNovoSupFoto("")}
                     style={{ background: "none", border: "none", color: "#F19AAB", fontSize: "11px", cursor: "pointer" }}
                   >
-                    Remover foto
+                    {textoUi('Remover foto', 'Remove photo')}
                   </button>
                 </div>
               )}
@@ -4971,7 +4982,7 @@ export default function App() {
                         onClick={() => removerSuplemento(sup.id)}
                         style={{ background: "none", border: "none", color: "#9E96AD", fontSize: "11px", cursor: "pointer" }}
                       >
-                        Excluir
+                        {textoUi('Excluir', 'Delete')}
                       </button>
                     </div>
                   </div>
@@ -4985,7 +4996,7 @@ export default function App() {
       {/* PÁGINA DEDICADA: ALIMENTAÇÃO & ROTINA */}
       {abaAtiva === "alimentacao" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {!diaPodeEditar && <div style={{ padding: "10px 12px", borderRadius: "9px", background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.28)", color: "#E9C987", fontSize: "12px" }}>Dia fechado para alterações. Os registros podem ser consultados, mas não modificados.</div>}
+          {!diaPodeEditar && <div style={{ padding: "10px 12px", borderRadius: "9px", background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.28)", color: "#E9C987", fontSize: "12px" }}>{textoUi('Dia fechado para alterações. Os registros podem ser consultados, mas não modificados.', 'This day is closed for changes. Records can be viewed but not modified.')}</div>}
           <fieldset disabled={!diaPodeEditar} style={{ border: 0, padding: 0, margin: 0, minWidth: 0, display: "flex", flexDirection: "column", gap: "16px" }}>
           {/* Qualidade do sono */}
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -5017,7 +5028,7 @@ export default function App() {
 
           {/* Janela pré/pós-treino + Refeição livre */}
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "10px" }}>
-            <span style={{ fontSize: "12px", fontWeight: 600 }}>Janela de treino & refeições</span>
+            <span style={{ fontSize: "12px", fontWeight: 600 }}>{textoUi('Janela de treino & refeições', 'Workout & meal window')}</span>
             <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
               <button
                 type="button"
@@ -5103,23 +5114,23 @@ export default function App() {
                 style={{ ...campoTexto, padding: "7px 9px", fontSize: "12px" }}
               />
               <button type="submit" style={{ ...btnSecundario, flex: "none", padding: "7px 12px" }}>
-                Salvar
+                {textoUi('Salvar', 'Save')}
               </button>
             </form>
           </div>
 
           {/* Contador de cafeína / pré-treino */}
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "8px" }}>
-            <span style={{ fontSize: "12px", fontWeight: 600 }}>Cafeína & pré-treino</span>
+            <span style={{ fontSize: "12px", fontWeight: 600 }}>{textoUi('Cafeína & pré-treino', 'Caffeine & pre-workout')}</span>
             <div style={{ display: "flex", gap: "6px", alignItems: "center", flexWrap: "wrap" }}>
               <select
                 value={novoRotuloCafeina}
                 onChange={(e) => setNovoRotuloCafeina(e.target.value)}
                 style={{ ...campoTexto, width: "auto", padding: "7px 9px", fontSize: "12px" }}
               >
-                <option value="Café">Café</option>
-                <option value="Pré-treino">Pré-treino</option>
-                <option value="Energético">Energético</option>
+                <option value="Café">{textoUi('Café', 'Coffee')}</option>
+                <option value="Pré-treino">{textoUi('Pré-treino', 'Pre-workout')}</option>
+                <option value="Energético">{textoUi('Energético', 'Energy drink')}</option>
               </select>
               <button
                 type="button"
@@ -5223,11 +5234,11 @@ export default function App() {
       {/* PÁGINA DEDICADA: MOCHILA & RITMO */}
       {abaAtiva === "mochila" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {!diaPodeEditar && <div style={{ padding: "10px 12px", borderRadius: "9px", background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.28)", color: "#E9C987", fontSize: "12px" }}>Dia fechado para alterações. Os registros podem ser consultados, mas não modificados.</div>}
+          {!diaPodeEditar && <div style={{ padding: "10px 12px", borderRadius: "9px", background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.28)", color: "#E9C987", fontSize: "12px" }}>{textoUi('Dia fechado para alterações. Os registros podem ser consultados, mas não modificados.', 'This day is closed for changes. Records can be viewed but not modified.')}</div>}
           <fieldset disabled={!diaPodeEditar} style={{ border: 0, padding: 0, margin: 0, minWidth: 0, display: "flex", flexDirection: "column", gap: "16px" }}>
           {/* Checklist da mochila */}
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "10px" }}>
-            <span style={{ fontSize: "12px", fontWeight: 600 }}>Checklist da mochila / saída</span>
+            <span style={{ fontSize: "12px", fontWeight: 600 }}>{textoUi('Checklist da mochila / saída', 'Gear / departure checklist')}</span>
             <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
               {itensMochila.map((item) => {
                 const marcado = mochilaMarcadaDia.includes(item.id);
@@ -5281,7 +5292,7 @@ export default function App() {
                 style={{ ...campoTexto, padding: "7px 9px", fontSize: "12px" }}
               />
               <button type="submit" style={{ ...btnSecundario, flex: "none", padding: "7px 12px" }}>
-                Adicionar
+                {textoUi('Adicionar', 'Add')}
               </button>
             </form>
           </div>
@@ -5455,7 +5466,7 @@ export default function App() {
           {formAdicionarExercicioAberto && (
           <form onSubmit={adicionarExercicio} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             <div>
-              <label style={rotuloCampo}>Exercício</label>
+              <label style={rotuloCampo}>{textoUi('Exercício', 'Exercise')}</label>
               <input
                 type="text"
                 placeholder="Ex.: Supino Reto"
@@ -5467,7 +5478,7 @@ export default function App() {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }}>
               <div>
-                <label style={rotuloCampo}>Séries x Reps</label>
+                <label style={rotuloCampo}>{textoUi('Séries x Reps', 'Sets x Reps')}</label>
                 <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                   <button
                     type="button"
@@ -5561,7 +5572,7 @@ export default function App() {
                 cursor: "pointer",
               }}
             >
-              Adicionar
+              {textoUi('Adicionar', 'Add')}
             </button>
           </form>
           )}
@@ -5624,7 +5635,7 @@ export default function App() {
                           onClick={() => setEditandoId(null)}
                           style={{ ...btnSecundario, flex: "none", padding: "5px 9px", fontSize: "11px" }}
                         >
-                          Cancelar
+                          {textoUi('Cancelar', 'Cancel')}
                         </button>
                         <button
                           type="button"
@@ -5640,7 +5651,7 @@ export default function App() {
                             cursor: "pointer",
                           }}
                         >
-                          Salvar
+                          {textoUi('Salvar', 'Save')}
                         </button>
                       </div>
                     </div>
@@ -5709,7 +5720,7 @@ export default function App() {
           </div>
 
                       <details style={{ width: "100%", borderBottom: "1px solid rgba(190, 170, 225, 0.12)", paddingBottom: "8px" }}>
-              <summary style={{ cursor: "pointer", color: "#9E96AD", fontSize: "11px", fontWeight: 600, padding: "5px 0" }}>Modelos e opções da rotina</summary>
+              <summary style={{ cursor: "pointer", color: "#9E96AD", fontSize: "11px", fontWeight: 600, padding: "5px 0" }}>{textoUi('Modelos e opções da rotina', 'Routine templates and options')}</summary>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px", paddingTop: "12px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
               <select
@@ -5843,7 +5854,7 @@ export default function App() {
           </section>
           <section style={{ ...cardClean, background: "rgba(20,22,28,.38)", border: "1px solid rgba(190,170,225,.13)", display: "grid", gap: 12 }}>
             <div>
-              <div style={{ fontSize: 10, letterSpacing: ".12em", color: "#BEB7CA", marginBottom: 5 }}>USUÁRIO</div>
+              <div style={{ fontSize: 10, letterSpacing: ".12em", color: "#BEB7CA", marginBottom: 5 }}>{textoUi('USUÁRIO', 'USER')}</div>
               <h2 style={{ margin: 0, fontSize: 16 }}>{textoUi("Foto de perfil", "Profile photo")}</h2>
               <p style={{ color: "#9E96AD", fontSize: 12, margin: "6px 0 0", lineHeight: 1.5 }}>{textoUi("A imagem será exibida no avatar do menu lateral e sincronizada com seus dados do aplicativo.", "This photo will appear in the sidebar avatar and sync with your app data.")}</p>
             </div>
@@ -5853,7 +5864,7 @@ export default function App() {
               </div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <button type="button" onClick={() => perfilFotoInputRef.current?.click()} style={{ ...btnSecundario, flex: "none", padding: "9px 12px" }}>{textoUi("Escolher foto", "Choose photo")}</button>
-                {perfilFoto && <button type="button" onClick={() => { setPerfilFoto(""); setPerfilFotoErro("Foto removida. A alteração será sincronizada."); }} style={{ ...btnSecundario, flex: "none", padding: "9px 12px", color: "#E9A8B6" }}>Remover foto</button>}
+                {perfilFoto && <button type="button" onClick={() => { setPerfilFoto(""); setPerfilFotoErro("Foto removida. A alteração será sincronizada."); }} style={{ ...btnSecundario, flex: "none", padding: "9px 12px", color: "#E9A8B6" }}>{textoUi('Remover foto', 'Remove photo')}</button>}
                 <input ref={perfilFotoInputRef} type="file" accept="image/*" onChange={(e) => atualizarFotoPerfil(e.target.files?.[0])} style={{ display: "none" }} />
               </div>
             </div>
@@ -5896,7 +5907,7 @@ export default function App() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
             <div style={cardClean}>
-              <div style={labelMini}>Mês</div>
+              <div style={labelMini}>{textoUi('Mês', 'Month')}</div>
               <div style={valorMini}>{dashboardData.treinosMes}</div>
             </div>
             <div style={cardClean}>
@@ -5919,7 +5930,7 @@ export default function App() {
             >
               {dashboardData.estagnados.length > 0 && (
                 <div style={cardClean}>
-                  <div style={{ ...labelMini, color: "#E9C987", marginBottom: "6px" }}>Atenção à estagnação</div>
+                  <div style={{ ...labelMini, color: "#E9C987", marginBottom: "6px" }}>{textoUi('Atenção à estagnação', 'Plateau alert')}</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "12px" }}>
                     {dashboardData.estagnados.map((est, i) => (
                       <div key={i}>
@@ -5994,7 +6005,7 @@ export default function App() {
             </div>
 
             <div style={cardClean}>
-              <div style={labelMini}>Volume nos últimos 7 dias</div>
+              <div style={labelMini}>{textoUi('Volume nos últimos 7 dias', 'Volume over the last 7 days')}</div>
               <div style={{ fontSize: "13px", fontWeight: 600, marginTop: "6px" }}>
                 {dashboardData.volume7dAtual.toLocaleString("pt-BR")} kg
               </div>
@@ -6013,7 +6024,7 @@ export default function App() {
 
           <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "10px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "8px" }}>
-              <span style={labelMini}>Água nos últimos 7 dias</span>
+              <span style={labelMini}>{textoUi('Água nos últimos 7 dias', 'Water over the last 7 days')}</span>
               <span style={{ fontSize: "12px", fontWeight: 600 }}>
                 Média de {dashboardData.mediaAgua7DiasMl} ml/dia • Meta {metaAguaMl} ml/dia ({pesoKg} kg)
               </span>
@@ -6065,9 +6076,9 @@ export default function App() {
               <div style={{ fontSize: "11px", color: "#9E96AD", marginTop: "3px" }}>Visão dos registros dos últimos 7 dias. Cada linha mostra os dados disponíveis daquele dia.</div>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: ehDesktop ? "repeat(4, 1fr)" : "repeat(2, 1fr)", gap: "8px" }}>
-              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>Refeições marcadas</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.refeicoes7d}</div></div>
-              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>Cafeína registrada</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.cafeina7d}</div></div>
-              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>Mochila média</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.mochilaMedia7d}%</div></div>
+              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>{textoUi('Refeições marcadas', 'Meals logged')}</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.refeicoes7d}</div></div>
+              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>{textoUi('Cafeína registrada', 'Caffeine logged')}</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.cafeina7d}</div></div>
+              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>{textoUi('Mochila média', 'Average gear checklist')}</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.mochilaMedia7d}%</div></div>
               <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>Suplementos ativos</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.suplementosAtivos}</div></div>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -6138,7 +6149,7 @@ export default function App() {
                 </select>
 
                 <select value={exercicioFiltro} onChange={(e) => setExercicioFiltro(e.target.value)} style={campoTexto}>
-                  <option value="TODOS">Todos os exercícios</option>
+                  <option value="TODOS">{textoUi('Todos os exercícios', 'All exercises')}</option>
                   {dashboardData.exerciciosNomes.map((n) => (
                     <option key={n} value={n}>
                       {n}
@@ -6148,7 +6159,7 @@ export default function App() {
               </div>
 
               {dashboardData.historico.length === 0 ? (
-                <div style={{ fontSize: "12px", color: "#9E96AD" }}>Sem treinos concluídos no filtro.</div>
+                <div style={{ fontSize: "12px", color: "#9E96AD" }}>{textoUi('Sem treinos concluídos no filtro.', 'No completed workouts in this filter.')}</div>
               ) : (
                 dashboardData.historico.map((item, i) => (
                   <div key={`${item.dataISO}-${i}`}>
@@ -6237,7 +6248,7 @@ export default function App() {
             const barras = (titulo, dados, unidade = "", cor = "#B99AE7") => {
               const validos = (dados || []).filter((x) => Number.isFinite(Number(x.valor)));
               const max = Math.max(1, ...validos.map((x) => Number(x.valor)));
-              return <div style={painel}><div style={{fontWeight:800,fontSize:13}}>{titulo}</div>{validos.length ? <div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(validos.length,8)},minmax(0,1fr))`,gap:7,alignItems:"end",minHeight:125}}>{validos.slice(-8).map((x,i)=><div key={`${x.rotulo}-${i}`} title={`${x.rotulo}: ${x.valor}${unidade}`} style={{display:"grid",gap:5,justifyItems:"center",minWidth:0}}><strong style={{fontSize:9,color:"#E9DFFC",whiteSpace:"nowrap"}}>{Number(x.valor).toLocaleString("pt-BR")}{unidade}</strong><div style={{height:78,width:"100%",maxWidth:34,display:"flex",alignItems:"end",background:"rgba(148,163,184,.12)",borderRadius:7,overflow:"hidden"}}><div style={{width:"100%",height:`${Math.max(3,Number(x.valor)/max*100)}%`,background:cor,borderRadius:7}}/></div><span style={{fontSize:9,color:"#AAA1B8",textAlign:"center",overflowWrap:"anywhere"}}>{x.rotulo}</span></div>)}</div> : <div style={{fontSize:11,color:"#AAA1B8"}}>Ainda não há registros suficientes para este gráfico.</div>}</div>;
+              return <div style={painel}><div style={{fontWeight:800,fontSize:13}}>{titulo}</div>{validos.length ? <div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(validos.length,8)},minmax(0,1fr))`,gap:7,alignItems:"end",minHeight:125}}>{validos.slice(-8).map((x,i)=><div key={`${x.rotulo}-${i}`} title={`${x.rotulo}: ${x.valor}${unidade}`} style={{display:"grid",gap:5,justifyItems:"center",minWidth:0}}><strong style={{fontSize:9,color:"#E9DFFC",whiteSpace:"nowrap"}}>{Number(x.valor).toLocaleString("pt-BR")}{unidade}</strong><div style={{height:78,width:"100%",maxWidth:34,display:"flex",alignItems:"end",background:"rgba(148,163,184,.12)",borderRadius:7,overflow:"hidden"}}><div style={{width:"100%",height:`${Math.max(3,Number(x.valor)/max*100)}%`,background:cor,borderRadius:7}}/></div><span style={{fontSize:9,color:"#AAA1B8",textAlign:"center",overflowWrap:"anywhere"}}>{x.rotulo}</span></div>)}</div> : <div style={{fontSize:11,color:"#AAA1B8"}}>{textoUi('Ainda não há registros suficientes para este gráfico.', 'Not enough records for this chart yet.')}</div>}</div>;
             };
             const ultimosPR = registrosPR.slice().sort((a,b)=>(a.data||"").localeCompare(b.data||"")).slice(-8).map(x=>({rotulo:(x.exercicio||"PR").slice(0,9),valor:Number(x.carga)}));
             const medidas = medidasCorporais.slice().sort((a,b)=>(a.data||"").localeCompare(b.data||"")).slice(-8);
@@ -6246,7 +6257,7 @@ export default function App() {
             const treinos = dashboardData.atividade7Dias.map(x=>({rotulo:x.rotulo,valor:x.treino?1:0}));
             const cardio = dashboardData.atividade7Dias.map(x=>({rotulo:x.rotulo,valor:Number(x.cardioMin)||0}));
             const cargasTreino = (dashboardData.historico || []).slice(-8).map(x=>({rotulo:(x.dataISO||x.nome||"Treino").slice(5,10),valor:Number(x.carga)||0}));
-            return <div style={{display:"grid",gap:12}}><div><h3 style={{margin:"2px 0 4px",fontSize:16}}>Gráficos de evolução</h3><p style={{...labelMini,margin:0}}>Visualizações calculadas a partir dos registros reais. Os gráficos ganham histórico conforme você registra atividades.</p></div><div style={{display:"grid",gridTemplateColumns:ehDesktop?"repeat(2,minmax(0,1fr))":"1fr",gap:12}}>{barras("Recordes pessoais por exercício",ultimosPR," kg","#B99AE7")}{barras("Cargas dos treinos registrados",cargasTreino," kg","#B89AE7")}{barras("Peso corporal (últimas medições)",medidas.filter(x=>x.peso).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peso)}))," kg","#C4A5EC")}{barras("Cintura (últimas medições)",medidas.filter(x=>x.cintura).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.cintura)}))," cm","#a78bfa")}{barras("Peito (últimas medições)",medidas.filter(x=>x.peito).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peito)}))," cm","#9DDFC8")}{barras("Hidratação diária — 7 dias",agua," ml","#C4A5EC")}{barras("Volume de treino — 7 dias",volume," kg","#E6C17C")}{barras("Dias com treino — 7 dias",treinos,"","#9DDFC8")}{barras("Cardio — 7 dias",cardio," min","#a78bfa")}</div><div style={painel}><strong style={{fontSize:13}}>Metas pessoais</strong>{metasPessoais.length?metasPessoais.map(m=><div key={m.id} style={{display:"flex",justifyContent:"space-between",gap:8,fontSize:11,borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7}}><span>{m.nome}</span><strong style={{color:m.concluida?"#B7EBD0":"#D6C4F1"}}>{m.concluida?"Concluída":"Em andamento"}</strong></div>):<span style={labelMini}>Nenhuma meta cadastrada.</span>}</div></div>;
+            return <div style={{display:"grid",gap:12}}><div><h3 style={{margin:"2px 0 4px",fontSize:16}}>{textoUi('Gráficos de evolução', 'Progress charts')}</h3><p style={{...labelMini,margin:0}}>Visualizações calculadas a partir dos registros reais. Os gráficos ganham histórico conforme você registra atividades.</p></div><div style={{display:"grid",gridTemplateColumns:ehDesktop?"repeat(2,minmax(0,1fr))":"1fr",gap:12}}>{barras("Recordes pessoais por exercício",ultimosPR," kg","#B99AE7")}{barras("Cargas dos treinos registrados",cargasTreino," kg","#B89AE7")}{barras("Peso corporal (últimas medições)",medidas.filter(x=>x.peso).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peso)}))," kg","#C4A5EC")}{barras("Cintura (últimas medições)",medidas.filter(x=>x.cintura).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.cintura)}))," cm","#a78bfa")}{barras("Peito (últimas medições)",medidas.filter(x=>x.peito).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peito)}))," cm","#9DDFC8")}{barras("Hidratação diária — 7 dias",agua," ml","#C4A5EC")}{barras("Volume de treino — 7 dias",volume," kg","#E6C17C")}{barras("Dias com treino — 7 dias",treinos,"","#9DDFC8")}{barras("Cardio — 7 dias",cardio," min","#a78bfa")}</div><div style={painel}><strong style={{fontSize:13}}>Metas pessoais</strong>{metasPessoais.length?metasPessoais.map(m=><div key={m.id} style={{display:"flex",justifyContent:"space-between",gap:8,fontSize:11,borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7}}><span>{m.nome}</span><strong style={{color:m.concluida?"#B7EBD0":"#D6C4F1"}}>{m.concluida?"Concluída":"Em andamento"}</strong></div>):<span style={labelMini}>Nenhuma meta cadastrada.</span>}</div></div>;
           })()}
         </div>
       )}
@@ -6258,12 +6269,12 @@ export default function App() {
         const card = { ...cardClean, background: "rgba(44, 67, 96, 0.48)", border: "1px solid rgba(190, 160, 232, 0.25)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderRadius: "14px", boxShadow: "0 12px 30px rgba(4, 12, 25, .16)" };
         const campo = { ...campoTexto, background: "rgba(19, 35, 55, .58)", border: "1px solid rgba(96,165,250,.25)", borderRadius: "10px" };
         return <div style={{ display: "grid", gap: "14px" }}>
-          <div style={{ ...card, padding: "18px" }}><div style={{ color: "#D6C4F1", fontSize: "11px", letterSpacing: ".12em", fontWeight: 800 }}>CAVEIRA • PERFORMANCE</div><h2 style={{ margin: "7px 0", fontSize: "22px" }}>Sua evolução em um só lugar</h2><p style={{ color: "#AAA1B8", fontSize: "12px", margin: 0 }}>Acompanhe seus recordes, medidas e metas com base nos registros que você inserir.</p></div>
+          <div style={{ ...card, padding: "18px" }}><div style={{ color: "#D6C4F1", fontSize: "11px", letterSpacing: ".12em", fontWeight: 800 }}>CAVEIRA • PERFORMANCE</div><h2 style={{ margin: "7px 0", fontSize: "22px" }}>{textoUi('Sua evolução em um só lugar', 'Your progress in one place')}</h2><p style={{ color: "#AAA1B8", fontSize: "12px", margin: 0 }}>Acompanhe seus recordes, medidas e metas com base nos registros que você inserir.</p></div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(135px,1fr))", gap: "10px" }}>
             {[{ t: "Recordes registrados", v: registrosPR.length }, { t: "Medições", v: medidasCorporais.length }, { t: "Metas pessoais", v: metasPessoais.length }, { t: "Peso mais recente", v: ultimoPeso?.peso ? `${ultimoPeso.peso} kg` : "—" }].map((x) => <div key={x.t} style={card}><div style={labelMini}>{x.t}</div><div style={{ fontSize: "22px", fontWeight: 800, color: "#E4D8F7", marginTop: "7px" }}>{x.v}</div></div>)}
           </div>
           <div style={card}><h3 style={{ margin: "0 0 12px", fontSize: "15px" }}>Registrar recorde pessoal</h3><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: "8px" }}><input value={novoPRExercicio} onChange={(e) => setNovoPRExercicio(e.target.value)} placeholder="Exercício" style={campo}/><input type="number" min="0" step="0.5" value={novoPRCarga} onChange={(e) => setNovoPRCarga(e.target.value)} placeholder="Carga (kg)" style={campo}/><button type="button" onClick={() => { if (!novoPRExercicio.trim() || !(Number(novoPRCarga) > 0) || dataSelecionada !== hojeISO) return; setRegistrosPR((p) => [...p, { id: `pr-${Date.now()}`, exercicio: novoPRExercicio.trim(), carga: Number(novoPRCarga), data: hojeISO }]); setNovoPRExercicio(""); setNovoPRCarga(""); }} style={{ ...btnSecundario, background: "#A98BDD", color: "#15131C", border: 0, fontWeight: 800 }}>Salvar recorde</button></div><p style={{ ...labelMini, marginBottom: 0 }}>Novos registros respeitam o bloqueio de datas: só podem ser adicionados hoje.</p>{registrosPR.slice().reverse().map((r) => <div key={r.id} style={{ display: "flex", justifyContent: "space-between", gap: 8, borderTop: "1px solid rgba(148,190,215,.14)", padding: "10px 0", fontSize: "12px" }}><span>{r.exercicio} • {r.data}</span><strong style={{ color: "#D6C4F1" }}>{r.carga} kg</strong></div>)}</div>
-          <div style={card}><h3 style={{ margin: "0 0 12px", fontSize: "15px" }}>Evolução corporal</h3><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))", gap: 8 }}><input type="number" min="0" step="0.1" value={novaMedidaPeso} onChange={(e) => setNovaMedidaPeso(e.target.value)} placeholder="Peso kg" style={campo}/><input type="number" min="0" step="0.1" value={novaMedidaCintura} onChange={(e) => setNovaMedidaCintura(e.target.value)} placeholder="Cintura cm" style={campo}/><input type="number" min="0" step="0.1" value={novaMedidaPeito} onChange={(e) => setNovaMedidaPeito(e.target.value)} placeholder="Peito cm" style={campo}/><button type="button" onClick={() => { if ((!novaMedidaPeso && !novaMedidaCintura && !novaMedidaPeito) || dataSelecionada !== hojeISO) return; setMedidasCorporais((p) => [...p, { id: `med-${Date.now()}`, data: hojeISO, peso: novaMedidaPeso ? Number(novaMedidaPeso) : null, cintura: novaMedidaCintura ? Number(novaMedidaCintura) : null, peito: novaMedidaPeito ? Number(novaMedidaPeito) : null }]); setNovaMedidaPeso(""); setNovaMedidaCintura(""); setNovaMedidaPeito(""); }} style={{ ...btnSecundario, background: "#A98BDD", color: "#15131C", border: 0, fontWeight: 800 }}>Registrar medidas</button></div>{medidasCorporais.slice().reverse().map((m) => <div key={m.id} style={{ borderTop: "1px solid rgba(148,190,215,.14)", padding: "9px 0", fontSize: "12px", color: "#cbd5e1" }}>{m.data} • {m.peso ? `${m.peso} kg` : ""} {m.cintura ? `• Cintura ${m.cintura} cm` : ""} {m.peito ? `• Peito ${m.peito} cm` : ""}</div>)}</div>
+          <div style={card}><h3 style={{ margin: "0 0 12px", fontSize: "15px" }}>{textoUi('Evolução corporal', 'Body progress')}</h3><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(110px,1fr))", gap: 8 }}><input type="number" min="0" step="0.1" value={novaMedidaPeso} onChange={(e) => setNovaMedidaPeso(e.target.value)} placeholder="Peso kg" style={campo}/><input type="number" min="0" step="0.1" value={novaMedidaCintura} onChange={(e) => setNovaMedidaCintura(e.target.value)} placeholder="Cintura cm" style={campo}/><input type="number" min="0" step="0.1" value={novaMedidaPeito} onChange={(e) => setNovaMedidaPeito(e.target.value)} placeholder="Peito cm" style={campo}/><button type="button" onClick={() => { if ((!novaMedidaPeso && !novaMedidaCintura && !novaMedidaPeito) || dataSelecionada !== hojeISO) return; setMedidasCorporais((p) => [...p, { id: `med-${Date.now()}`, data: hojeISO, peso: novaMedidaPeso ? Number(novaMedidaPeso) : null, cintura: novaMedidaCintura ? Number(novaMedidaCintura) : null, peito: novaMedidaPeito ? Number(novaMedidaPeito) : null }]); setNovaMedidaPeso(""); setNovaMedidaCintura(""); setNovaMedidaPeito(""); }} style={{ ...btnSecundario, background: "#A98BDD", color: "#15131C", border: 0, fontWeight: 800 }}>Registrar medidas</button></div>{medidasCorporais.slice().reverse().map((m) => <div key={m.id} style={{ borderTop: "1px solid rgba(148,190,215,.14)", padding: "9px 0", fontSize: "12px", color: "#cbd5e1" }}>{m.data} • {m.peso ? `${m.peso} kg` : ""} {m.cintura ? `• Cintura ${m.cintura} cm` : ""} {m.peito ? `• Peito ${m.peito} cm` : ""}</div>)}</div>
           <div style={card}><h3 style={{ margin: "0 0 12px", fontSize: "15px" }}>Metas pessoais</h3><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))", gap: 8 }}><input value={novaMetaNome} onChange={(e) => setNovaMetaNome(e.target.value)} placeholder="Ex.: Treinar 4x por semana" style={campo}/><input value={novaMetaAlvo} onChange={(e) => setNovaMetaAlvo(e.target.value)} placeholder="Alvo / observação" style={campo}/><button type="button" onClick={() => { if (!novaMetaNome.trim()) return; setMetasPessoais((p) => [...p, { id: `meta-${Date.now()}`, nome: novaMetaNome.trim(), alvo: novaMetaAlvo.trim(), concluida: false }]); setNovaMetaNome(""); setNovaMetaAlvo(""); }} style={{ ...btnSecundario, background: "#A98BDD", color: "#15131C", border: 0, fontWeight: 800 }}>Adicionar meta</button></div>{metasPessoais.map((m) => <div key={m.id} style={{ display: "flex", alignItems: "center", gap: 8, borderTop: "1px solid rgba(148,190,215,.14)", padding: "9px 0", fontSize: "12px" }}><input type="checkbox" checked={!!m.concluida} onChange={(e) => setMetasPessoais((p) => p.map((x) => x.id === m.id ? { ...x, concluida: e.target.checked } : x))}/><span style={{ flex: 1, textDecoration: m.concluida ? "line-through" : "none" }}>{m.nome} {m.alvo ? `— ${m.alvo}` : ""}</span><button type="button" onClick={() => setMetasPessoais((p) => p.filter((x) => x.id !== m.id))} style={{ ...btnCarga, color: "#F4B8C2" }}>×</button></div>)}</div>
         </div>;
       })()}
@@ -6347,7 +6358,7 @@ export default function App() {
           ["Kettlebell swing", "Posterior e glúteos", "Kettlebell", "Inicie com dobradiça de quadril. Impulsione o kettlebell estendendo quadris, sem levantar com os braços ou hiperestender a lombar. Aprenda a técnica antes de acelerar."]
         ];
         const filtrados = biblioteca.filter((e) => e.join(" ").toLowerCase().includes(buscaBiblioteca.toLowerCase()));
-        return <div style={{ display: "grid", gap: 12 }}><div style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.22)", backdropFilter: "blur(16px)" }}><h2 style={{ margin: "0 0 6px", fontSize: 19 }}>Biblioteca de exercícios</h2><p style={labelMini}>Referência rápida de grupos musculares e execução. Ajuste exercícios à sua condição e orientação profissional.</p><input value={buscaBiblioteca} onChange={(e) => setBuscaBiblioteca(e.target.value)} placeholder="Buscar exercício ou grupo muscular..." style={campoTexto}/></div><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 10 }}>{filtrados.map((e) => <div key={e[0]} style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.18)", backdropFilter: "blur(14px)" }}><div style={{ color: "#D6C4F1", fontSize: 10, fontWeight: 800, letterSpacing: ".08em" }}>{e[1].toUpperCase()}</div><strong style={{ display: "block", margin: "6px 0", fontSize: 14 }}>{e[0]}</strong><div style={{ color: "#D6C4F1", fontSize: 10, marginBottom: 7 }}>Equipamento: {e[2]}</div><p style={{ color: "#AAA1B8", fontSize: 12, lineHeight: 1.55, margin: 0 }}>{e[3]}</p></div>)}</div>{!filtrados.length && <p style={labelMini}>Nenhum exercício encontrado.</p>}</div>;
+        return <div style={{ display: "grid", gap: 12 }}><div style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.22)", backdropFilter: "blur(16px)" }}><h2 style={{ margin: "0 0 6px", fontSize: 19 }}>{textoUi('Biblioteca de exercícios', 'Exercise library')}</h2><p style={labelMini}>Referência rápida de grupos musculares e execução. Ajuste exercícios à sua condição e orientação profissional.</p><input value={buscaBiblioteca} onChange={(e) => setBuscaBiblioteca(e.target.value)} placeholder="Buscar exercício ou grupo muscular..." style={campoTexto}/></div><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 10 }}>{filtrados.map((e) => <div key={e[0]} style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.18)", backdropFilter: "blur(14px)" }}><div style={{ color: "#D6C4F1", fontSize: 10, fontWeight: 800, letterSpacing: ".08em" }}>{e[1].toUpperCase()}</div><strong style={{ display: "block", margin: "6px 0", fontSize: 14 }}>{e[0]}</strong><div style={{ color: "#D6C4F1", fontSize: 10, marginBottom: 7 }}>Equipamento: {e[2]}</div><p style={{ color: "#AAA1B8", fontSize: 12, lineHeight: 1.55, margin: 0 }}>{e[3]}</p></div>)}</div>{!filtrados.length && <p style={labelMini}>{textoUi('Nenhum exercício encontrado.', 'No exercises found.')}</p>}</div>;
       })()}
 
       {abaAtiva === "conquistas" && <div style={{ display: "grid", gap: 12 }}><div style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.22)", backdropFilter: "blur(16px)" }}><h2 style={{ margin: "0 0 6px", fontSize: 19 }}>Suas conquistas</h2><p style={labelMini}>Marcos calculados a partir dos registros existentes.</p></div><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 10 }}>{[{n:"Primeiro recorde",ok:registrosPR.length>=1,d:"Registre seu primeiro PR"},{n:"Colecionador",ok:registrosPR.length>=5,d:"Registre 5 recordes"},{n:"Acompanhamento",ok:medidasCorporais.length>=3,d:"Registre 3 medições"},{n:"Planejador",ok:metasPessoais.length>=3,d:"Crie 3 metas pessoais"},{n:"Hidratação",ok:Object.keys(aguaPorData||{}).length>=7,d:"Registre água em 7 dias"},{n:"Constância",ok:Object.keys(logsPorData||{}).length>=10,d:"Tenha registros em 10 dias"}].map((x)=><div key={x.n} style={{ ...cardClean, background:x.ok?"rgba(59,130,246,.18)":"rgba(44,67,96,.38)", border:`1px solid ${x.ok?"rgba(96,165,250,.45)":"rgba(148,190,215,.14)"}` }}><div style={{fontSize:24,marginBottom:8}}>{x.ok?"🏆":"◇"}</div><strong style={{fontSize:13}}>{x.n}</strong><div style={{fontSize:11,color:"#AAA1B8",marginTop:5}}>{x.ok?"Conquistado":x.d}</div></div>)}</div></div>}
@@ -6359,14 +6370,14 @@ export default function App() {
         const totalAgua = Object.values(aguaPorData || {}).reduce((a,v)=>a+(Number(typeof v === "object" ? v?.total ?? v?.ml ?? 0 : v)||0),0);
         const refeicoesTotal = Object.values(refeicoesFeitasPorData || {}).reduce((a,v)=>a+(Array.isArray(v)?v.length:Object.values(v||{}).filter(Boolean).length),0);
         const cards = [{n:"Dias com registros de treino",v:diasTreino},{n:"Dias com hidratação",v:diasAgua},{n:"Água acumulada registrada",v:`${totalAgua.toLocaleString("pt-BR")} ml`},{n:"Recordes pessoais",v:registrosPR.length},{n:"Medições corporais",v:medidasCorporais.length},{n:"Metas concluídas",v:metasPessoais.filter(m=>m.concluida).length},{n:"Metas em andamento",v:metasPessoais.filter(m=>!m.concluida).length},{n:"Refeições marcadas",v:refeicoesTotal},{n:"Suplementos cadastrados",v:(suplementos||[]).length},{n:"Dias com cardio",v:Object.keys(cardioPorData||{}).length},{n:"Dias com sono registrado",v:Object.keys(sonoPorData||{}).length},{n:"Dias com mochila",v:Object.keys(mochilaMarcadaPorData||{}).length}];
-        const chart=(titulo,dados,unidade="",cor="#B99AE7")=>{const xs=(dados||[]).filter(x=>Number.isFinite(Number(x.valor)));const max=Math.max(1,...xs.map(x=>Number(x.valor)));return <div style={cardRel}><strong style={{fontSize:13}}>{titulo}</strong>{xs.length?<div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(xs.length,10)},minmax(0,1fr))`,gap:6,alignItems:"end",minHeight:125}}>{xs.slice(-10).map((x,i)=><div key={`${x.rotulo}-${i}`} style={{display:"grid",gap:5,justifyItems:"center",minWidth:0}}><b style={{fontSize:9}}>{Number(x.valor).toLocaleString("pt-BR")}{unidade}</b><div style={{height:76,width:"100%",maxWidth:32,background:"rgba(148,163,184,.12)",borderRadius:6,display:"flex",alignItems:"end",overflow:"hidden"}}><div style={{height:`${Math.max(3,Number(x.valor)/max*100)}%`,width:"100%",background:cor}}/></div><span style={{fontSize:9,color:"#AAA1B8",textAlign:"center"}}>{x.rotulo}</span></div>)}</div>:<span style={labelMini}>Sem dados suficientes para gerar este gráfico.</span>}</div>};
+        const chart=(titulo,dados,unidade="",cor="#B99AE7")=>{const xs=(dados||[]).filter(x=>Number.isFinite(Number(x.valor)));const max=Math.max(1,...xs.map(x=>Number(x.valor)));return <div style={cardRel}><strong style={{fontSize:13}}>{titulo}</strong>{xs.length?<div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(xs.length,10)},minmax(0,1fr))`,gap:6,alignItems:"end",minHeight:125}}>{xs.slice(-10).map((x,i)=><div key={`${x.rotulo}-${i}`} style={{display:"grid",gap:5,justifyItems:"center",minWidth:0}}><b style={{fontSize:9}}>{Number(x.valor).toLocaleString("pt-BR")}{unidade}</b><div style={{height:76,width:"100%",maxWidth:32,background:"rgba(148,163,184,.12)",borderRadius:6,display:"flex",alignItems:"end",overflow:"hidden"}}><div style={{height:`${Math.max(3,Number(x.valor)/max*100)}%`,width:"100%",background:cor}}/></div><span style={{fontSize:9,color:"#AAA1B8",textAlign:"center"}}>{x.rotulo}</span></div>)}</div>:<span style={labelMini}>{textoUi('Sem dados suficientes para gerar este gráfico.', 'Not enough data to generate this chart.')}</span>}</div>};
         const med=medidasCorporais.slice().sort((a,b)=>(a.data||"").localeCompare(b.data||""));
         const pr=registrosPR.slice().sort((a,b)=>(a.data||"").localeCompare(b.data||""));
         const atividade=dashboardData.atividade7Dias||[];
-        return <div style={{display:"grid",gap:14}}><div style={cardRel}><div style={{color:"#D6C4F1",fontSize:10,fontWeight:800,letterSpacing:".12em"}}>CAVEIRA APP • RELATÓRIO COMPLETO</div><h2 style={{margin:0,fontSize:21}}>Relatório geral de desempenho</h2><p style={{...labelMini,margin:0}}>Consolidação dos dados disponíveis na sua conta. Períodos sem registro não são estimados nem preenchidos artificialmente.</p><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(135px,1fr))",gap:9}}>{cards.map(x=><div key={x.n} style={{...cardClean,minWidth:0}}><div style={labelMini}>{x.n}</div><strong style={{fontSize:20,color:"#E4D8F7"}}>{x.v}</strong></div>)}</div><button type="button" onClick={()=>window.print()} style={{...btnSecundario,flex:"none",maxWidth:240,background:"#A98BDD",color:"#15131C",border:0,fontWeight:800}}>Imprimir / Salvar relatório em PDF</button></div>
-          <h3 style={{margin:"2px 0 -5px",fontSize:16}}>Gráficos de desempenho</h3><div style={{display:"grid",gridTemplateColumns:ehDesktop?"repeat(2,minmax(0,1fr))":"1fr",gap:10}}>{chart("Recordes pessoais — cargas registradas",pr.slice(-10).map(x=>({rotulo:(x.exercicio||"PR").slice(0,9),valor:Number(x.carga)}))," kg","#B99AE7")}{chart("Cargas dos treinos registrados",(dashboardData.historico||[]).slice(-10).map(x=>({rotulo:(x.dataISO||x.nome||"Treino").slice(5,10),valor:Number(x.carga)||0}))," kg","#B89AE7")}{chart("Peso corporal",med.filter(x=>x.peso).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peso)}))," kg","#C4A5EC")}{chart("Cintura",med.filter(x=>x.cintura).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.cintura)}))," cm","#a78bfa")}{chart("Peito",med.filter(x=>x.peito).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peito)}))," cm","#9DDFC8")}{chart("Hidratação — últimos 7 dias",(dashboardData.agua7Dias||[]).map(x=>({rotulo:x.rotulo,valor:Number(x.ml)||0}))," ml","#C4A5EC")}{chart("Volume de treino — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.volumeKg)||0}))," kg","#E6C17C")}{chart("Cardio — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.cardioMin)||0}))," min","#a78bfa")}{chart("Tempo ativo — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.duracaoMin)||0}))," min","#9DDFC8")}{chart("Refeições marcadas — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.refeicoes)||0})),"","#E9B18D")}{chart("Cafeína registrada — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.cafeina)||0})),"","#E9C987")}{chart("Mochila — percentual de preparo",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.mochilaPct)||0})),"%","#B99AE7")}{chart("Dias com treino — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:x.treino?1:0})),"","#9DDFC8")}</div>
-          <div style={cardRel}><h3 style={{margin:0,fontSize:14}}>Histórico de recordes</h3>{pr.length?pr.map(x=><div key={x.id} style={{display:"flex",justifyContent:"space-between",gap:8,borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7,fontSize:11}}><span>{x.data} • {x.exercicio}</span><strong>{x.carga} kg</strong></div>):<span style={labelMini}>Nenhum recorde cadastrado.</span>}</div>
-          <div style={cardRel}><h3 style={{margin:0,fontSize:14}}>Histórico de medidas corporais</h3>{med.length?med.map(x=><div key={x.id} style={{borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7,fontSize:11}}>{x.data} • {x.peso?`Peso ${x.peso} kg`:""} {x.cintura?`• Cintura ${x.cintura} cm`:""} {x.peito?`• Peito ${x.peito} cm`:""}</div>):<span style={labelMini}>Nenhuma medição cadastrada.</span>}</div>
+        return <div style={{display:"grid",gap:14}}><div style={cardRel}><div style={{color:"#D6C4F1",fontSize:10,fontWeight:800,letterSpacing:".12em"}}>{textoUi('CAVEIRA APP • RELATÓRIO COMPLETO', 'CAVEIRA APP • FULL REPORT')}</div><h2 style={{margin:0,fontSize:21}}>{textoUi('Relatório geral de desempenho', 'Overall performance report')}</h2><p style={{...labelMini,margin:0}}>Consolidação dos dados disponíveis na sua conta. Períodos sem registro não são estimados nem preenchidos artificialmente.</p><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(135px,1fr))",gap:9}}>{cards.map(x=><div key={x.n} style={{...cardClean,minWidth:0}}><div style={labelMini}>{x.n}</div><strong style={{fontSize:20,color:"#E4D8F7"}}>{x.v}</strong></div>)}</div><button type="button" onClick={()=>window.print()} style={{...btnSecundario,flex:"none",maxWidth:240,background:"#A98BDD",color:"#15131C",border:0,fontWeight:800}}>{textoUi('Imprimir / Salvar relatório em PDF', 'Print / Save report as PDF')}</button></div>
+          <h3 style={{margin:"2px 0 -5px",fontSize:16}}>{textoUi('Gráficos de desempenho', 'Performance charts')}</h3><div style={{display:"grid",gridTemplateColumns:ehDesktop?"repeat(2,minmax(0,1fr))":"1fr",gap:10}}>{chart("Recordes pessoais — cargas registradas",pr.slice(-10).map(x=>({rotulo:(x.exercicio||"PR").slice(0,9),valor:Number(x.carga)}))," kg","#B99AE7")}{chart("Cargas dos treinos registrados",(dashboardData.historico||[]).slice(-10).map(x=>({rotulo:(x.dataISO||x.nome||"Treino").slice(5,10),valor:Number(x.carga)||0}))," kg","#B89AE7")}{chart("Peso corporal",med.filter(x=>x.peso).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peso)}))," kg","#C4A5EC")}{chart("Cintura",med.filter(x=>x.cintura).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.cintura)}))," cm","#a78bfa")}{chart("Peito",med.filter(x=>x.peito).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peito)}))," cm","#9DDFC8")}{chart("Hidratação — últimos 7 dias",(dashboardData.agua7Dias||[]).map(x=>({rotulo:x.rotulo,valor:Number(x.ml)||0}))," ml","#C4A5EC")}{chart("Volume de treino — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.volumeKg)||0}))," kg","#E6C17C")}{chart("Cardio — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.cardioMin)||0}))," min","#a78bfa")}{chart("Tempo ativo — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.duracaoMin)||0}))," min","#9DDFC8")}{chart("Refeições marcadas — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.refeicoes)||0})),"","#E9B18D")}{chart("Cafeína registrada — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.cafeina)||0})),"","#E9C987")}{chart("Mochila — percentual de preparo",atividade.map(x=>({rotulo:x.rotulo,valor:Number(x.mochilaPct)||0})),"%","#B99AE7")}{chart("Dias com treino — últimos 7 dias",atividade.map(x=>({rotulo:x.rotulo,valor:x.treino?1:0})),"","#9DDFC8")}</div>
+          <div style={cardRel}><h3 style={{margin:0,fontSize:14}}>{textoUi('Histórico de recordes', 'Personal records history')}</h3>{pr.length?pr.map(x=><div key={x.id} style={{display:"flex",justifyContent:"space-between",gap:8,borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7,fontSize:11}}><span>{x.data} • {x.exercicio}</span><strong>{x.carga} kg</strong></div>):<span style={labelMini}>Nenhum recorde cadastrado.</span>}</div>
+          <div style={cardRel}><h3 style={{margin:0,fontSize:14}}>{textoUi('Histórico de medidas corporais', 'Body measurements history')}</h3>{med.length?med.map(x=><div key={x.id} style={{borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7,fontSize:11}}>{x.data} • {x.peso?`Peso ${x.peso} kg`:""} {x.cintura?`• Cintura ${x.cintura} cm`:""} {x.peito?`• Peito ${x.peito} cm`:""}</div>):<span style={labelMini}>{textoUi('Nenhuma medição cadastrada.', 'No measurements recorded.')}</span>}</div>
           <div style={cardRel}><h3 style={{margin:0,fontSize:14}}>Metas pessoais</h3>{metasPessoais.length?metasPessoais.map(m=><div key={m.id} style={{display:"flex",justifyContent:"space-between",gap:8,borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7,fontSize:11}}><span>{m.nome}{m.alvo?` — ${m.alvo}`:""}</span><strong style={{color:m.concluida?"#B7EBD0":"#D6C4F1"}}>{m.concluida?"Concluída":"Em andamento"}</strong></div>):<span style={labelMini}>Nenhuma meta cadastrada.</span>}</div>
           <p style={labelMini}>O relatório reúne os dados disponíveis: treino, volume, cardio, água, alimentação, cafeína, mochila, sono, suplementos, recordes, medidas e metas. Alguns detalhes antigos dependem de terem sido registrados no período e no formato atual do app.</p></div>;
       })()}
