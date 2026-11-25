@@ -600,6 +600,10 @@ export default function App() {
   const [timerRestante, setTimerRestante] = useState(0);
   const [timerRodando, setTimerRodando] = useState(false);
   const [alarmeTocando, setAlarmeTocando] = useState(false);
+  // Mini-timer de descanso dos exercícios: utiliza o mesmo contador/alarme do Timer principal.
+  const [miniDescansoAberto, setMiniDescansoAberto] = useState(false);
+  const [miniDescansoExercicio, setMiniDescansoExercicio] = useState("");
+  const [miniDescansoDuracao, setMiniDescansoDuracao] = useState(60);
 
   // Intervalo / Circuito
   const [intervaloTrabalhoSeg, setIntervaloTrabalhoSeg] = useState(40);
@@ -1112,10 +1116,11 @@ export default function App() {
     setTimerRestante(totalConfigTimerSeg);
   }
 
-  function acionarDescansoDeExercicio(seg) {
+  function acionarDescansoDeExercicio(seg, nomeExercicio = "") {
     const safeSeg = Math.max(5, Number(seg) || 60);
-    setDataSelecionada(hojeISO);
-    setAbaAtiva("timer");
+    setMiniDescansoExercicio(nomeExercicio || "Exercício");
+    setMiniDescansoDuracao(safeSeg);
+    setMiniDescansoAberto(true);
     setModoTempo("timer");
     setIntervaloRodando(false);
     const { h, m, s } = segParaHMS(safeSeg);
@@ -1642,9 +1647,8 @@ export default function App() {
       },
     }));
 
-    if (vaiConcluir && ex.descanso) {
-      acionarDescansoDeExercicio(ex.descanso);
-    }
+    // Marcar o exercício registra somente a conclusão.
+    // O descanso é iniciado manualmente no botão de segundos do próprio exercício.
   }
 
   function somarAgua(ml) {
@@ -3296,6 +3300,86 @@ export default function App() {
         </div>
       )}
 
+      {/* Mini-timer flutuante de descanso: permanece independente da navegação entre páginas. */}
+      {miniDescansoAberto && (
+        <div
+          role="dialog"
+          aria-label={`Timer de descanso: ${miniDescansoExercicio}`}
+          style={{
+            position: "fixed",
+            left: "50%",
+            bottom: "20px",
+            transform: "translateX(-50%)",
+            width: "min(280px, calc(100vw - 24px))",
+            zIndex: 10050,
+            boxSizing: "border-box",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            padding: "14px 16px",
+            borderRadius: "12px",
+            background: "rgba(24, 23, 31, .97)",
+            border: "1px solid rgba(199, 169, 239, .75)",
+            boxShadow: "0 18px 48px rgba(0, 0, 0, .45)",
+            backdropFilter: "blur(18px)",
+            WebkitBackdropFilter: "blur(18px)",
+          }}
+        >
+          <div style={{ color: "#C7A9EF", flexShrink: 0, display: "grid", placeItems: "center" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+          </div>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div style={{ fontSize: "9px", color: "#9E96AD", textTransform: "uppercase", letterSpacing: ".04em", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              DESCANSO · {miniDescansoExercicio}
+            </div>
+            <div style={{ fontSize: "26px", lineHeight: 1.1, fontWeight: 800, letterSpacing: "-.02em", color: "#F1EEF7", fontVariantNumeric: "tabular-nums", marginTop: "4px" }}>
+              {formatarDuracao(timerRestante)}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              pararSomAlarme();
+              setTimerRodando((rodando) => !rodando && timerRestante > 0);
+            }}
+            aria-label={timerRodando ? "Pausar descanso" : "Continuar descanso"}
+            title={timerRodando ? "Pausar" : "Continuar"}
+            style={{ background: "transparent", border: "none", color: "#F1EEF7", padding: "5px", cursor: "pointer", flexShrink: 0 }}
+          >
+            {timerRodando ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m8 5 12 7-12 7z" /></svg>
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              pararSomAlarme();
+              setTimerRestante(miniDescansoDuracao);
+              setTimerRodando(true);
+            }}
+            aria-label="Reiniciar descanso"
+            title="Reiniciar"
+            style={{ background: "transparent", border: "none", color: "#F1EEF7", padding: "5px", cursor: "pointer", flexShrink: 0 }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.35L3 8" /><path d="M3 3v5h5" /></svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => setMiniDescansoAberto(false)}
+            aria-label="Fechar mini-timer"
+            title="Fechar (o timer continua rodando)"
+            style={{ background: "transparent", border: "none", color: "#F1EEF7", padding: "5px", cursor: "pointer", flexShrink: 0 }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+          </button>
+        </div>
+      )}
+
       {/* PÁGINA 1: HOJE (focada em treino, tempo, água e observação) */}
       {abaAtiva === "hoje" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", position: "relative", paddingRight: ehDesktop ? "294px" : "0px" }}>
@@ -3866,7 +3950,7 @@ export default function App() {
                           <span>{ex.seriesReps}</span>
                           <button
                             type="button"
-                            onClick={() => acionarDescansoDeExercicio(ex.descanso)}
+                            onClick={() => acionarDescansoDeExercicio(ex.descanso, ex.nome)}
                             title={`Iniciar timer de descanso: ${ex.descanso} segundos`}
                             style={{
                               display: "inline-flex",
