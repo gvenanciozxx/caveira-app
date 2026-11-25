@@ -414,6 +414,8 @@ export default function App() {
   const [dadosNuvemCarregados, setDadosNuvemCarregados] = useState(false);
   const [erroDadosNuvem, setErroDadosNuvem] = useState("");
   const [statusDadosNuvem, setStatusDadosNuvem] = useState("Sincronizando dados...");
+  const [sincronizacaoManualEmAndamento, setSincronizacaoManualEmAndamento] = useState(false);
+  const [mensagemSincronizacaoManual, setMensagemSincronizacaoManual] = useState("");
   const [tentativaNuvem, setTentativaNuvem] = useState(0);
   const [estaOnline, setEstaOnline] = useState(() => typeof navigator === "undefined" ? true : navigator.onLine);
   const [statusOffline, setStatusOffline] = useState("Conectado");
@@ -933,60 +935,24 @@ export default function App() {
     return () => { cancelado = true; };
   }, [authSession?.user?.id, tentativaNuvem, estaOnline]);
 
-  // Salva primeiro no dispositivo e depois sincroniza com o Supabase.
-  // Se a internet cair, o último snapshot fica marcado como pendente no IndexedDB.
+  // Persistência local automática: alterações ficam pendentes até o usuário sincronizar manualmente.
   useEffect(() => {
     const userId = authSession?.user?.id;
     if (!userId || !dadosNuvemCarregados || ultimoUsuarioNuvemRef.current !== userId) return;
-
-    salvamentoPendenteRef.current = estadoPersistido;
-    if (salvamentoTimerRef.current) return;
-
+    if (salvamentoTimerRef.current) clearTimeout(salvamentoTimerRef.current);
     salvamentoTimerRef.current = setTimeout(async () => {
       salvamentoTimerRef.current = null;
-      if (salvamentoEmAndamentoRef.current) return;
-      salvamentoEmAndamentoRef.current = true;
       try {
-        while (salvamentoPendenteRef.current) {
-          const dadosParaSalvar = salvamentoPendenteRef.current;
-          salvamentoPendenteRef.current = null;
-          const cacheAnterior = await lerSnapshotOffline(userId).catch(() => null);
-          await gravarSnapshotOffline({
-            userId,
-            data: dadosParaSalvar,
-            salvoEm: new Date().toISOString(),
-            cloudUpdatedAt: cacheAnterior?.cloudUpdatedAt || null,
-            pendente: true,
-          });
-
-          if (!navigator.onLine) {
-            setEstaOnline(false);
-            setStatusOffline("Modo offline");
-            setStatusDadosNuvem("Salvo neste dispositivo • aguardando internet");
-            continue;
-          }
-
-          const updatedAt = new Date().toISOString();
-          const { error } = await supabase
-            .from("caveira_app_data")
-            .upsert({ user_id: userId, data: dadosParaSalvar, updated_at: updatedAt }, { onConflict: "user_id" });
-          if (error) throw error;
-          await gravarSnapshotOffline({ userId, data: dadosParaSalvar, salvoEm: updatedAt, cloudUpdatedAt: updatedAt, pendente: false });
-        }
-        setErroDadosNuvem("");
-        if (navigator.onLine) {
-          setStatusOffline("Conectado");
-          setStatusDadosNuvem("Dados sincronizados");
-        }
+        const cacheAnterior = await lerSnapshotOffline(userId).catch(() => null);
+        const mudou = JSON.stringify(cacheAnterior?.data || {}) !== JSON.stringify(estadoPersistido || {});
+        if (!mudou && cacheAnterior?.pendente !== true) return;
+        await gravarSnapshotOffline({ userId, data: estadoPersistido, salvoEm: new Date().toISOString(), cloudUpdatedAt: cacheAnterior?.cloudUpdatedAt || null, pendente: true });
+        setStatusDadosNuvem(estaOnline ? "Alterações salvas localmente • sincronização pendente" : "Salvo neste dispositivo • aguardando internet");
       } catch (error) {
-        // Falha de rede nunca apaga a cópia local nem a marcação de pendência.
-        setErroDadosNuvem(error?.message || "Não foi possível sincronizar agora. Seus dados continuam salvos neste dispositivo.");
-        setStatusDadosNuvem("Salvo localmente • sincronização pendente");
-      } finally {
-        salvamentoEmAndamentoRef.current = false;
+        setErroDadosNuvem(error?.message || "Não foi possível salvar os dados neste dispositivo.");
+        setStatusDadosNuvem("Falha ao salvar localmente");
       }
-    }, 700);
-
+    }, 500);
     return () => {};
   }, [authSession?.user?.id, dadosNuvemCarregados, estaOnline, rotina, focoDiasPorChave, presets, logsPorData,
     observacoes, duracaoPorData, tempoAtivoPorData, aquecimentoPorData, estadoDiaPorData,
@@ -995,6 +961,41 @@ export default function App() {
     cafeinaPorData, cardioPorData, suplementos, itensMochila, mochilaMarcadaPorData,
     metaTreinosSemana, ultimoBackupISO, modoTempo, totalConfigTimerSeg, intervaloTrabalhoSeg,
     intervaloDescansoSeg, intervaloRodadasTotal, pesoKg, aguaPorData, metaTreinosMes, registrosPR, medidasCorporais, metasPessoais, perfilFoto]);
+
+  async function sincronizarDadosManualmente() {
+    const userId = authSession?.user?.id;
+    if (!userId || !dadosNuvemCarregados) {
+      setStatusDadosNuvem("Entre na conta para sincronizar");
+      return;
+    }
+    if (!navigator.onLine) {
+      setEstaOnline(false);
+      setStatusDadosNuvem("Offline • sincronização pendente");
+      setErroDadosNuvem("Conecte-se à internet para enviar seus dados ao Supabase.");
+      return;
+    }
+    setSincronizacaoManualEmAndamento(true);
+    setErroDadosNuvem("");
+    setStatusDadosNuvem("Sincronizando dados com o Supabase...");
+    try {
+      const snapshotAtual = estadoPersistido;
+      const timestamp = new Date().toISOString();
+      await gravarSnapshotOffline({ userId, data: snapshotAtual, salvoEm: timestamp, cloudUpdatedAt: null, pendente: true });
+      const { error } = await supabase.from("caveira_app_data").upsert({ user_id: userId, data: snapshotAtual, updated_at: timestamp }, { onConflict: "user_id" });
+      if (error) throw error;
+      await gravarSnapshotOffline({ userId, data: snapshotAtual, salvoEm: timestamp, cloudUpdatedAt: timestamp, pendente: false });
+      setStatusOffline("Conectado");
+      setStatusDadosNuvem("Dados sincronizados");
+      setErroDadosNuvem("");
+      setMensagemSincronizacaoManual(emIngles ? "Your data was successfully synced to Supabase." : "Seus dados foram sincronizados com sucesso no Supabase.");
+    } catch (error) {
+      setErroDadosNuvem(error?.message || "Falha ao enviar dados ao Supabase.");
+      setStatusDadosNuvem("Sincronização pendente • falha no envio");
+      setMensagemSincronizacaoManual("");
+    } finally {
+      setSincronizacaoManualEmAndamento(false);
+    }
+  }
 
   // Ao voltar a conexão, o efeito de persistência envia o snapshot pendente.
   useEffect(() => {
@@ -3227,7 +3228,7 @@ export default function App() {
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
         <span style={{ width: 6, height: 6, borderRadius: "50%", background: estaOnline ? "#B99AE7" : "#E9C987" }} />
-        {estaOnline ? (statusDadosNuvem.includes("pendente") || statusDadosNuvem.includes("aguardando") ? "Sincronização pendente" : "Online") : "Offline • salvando neste dispositivo"}
+        {estaOnline ? (statusDadosNuvem.includes("pendente") || statusDadosNuvem.includes("aguardando") || statusDadosNuvem.includes("localmente") ? textoUi("Sincronização pendente", "Sync pending") : statusDadosNuvem.includes("Sincronizando") ? textoUi("Sincronizando...", "Syncing...") : textoUi("Sincronizado", "Synced")) : textoUi("Offline • salvo neste dispositivo", "Offline • saved on this device")}
       </div>
       {/* Ondulações pastéis no canto inferior direito, atrás do conteúdo */}
       <div
@@ -3381,22 +3382,22 @@ export default function App() {
               </div>
 
               <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "4px", flex: 1, minHeight: 0, overflowY: "auto", paddingRight: 2, scrollbarWidth: "thin", scrollbarColor: "rgba(148,163,184,.22) transparent" }}>
-                <span style={rotuloSecaoMenu}>ROTINA</span>
-                <button type="button" onClick={() => abrirPagina("alimentacao")} style={estiloMenuAtivo("alimentacao", abaAtiva)}>{renderIconeMenu("alimentacao", 17)}<span>Alimentação & Rotina</span></button>
-                <button type="button" onClick={() => abrirPagina("suplementos")} style={estiloMenuAtivo("suplementos", abaAtiva)}>{renderIconeMenu("suplementos", 17)}<span>Suplementos</span></button>
-                <button type="button" onClick={() => abrirPagina("mochila")} style={estiloMenuAtivo("mochila", abaAtiva)}>{renderIconeMenu("mochila", 17)}<span>Mochila & Ritmo</span></button>
+                <span style={rotuloSecaoMenu}>{textoUi("ROTINA", "ROUTINE")}</span>
+                <button type="button" onClick={() => abrirPagina("alimentacao")} style={estiloMenuAtivo("alimentacao", abaAtiva)}>{renderIconeMenu("alimentacao", 17)}<span>{textoUi("Alimentação & Rotina", "Nutrition & Routine")}</span></button>
+                <button type="button" onClick={() => abrirPagina("suplementos")} style={estiloMenuAtivo("suplementos", abaAtiva)}>{renderIconeMenu("suplementos", 17)}<span>{textoUi("Suplementos", "Supplements")}</span></button>
+                <button type="button" onClick={() => abrirPagina("mochila")} style={estiloMenuAtivo("mochila", abaAtiva)}>{renderIconeMenu("mochila", 17)}<span>{textoUi("Mochila & Ritmo", "Gear & Pace")}</span></button>
 
                 <div style={{ height: 1, background: "rgba(148,163,184,.14)", margin: "10px 2px 8px", flexShrink: 0 }} />
-                <span style={rotuloSecaoMenu}>TREINO & DESEMPENHO</span>
-                <button type="button" onClick={() => abrirPagina("exercicios")} style={estiloMenuAtivo("exercicios", abaAtiva)}>{renderIconeMenu("biblioteca", 17)}<span>Biblioteca de Exercícios</span></button>
-                <button type="button" onClick={() => abrirPagina("desempenho")} style={estiloMenuAtivo("desempenho", abaAtiva)}>{renderIconeMenu("desempenho", 17)}<span>Central de Desempenho</span></button>
-                <button type="button" onClick={() => abrirPagina("relatorios")} style={estiloMenuAtivo("relatorios", abaAtiva)}>{renderIconeMenu("relatorios", 17)}<span>Relatórios</span></button>
-                <button type="button" onClick={() => abrirPagina("conquistas")} style={estiloMenuAtivo("conquistas", abaAtiva)}>{renderIconeMenu("conquistas", 17)}<span>Conquistas</span></button>
-                <button type="button" onClick={() => { setMenuAberto(false); setModoFocoLimpo(true); }} style={btnMenu}>{renderIconeMenu("foco", 17)}<span>Modo Foco</span></button>
+                <span style={rotuloSecaoMenu}>{textoUi("TREINO & DESEMPENHO", "TRAINING & PERFORMANCE")}</span>
+                <button type="button" onClick={() => abrirPagina("exercicios")} style={estiloMenuAtivo("exercicios", abaAtiva)}>{renderIconeMenu("biblioteca", 17)}<span>{textoUi("Biblioteca de Exercícios", "Exercise Library")}</span></button>
+                <button type="button" onClick={() => abrirPagina("desempenho")} style={estiloMenuAtivo("desempenho", abaAtiva)}>{renderIconeMenu("desempenho", 17)}<span>{textoUi("Central de Desempenho", "Performance Center")}</span></button>
+                <button type="button" onClick={() => abrirPagina("relatorios")} style={estiloMenuAtivo("relatorios", abaAtiva)}>{renderIconeMenu("relatorios", 17)}<span>{textoUi("Relatórios", "Reports")}</span></button>
+                <button type="button" onClick={() => abrirPagina("conquistas")} style={estiloMenuAtivo("conquistas", abaAtiva)}>{renderIconeMenu("conquistas", 17)}<span>{textoUi("Conquistas", "Achievements")}</span></button>
+                <button type="button" onClick={() => { setMenuAberto(false); setModoFocoLimpo(true); }} style={btnMenu}>{renderIconeMenu("foco", 17)}<span>{textoUi("Modo Foco", "Focus Mode")}</span></button>
 
                 <div style={{ height: 1, background: "rgba(148,163,184,.14)", margin: "10px 2px 8px", flexShrink: 0 }} />
-                <span style={rotuloSecaoMenu}>SISTEMA</span>
-                <button type="button" onClick={abrirBackupMenu} style={btnMenu}>{renderIconeMenu("backup", 17)}<span>Backup & Dados</span></button>
+                <span style={rotuloSecaoMenu}>{textoUi("SISTEMA", "SYSTEM")}</span>
+                <button type="button" onClick={abrirBackupMenu} style={btnMenu}>{renderIconeMenu("backup", 17)}<span>{textoUi("Backup & Dados", "Backup & Data")}</span></button>
                 <button type="button" onClick={() => abrirPagina("configuracoes")} style={estiloMenuAtivo("configuracoes", abaAtiva)}>{renderIconeMenu("configuracoes", 17)}<span>{textoUi("Configurações", "Settings")}</span></button>
               </div>
             </div>
@@ -5803,6 +5804,23 @@ export default function App() {
       {/* DASHBOARD */}
       {abaAtiva === "configuracoes" && (
         <div style={{ display: "grid", gap: 14, maxWidth: 720 }}>
+          <section style={{ ...cardClean, background: "rgba(20,22,28,.30)", border: "1px solid rgba(190,170,225,.13)", display: "grid", gap: 12 }}>
+            <div>
+              <div style={{ fontSize: 10, letterSpacing: ".12em", color: "#BEB7CA", marginBottom: 5 }}>{textoUi("DADOS NA NUVEM", "CLOUD DATA")}</div>
+              <h2 style={{ margin: 0, fontSize: 16 }}>{textoUi("Sincronização de dados", "Data synchronization")}</h2>
+              <p style={{ color: "#9E96AD", fontSize: 12, margin: "6px 0 0", lineHeight: 1.5 }}>{textoUi("Envie seus dados salvos neste dispositivo para sua conta Supabase. A sincronização é manual, iniciada por você.", "Upload the data saved on this device to your Supabase account. Sync is manual and started by you.")}</p>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", fontSize: 12, color: statusDadosNuvem.includes("pendente") ? "#E9C987" : statusDadosNuvem.includes("Falha") ? "#F4B8C2" : "#B9E3C8" }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: statusDadosNuvem.includes("pendente") ? "#E9C987" : statusDadosNuvem.includes("Falha") ? "#F4B8C2" : "#86D6A5" }} />
+              {statusDadosNuvem.includes("pendente") ? textoUi("Sincronização pendente", "Sync pending") : sincronizacaoManualEmAndamento ? textoUi("Sincronizando...", "Syncing...") : statusDadosNuvem.includes("Falha") ? textoUi("Falha na sincronização", "Sync failed") : textoUi("Sincronizado", "Synced")}
+            </div>
+            <button type="button" onClick={sincronizarDadosManualmente} disabled={sincronizacaoManualEmAndamento || !estaOnline} style={{ ...btnSecundario, width: "fit-content", flex: "none", padding: "10px 14px", opacity: sincronizacaoManualEmAndamento || !estaOnline ? .55 : 1, cursor: sincronizacaoManualEmAndamento || !estaOnline ? "not-allowed" : "pointer" }}>
+              {sincronizacaoManualEmAndamento ? textoUi("Enviando dados...", "Uploading data...") : textoUi("Sincronizar meus dados", "Sync my data")}
+            </button>
+            {mensagemSincronizacaoManual && <p role="status" style={{ margin: 0, color: "#B9E3C8", fontSize: 12 }}>{mensagemSincronizacaoManual}</p>}
+            {erroDadosNuvem && <p role="alert" style={{ margin: 0, color: "#F4B8C2", fontSize: 12 }}>{erroDadosNuvem}</p>}
+          </section>
+
           <section style={{ ...cardClean, background: "rgba(20,22,28,.24)", border: "1px solid rgba(190,170,225,.10)", display: "grid", gap: 12 }}>
             <div>
               <div style={{ fontSize: 10, letterSpacing: ".12em", color: "#BEB7CA", marginBottom: 5 }}>{textoUi("PERSONALIZAÇÃO", "PERSONALIZATION")}</div>
@@ -5820,36 +5838,36 @@ export default function App() {
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 7 }}>
                 {[{id:"pt",label:"Português"},{id:"en",label:"English"}].map(opt => <button key={opt.id} type="button" onClick={() => setIdiomaApp(opt.id)} style={{ ...btnSecundario, background: idiomaApp===opt.id ? "rgba(197,178,255,.16)" : "transparent", borderColor: idiomaApp===opt.id ? "rgba(197,178,255,.4)" : "rgba(190,170,225,.15)", color: idiomaApp===opt.id ? "#E6D8FA" : "#BEB7CA" }}>{opt.label}</button>)}
               </div>
-              {emIngles && <p style={{ ...labelMini, margin: 0 }}>{"Note: the language selection is applied to the main navigation and personalization controls; user-entered data remains unchanged."}</p>}
+              {emIngles && <p style={{ ...labelMini, margin: 0 }}>User-entered data remains unchanged when switching languages.</p>}
             </div>
           </section>
           <section style={{ ...cardClean, background: "rgba(20,22,28,.38)", border: "1px solid rgba(190,170,225,.13)", display: "grid", gap: 12 }}>
             <div>
               <div style={{ fontSize: 10, letterSpacing: ".12em", color: "#BEB7CA", marginBottom: 5 }}>USUÁRIO</div>
-              <h2 style={{ margin: 0, fontSize: 16 }}>Foto de perfil</h2>
-              <p style={{ color: "#9E96AD", fontSize: 12, margin: "6px 0 0", lineHeight: 1.5 }}>A imagem será exibida no avatar do menu lateral e sincronizada com seus dados do aplicativo.</p>
+              <h2 style={{ margin: 0, fontSize: 16 }}>{textoUi("Foto de perfil", "Profile photo")}</h2>
+              <p style={{ color: "#9E96AD", fontSize: 12, margin: "6px 0 0", lineHeight: 1.5 }}>{textoUi("A imagem será exibida no avatar do menu lateral e sincronizada com seus dados do aplicativo.", "This photo will appear in the sidebar avatar and sync with your app data.")}</p>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
               <div style={{ width: 76, height: 76, borderRadius: "50%", overflow: "hidden", border: "1px solid rgba(199,169,239,.5)", background: "#342B46", display: "grid", placeItems: "center", color: "#DCCCF5", fontWeight: 800, fontSize: 22, flexShrink: 0 }}>
                 {perfilFoto ? <img src={perfilFoto} alt="Foto de perfil atual" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : (authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0,1).toUpperCase()}
               </div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <button type="button" onClick={() => perfilFotoInputRef.current?.click()} style={{ ...btnSecundario, flex: "none", padding: "9px 12px" }}>Escolher foto</button>
+                <button type="button" onClick={() => perfilFotoInputRef.current?.click()} style={{ ...btnSecundario, flex: "none", padding: "9px 12px" }}>{textoUi("Escolher foto", "Choose photo")}</button>
                 {perfilFoto && <button type="button" onClick={() => { setPerfilFoto(""); setPerfilFotoErro("Foto removida. A alteração será sincronizada."); }} style={{ ...btnSecundario, flex: "none", padding: "9px 12px", color: "#E9A8B6" }}>Remover foto</button>}
                 <input ref={perfilFotoInputRef} type="file" accept="image/*" onChange={(e) => atualizarFotoPerfil(e.target.files?.[0])} style={{ display: "none" }} />
               </div>
             </div>
             {perfilFotoErro && <div role="status" style={{ fontSize: 11, color: perfilFotoErro.includes("Não") || perfilFotoErro.includes("Escolha") || perfilFotoErro.includes("8 MB") ? "#F4B8C2" : "#BEB7CA" }}>{perfilFotoErro}</div>}
-            <div style={{ fontSize: 11, color: "#9E96AD" }}>Formatos de imagem aceitos · até 8 MB (a imagem é reduzida para economizar armazenamento).</div>
+            <div style={{ fontSize: 11, color: "#9E96AD" }}>{textoUi("Formatos de imagem aceitos · até 8 MB (a imagem é reduzida para economizar armazenamento).", "Accepted image formats · up to 8 MB (image is resized to save storage).")}</div>
           </section>
 
           <section style={{ ...cardClean, background: "rgba(20,22,28,.38)", border: "1px solid rgba(190,170,225,.13)", display: "grid", gap: 12 }}>
             <div>
-              <div style={{ fontSize: 10, letterSpacing: ".12em", color: "#BEB7CA", marginBottom: 5 }}>DADOS & SEGURANÇA</div>
-              <h2 style={{ margin: 0, fontSize: 16, color: "#F1EEF7" }}>Resetar dados do aplicativo</h2>
+              <div style={{ fontSize: 10, letterSpacing: ".12em", color: "#BEB7CA", marginBottom: 5 }}>{textoUi("DADOS & SEGURANÇA", "DATA & SECURITY")}</div>
+              <h2 style={{ margin: 0, fontSize: 16, color: "#F1EEF7" }}>{textoUi("Resetar dados do aplicativo", "Reset app data")}</h2>
               <p style={{ color: "#9E96AD", fontSize: 12, margin: "6px 0 0", lineHeight: 1.55 }}>Apaga treinos, registros, histórico, Dashboard, relatórios, recordes, metas, água e demais dados do aplicativo. Sua conta e foto de perfil serão preservadas. Esta ação é irreversível.</p>
             </div>
-            <button type="button" onClick={() => { setResetModalAberto(true); setResetSenha(""); setResetErro(""); }} style={{ ...btnSecundario, flex: "none", width: "fit-content", padding: "10px 14px", color: "#F1A8B8", borderColor: "rgba(241,168,184,.25)" }}>Resetar dados do app</button>
+            <button type="button" onClick={() => { setResetModalAberto(true); setResetSenha(""); setResetErro(""); }} style={{ ...btnSecundario, flex: "none", width: "fit-content", padding: "10px 14px", color: "#F1A8B8", borderColor: "rgba(241,168,184,.25)" }}>{textoUi("Resetar dados do app", "Reset app data")}</button>
           </section>
         </div>
       )}
