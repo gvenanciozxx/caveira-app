@@ -2577,9 +2577,11 @@ export default function App() {
       <main
         style={{
           minHeight: "100vh",
-          minHeight: "100svh",
-          width: "100%",
-          position: "relative",
+          minHeight: "100dvh",
+          height: "100dvh",
+          width: "100vw",
+          position: "fixed",
+          inset: 0,
           overflow: "hidden",
           isolation: "isolate",
           background: "#050506",
@@ -2587,29 +2589,29 @@ export default function App() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: "max(18px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom))",
+          padding: 0,
           boxSizing: "border-box",
-          fontFamily: "inherit",
+          fontFamily: "'DM Sans', 'Inter', ui-sans-serif, system-ui, sans-serif",
         }}
       >
         <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750&display=swap');
           @keyframes caveiraEntradaAparecer {
-            from { opacity: 0; transform: translateY(12px) scale(.99); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from { opacity: 0; }
+            to { opacity: 1; }
           }
           .caveira-entrada-card {
             position: relative;
-            width: min(100%, 430px);
-            height: min(82svh, 790px);
-            min-height: 570px;
+            width: 100%;
+            height: 100dvh;
+            min-height: 100dvh;
             overflow: hidden;
             isolation: isolate;
-            border: 1px solid rgba(255,255,255,.14);
-            border-radius: 28px;
-            background: #111114;
-            isolation: isolate;
-            box-shadow: 0 24px 80px rgba(0,0,0,.42);
-            animation: caveiraEntradaAparecer .5s ease both;
+            border: 0;
+            border-radius: 0;
+            background: #08080a;
+            box-shadow: none;
+            animation: caveiraEntradaAparecer .55s ease both;
           }
           .caveira-entrada-imagem {
             position: absolute;
@@ -2619,8 +2621,8 @@ export default function App() {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: 66% center;
-            opacity: .72;
+            object-position: center 43%;
+            opacity: .82;
             filter: grayscale(1) brightness(.78);
           }
           .caveira-entrada-sombra {
@@ -2629,8 +2631,8 @@ export default function App() {
             z-index: 1;
             pointer-events: none;
             background:
-              linear-gradient(180deg, rgba(0,0,0,.48) 0%, rgba(0,0,0,.12) 34%, rgba(0,0,0,.42) 63%, rgba(0,0,0,.88) 100%),
-              linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.04));
+              linear-gradient(180deg, rgba(0,0,0,.43) 0%, rgba(0,0,0,.08) 32%, rgba(0,0,0,.30) 60%, rgba(0,0,0,.82) 100%),
+              linear-gradient(90deg, rgba(0,0,0,.24), rgba(0,0,0,.02) 55%, rgba(0,0,0,.16));
           }
           .caveira-entrada-conteudo {
             position: relative;
@@ -2640,29 +2642,47 @@ export default function App() {
             justify-content: space-between;
             width: 100%;
             height: 100%;
+            min-height: 100%;
             box-sizing: border-box;
-            padding: 28px 24px 26px;
+            padding: max(34px, env(safe-area-inset-top)) clamp(24px, 5vw, 76px) max(30px, env(safe-area-inset-bottom));
+            font-family: 'DM Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+          }
+          .caveira-entrada-conteudo h1 {
+            font-family: 'Manrope', 'DM Sans', sans-serif !important;
+            font-weight: 600 !important;
+            letter-spacing: -.065em !important;
+          }
+          .caveira-entrada-conteudo p {
+            font-weight: 400;
+            letter-spacing: -.015em;
+          }
+          .caveira-entrada-conteudo header > div > div:first-child {
+            font-family: 'Manrope', 'DM Sans', sans-serif;
+            font-weight: 700 !important;
+            letter-spacing: .16em !important;
           }
           .caveira-entrada-botao {
             width: 100%;
-            min-height: 50px;
-            border-radius: 13px;
+            min-height: 52px;
+            border-radius: 999px;
+            font-family: 'DM Sans', 'Inter', sans-serif;
             font-size: 14px;
-            font-weight: 750;
+            font-weight: 600;
+            letter-spacing: .005em;
             cursor: pointer;
             touch-action: manipulation;
-            transition: transform .18s ease, background .18s ease;
+            transition: transform .18s ease, background .18s ease, border-color .18s ease;
           }
           .caveira-entrada-botao:active { transform: scale(.985); }
           @media (max-width: 380px) {
-            .caveira-entrada-card { height: 80svh; min-height: 520px; border-radius: 23px; }
-            .caveira-entrada-conteudo { padding: 23px 19px 21px; }
+            .caveira-entrada-conteudo { padding-left: 22px; padding-right: 22px; }
           }
           @media (min-width: 700px) {
-            .caveira-entrada-card { height: min(84svh, 820px); }
-          }
-          @media (max-height: 650px) {
-            .caveira-entrada-card { height: 88svh; min-height: 0; }
+            .caveira-entrada-conteudo { padding-left: clamp(56px, 8vw, 132px); padding-right: clamp(56px, 8vw, 132px); }
+            .caveira-entrada-conteudo > div:nth-child(2) { max-width: 560px; margin-left: auto; margin-right: auto; }
+            .caveira-entrada-botao { max-width: 320px; }
           }
           button, a { touch-action: manipulation; }
         `}</style>
