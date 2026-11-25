@@ -1255,6 +1255,36 @@ export default function App() {
     // Aproximação de 40 segundos de execução por série + descanso entre séries.
     return total + (series * 40) + (Math.max(0, series - 1) * descanso);
   }, 0);
+  // Próxima sessão programada: procura o próximo dia com treino, a partir de amanhã.
+  const proximaSessaoInfo = (() => {
+    const dataBase = new Date(`${hojeISO}T12:00:00`);
+    for (let deslocamento = 1; deslocamento <= 7; deslocamento += 1) {
+      const dataCandidata = new Date(dataBase);
+      dataCandidata.setDate(dataCandidata.getDate() + deslocamento);
+      const dataISO = `${dataCandidata.getFullYear()}-${String(dataCandidata.getMonth() + 1).padStart(2, "0")}-${String(dataCandidata.getDate()).padStart(2, "0")}`;
+      const chave = getChaveDiaDaData(dataISO);
+      const diaInfo = DIAS_SEMANA.find((dia) => dia.chave === chave);
+      const lista = rotina[chave] || [];
+      if (lista.length > 0) {
+        const resumo = lista.reduce((acc, item) => {
+          const match = String(item.seriesReps || "").match(/(\d+)\s*[xX×]\s*(\d+)/);
+          if (match) {
+            acc.series += Number(match[1]) || 0;
+            acc.repeticoes += (Number(match[1]) || 0) * (Number(match[2]) || 0);
+          }
+          return acc;
+        }, { series: 0, repeticoes: 0 });
+        return {
+          dataISO,
+          nomeDia: diaInfo?.nome || "Próximo treino",
+          exercicios: lista.length,
+          series: resumo.series,
+          repeticoes: resumo.repeticoes,
+        };
+      }
+    }
+    return null;
+  })();
   const duracaoSessaoSeg = Number(duracaoPorData[dataSelecionada] || 0);
   const tempoAtivoSeg = Number(tempoAtivoPorData[dataSelecionada] ?? duracaoSessaoSeg);
   const tempoDescansoSeg = Math.max(0, duracaoSessaoSeg - tempoAtivoSeg);
@@ -2983,6 +3013,44 @@ export default function App() {
           -webkit-backdrop-filter: none !important;
           backdrop-filter: none !important;
         }
+        /* Blocos "próxima sessão" e assinatura Caveira no rodapé do painel lateral. */
+        .caveira-proxima-sessao {
+          border-top: 1px solid rgba(148, 163, 184, .16);
+          border-bottom: 1px solid rgba(148, 163, 184, .16);
+          padding: 22px 0;
+          margin-top: 8px;
+        }
+        .caveira-assinatura-painel {
+          position: relative;
+          overflow: hidden;
+          min-height: 150px;
+          padding-top: 18px;
+          background:
+            radial-gradient(ellipse at 80% 100%, rgba(197, 178, 255, .10), transparent 70%),
+            radial-gradient(circle, rgba(197, 178, 255, .16) 1px, transparent 1.2px) 0 38px / 5px 5px;
+        }
+        .caveira-assinatura-painel img {
+          opacity: .34;
+          filter: grayscale(.18);
+        }
+        .caveira-assinatura-painel > * {
+          position: relative;
+          z-index: 1;
+        }
+        @media (max-width: 899px) {
+          .caveira-proxima-sessao {
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 6px;
+            padding: 20px 0;
+          }
+          .caveira-assinatura-painel {
+            min-height: 190px;
+            margin-left: -2px;
+            margin-right: -2px;
+            padding-top: 22px;
+          }
+        }
         /* Mantém a barra de status legível, sem reintroduzir o fundo azulado. */
         div[role="status"] {
           background: rgba(16, 18, 24, .96) !important;
@@ -3455,6 +3523,26 @@ export default function App() {
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(7,minmax(0,1fr))", gap: "5px", textAlign: "center", fontSize: "9px", color: "#717987" }}>{janelaDias.map((d) => <span key={`letra-lateral-${d.dataISO}`}>{d.letra}</span>)}</div>
                 <button type="button" onClick={() => abrirPagina("dashboard")} style={{ border: "none", background: "transparent", padding: "0", alignSelf: "flex-start", color: "#C7A9EF", fontSize: "10px", fontWeight: 650, cursor: "pointer" }}>Ver meu progresso ↗</button>
               </section>
+              <section className="caveira-proxima-sessao" aria-label="Próxima sessão" style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px" }}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ color: "#9299A6", fontSize: "10px", fontWeight: 750, letterSpacing: ".04em", marginBottom: "10px" }}>PRÓXIMA SESSÃO</div>
+                    <strong style={{ color: "#E6E8ED", fontSize: "14px", fontWeight: 700 }}>{proximaSessaoInfo?.nomeDia || "Descanso"}</strong>
+                  </div>
+                  <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#9AA1AE" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+                    <path d="m6.5 6.5 11 11M4 8l4-4 2 2-4 4zM14 18l4-4 2 2-4 4zM8 14l-3 3a2 2 0 0 0 3 3l3-3M16 10l3-3a2 2 0 0 0-3-3l-3 3" />
+                  </svg>
+                </div>
+                <div style={{ color: "#9299A6", fontSize: "10px", display: "flex", flexWrap: "wrap", gap: "7px" }}>
+                  {proximaSessaoInfo ? `${proximaSessaoInfo.exercicios} exercício${proximaSessaoInfo.exercicios === 1 ? "" : "s"} · ${proximaSessaoInfo.series} séries · ${proximaSessaoInfo.repeticoes} repetições` : "Nenhum treino programado para os próximos 7 dias"}
+                  {proximaSessaoInfo && <span>· {proximaSessaoInfo.dataISO.slice(8, 10)}/{proximaSessaoInfo.dataISO.slice(5, 7)}</span>}
+                </div>
+              </section>
+              <div className="caveira-assinatura-painel" aria-label="Caveira — Força na constância">
+                <img src="/LogoCaveira.png" alt="Caveira" onError={(e) => { e.currentTarget.style.display = "none"; }} style={{ width: "30px", height: "30px", objectFit: "contain", display: "block", marginBottom: "12px" }} />
+                <div style={{ color: "#9299A6", fontSize: "16px", fontWeight: 500, letterSpacing: ".04em", marginBottom: "4px" }}>CAVEIRA</div>
+                <div style={{ color: "#727A88", fontSize: "8px", letterSpacing: ".08em", fontWeight: 650 }}>FORÇA NA CONSTÂNCIA.</div>
+              </div>
             </aside>
           )}
           <div
