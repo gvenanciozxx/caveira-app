@@ -651,6 +651,7 @@ export default function App() {
   const [metaTreinosMes, setMetaTreinosMes] = useState(16);
 
   const [exercicioHistoricoAberto, setExercicioHistoricoAberto] = useState(null);
+  const [grupoTreinoSelecionado, setGrupoTreinoSelecionado] = useState(null);
 
   // Recursos Premium adicionais: desempenho, medidas, metas e biblioteca.
   const [registrosPR, setRegistrosPR] = useState([]);
@@ -1378,6 +1379,36 @@ export default function App() {
     feito: Boolean(logsDia[ex.id]?.feito),
     esforcoNota: logsDia[ex.id]?.esforcoNota || "",
   }));
+
+  const gruposMuscularesCards = [
+    { id: "superior", nome: "SUPERIOR", descricao: "Peito, costas, ombros, bíceps e tríceps.", cor: "#C7A9EF", figura: "superior" },
+    { id: "inferior", nome: "INFERIOR", descricao: "Quadríceps, posteriores, glúteos, adutores e panturrilhas.", cor: "#A9C7F2", figura: "inferior" },
+    { id: "core", nome: "ABDÔMEN E CORE", descricao: "Reto abdominal, oblíquos e estabilizadores do tronco.", cor: "#E9B6D0", figura: "core" },
+    { id: "antebracos", nome: "ANTEBRAÇOS", descricao: "Flexores, extensores e pegada.", cor: "#D8C0F2", figura: "antebracos" },
+    { id: "cardio", nome: "CARDIO", descricao: "Esteira, bicicleta, corrida, escada e condicionamento.", cor: "#A9DCCB", figura: "cardio" },
+    { id: "mobilidade", nome: "MOBILIDADE E ALONGAMENTO", descricao: "Flexibilidade, mobilidade articular e alongamentos.", cor: "#EBC9A8", figura: "mobilidade" },
+  ];
+  const identificarGrupoTreino = (exercicio) => {
+    const texto = [exercicio?.nome, exercicio?.grupoMuscular, exercicio?.grupo, exercicio?.musculo, exercicio?.musculos, exercicio?.categoria]
+      .filter(Boolean).join(" ").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    if (/antebraco|punho|wrist|rosca inversa|flexao de punho|extensao de punho|pegada|farmer/.test(texto)) return "antebracos";
+    if (/abdomen|abdominal|core|prancha|obl(i|í)quo|dead bug|hollow|lombar/.test(texto)) return "core";
+    if (/cardio|esteira|corrida|bicicleta|bike|escada|eliptico|remo erg|caminhada|transport/.test(texto)) return "cardio";
+    if (/mobilidade|alongamento|stretch|flexibilidade|rotacao toracica|mobilizacao/.test(texto)) return "mobilidade";
+    if (/quadriceps|posterior|glute|panturrilha|gemeos|adutor|abdutor|leg press|agachamento|extensora|flexora|stiff|terra|passada|afundo|hack|cadeira/.test(texto)) return "inferior";
+    if (/peito|supino|crucifixo|costas|remada|puxada|barra fixa|ombro|desenvolvimento|elevacao lateral|biceps|triceps|rosca|pullover/.test(texto)) return "superior";
+    // Exercícios sem grupo muscular informado permanecem acessíveis no card Superior,
+    // evitando que qualquer item da rotina desapareça da visualização.
+    return "superior";
+  };
+  const exerciciosPorGrupoTreino = gruposMuscularesCards.reduce((acc, grupo) => {
+    acc[grupo.id] = exercicios.filter((ex) => identificarGrupoTreino(ex) === grupo.id);
+    return acc;
+  }, {});
+  const exerciciosVisiveisTreino = grupoTreinoSelecionado
+    ? (exerciciosPorGrupoTreino[grupoTreinoSelecionado] || [])
+    : exercicios;
+  const grupoTreinoAtual = gruposMuscularesCards.find((grupo) => grupo.id === grupoTreinoSelecionado);
 
   const proximoExercicio = exercicios.find((ex) => !ex.feito) || exercicios[0] || null;
   const concluidosHoje = exercicios.filter((e) => e.feito).length;
@@ -4370,6 +4401,48 @@ export default function App() {
             </div>
           </div>
 
+          {/* Carrossel fixo dos seis grupos musculares: navegação visual sem alterar a rotina salva. */}
+          <div style={{ marginTop: "14px", marginBottom: "14px" }}>
+            <div
+              aria-label="Grupos musculares do treino"
+              style={{ display: "flex", gap: "10px", overflowX: "auto", overflowY: "hidden", padding: "3px 2px 12px", scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", scrollbarWidth: "thin" }}
+            >
+              {gruposMuscularesCards.map((grupo) => {
+                const ativo = grupoTreinoSelecionado === grupo.id;
+                const quantidade = exerciciosPorGrupoTreino[grupo.id]?.length || 0;
+                return (
+                  <button
+                    key={grupo.id}
+                    type="button"
+                    aria-pressed={ativo}
+                    onClick={() => setGrupoTreinoSelecionado(ativo ? null : grupo.id)}
+                    style={{ flex: "0 0 clamp(190px, 27vw, 230px)", minHeight: "142px", scrollSnapAlign: "start", textAlign: "left", padding: "13px 14px", borderRadius: "13px", border: `1px solid ${ativo ? grupo.cor : "rgba(190,170,225,.18)"}`, background: ativo ? `linear-gradient(145deg, ${grupo.cor}20, rgba(20,22,31,.96))` : "linear-gradient(145deg, rgba(35,34,47,.94), rgba(17,19,27,.96))", color: "#E6E8ED", cursor: "pointer", boxShadow: ativo ? `0 0 0 1px ${grupo.cor}22, 0 8px 22px rgba(0,0,0,.18)` : "0 6px 18px rgba(0,0,0,.12)", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px", transition: "border-color .18s, background .18s", boxSizing: "border-box" }}
+                  >
+                    <span aria-hidden="true" style={{ width: "43px", height: "43px", display: "grid", placeItems: "center", borderRadius: "12px", background: `${grupo.cor}18`, border: `1px solid ${grupo.cor}38`, flexShrink: 0 }}>
+                      <svg viewBox="0 0 48 48" width="31" height="31" fill="none" stroke={grupo.cor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        {grupo.id === "superior" && <><path d="M12 18c3-5 7-6 11-3l4 4 5-2 5 5-5 5-5-2-4 5-8-2-4-5"/><path d="M17 16l-3-5m17 9 4-5"/><path d="M18 28l-2 9m12-8 4 8"/></>}
+                        {grupo.id === "inferior" && <><path d="M17 7l2 13-3 8-2 12h8l3-12 2-8 2 8 3 12h8l-4-13-3-8 1-12"/><path d="M17 20h14M16 29h17"/></>}
+                        {grupo.id === "core" && <><path d="M16 7c2 3 5 4 8 4s6-1 8-4l4 8-4 7 2 17H14l2-17-4-7z"/><path d="M24 12v25M17 20l7 3 7-3M17 28l7 2 7-2"/></>}
+                        {grupo.id === "antebracos" && <><path d="M18 39l-4-12 3-13c.4-2 3-2 3 0v7l2-13c.3-2.5 3.2-2.3 3.3.1l.2 10 2-8c.6-2.2 3.5-1.5 3.1.8l-1 9 2-5c.8-2 3.5-.8 2.7 1.3l-2.6 13-6 10z"/><path d="M18 29l8 2"/></>}
+                        {grupo.id === "cardio" && <><circle cx="29" cy="8" r="4"/><path d="M24 15l-6 8 7 5 5-7 5 4M18 23l-7-1-4 6M25 28l-6 8-7 4M30 22l4 9 8 2"/></>}
+                        {grupo.id === "mobilidade" && <><circle cx="25" cy="8" r="4"/><path d="M23 14l-7 9 8 5 7-7M16 23l-8-1m16 6-6 10m13-17 8 7m-15-1 10 10"/></>}
+                      </svg>
+                    </span>
+                    <span style={{ fontSize: "12px", fontWeight: 800, letterSpacing: ".035em", lineHeight: 1.2 }}>{grupo.nome}</span>
+                    <span style={{ fontSize: "10px", color: "#A8A4B2", lineHeight: 1.4, minHeight: "28px" }}>{grupo.descricao}</span>
+                    <span style={{ fontSize: "9px", color: grupo.cor, fontWeight: 700, letterSpacing: ".04em" }}>{quantidade} {quantidade === 1 ? "EXERCÍCIO" : "EXERCÍCIOS"}</span>
+                  </button>
+                );
+              })}
+            </div>
+            {grupoTreinoAtual && (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", margin: "2px 2px 10px" }}>
+                <div style={{ fontSize: "12px", color: "#DCCCF5", fontWeight: 750 }}>{grupoTreinoAtual.nome} <span style={{ color: "#92909D", fontWeight: 500 }}>— {exerciciosVisiveisTreino.length} {exerciciosVisiveisTreino.length === 1 ? "exercício" : "exercícios"}</span></div>
+                <button type="button" onClick={() => setGrupoTreinoSelecionado(null)} style={{ border: "1px solid rgba(190,170,225,.22)", background: "rgba(190,170,225,.08)", color: "#DCCCF5", borderRadius: "7px", padding: "5px 9px", fontSize: "10px", cursor: "pointer" }}>Ver todos</button>
+              </div>
+            )}
+          </div>
+
           {exercicios.length === 0 ? (
             <div style={{ ...cardClean, textAlign: "center", padding: "20px 14px", display: "flex", flexDirection: "column", gap: "10px" }}>
               <div style={{ color: "#9E96AD", fontSize: "13px" }}>{textoUi('Sem exercícios para este dia.', 'No exercises for this day.')}</div>
@@ -4405,7 +4478,11 @@ export default function App() {
                 gap: "8px",
               }}
             >
-              {exercicios.map((ex, indiceExercicio) => {
+              {exerciciosVisiveisTreino.length === 0 ? (
+                <div style={{ ...cardClean, textAlign: "center", padding: "18px 12px", color: "#9E96AD", fontSize: "12px" }}>
+                  Nenhum exercício deste grupo está cadastrado neste treino.
+                </div>
+              ) : exerciciosVisiveisTreino.map((ex, indiceExercicio) => {
                 const chaveHist = ex.nome.trim().toLowerCase();
                 const histEx = (historicoPorExercicio[chaveHist] || []).filter(
                   (h) => h.dataISO !== dataSelecionada
