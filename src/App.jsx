@@ -3372,10 +3372,10 @@ export default function App() {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", position: "relative", paddingRight: ehDesktopPainel ? "min(294px, 31vw)" : "0px" }}>
           {/* Painel lateral da sessão e semana: adicionado sem remover o calendário original. */}
           {(
-            <aside style={{ position: ehDesktopPainel ? "absolute" : "relative", top: ehDesktopPainel ? "0px" : "auto", right: ehDesktopPainel ? "0px" : "auto", width: ehDesktopPainel ? "270px" : "100%", maxWidth: ehDesktopPainel ? "none" : "480px", minHeight: ehDesktopPainel ? "520px" : "0px", boxSizing: "border-box", borderLeft: ehDesktopPainel ? "1px solid rgba(148,163,184,.12)" : "none", paddingLeft: ehDesktopPainel ? "24px" : "0px", paddingRight: ehDesktopPainel ? "0px" : "0px", margin: ehDesktopPainel ? "0px" : "0px auto 8px", color: "#9AA1AE", display: "flex", flexDirection: "column", gap: "24px", background: "transparent", backdropFilter: "none", WebkitBackdropFilter: "none", overflow: "visible" }}>
-              <section style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
+            <aside style={{ position: ehDesktopPainel ? "absolute" : "relative", top: ehDesktopPainel ? "0px" : "auto", right: ehDesktopPainel ? "0px" : "auto", width: ehDesktopPainel ? "270px" : "min(100%, 340px)", maxWidth: ehDesktopPainel ? "none" : "340px", minWidth: "0", minHeight: ehDesktopPainel ? "520px" : "0px", alignSelf: "center", boxSizing: "border-box", borderLeft: ehDesktopPainel ? "1px solid rgba(148,163,184,.12)" : "none", paddingLeft: ehDesktopPainel ? "24px" : "8px", paddingRight: ehDesktopPainel ? "0px" : "8px", margin: ehDesktopPainel ? "0px" : "0px auto 8px", color: "#9AA1AE", display: "flex", flexDirection: "column", gap: "24px", background: "transparent", backdropFilter: "none", WebkitBackdropFilter: "none", overflow: "visible" }}>
+              <section style={{ display: "flex", width: "100%", minWidth: "0", boxSizing: "border-box", flexDirection: "column", alignItems: "center", gap: "10px" }}>
                 <div style={{ alignSelf: "stretch", textAlign: ehDesktopPainel ? "left" : "center", fontSize: "10px", fontWeight: 700, color: "#9AA1AE", letterSpacing: ".04em" }}>SESSÃO DE HOJE</div>
-                <div style={{ position: "relative", width: "136px", height: "136px", margin: "20px auto 8px" }}>
+                <div style={{ position: "relative", width: "136px", height: "136px", flexShrink: 0, margin: "20px auto 8px", alignSelf: "center" }}>
                   <svg width="136" height="136" viewBox="0 0 136 136" style={{ transform: "rotate(-90deg)" }}>
                     <circle cx="68" cy="68" r="65" fill="none" stroke="#242833" strokeWidth="4" />
                     <circle cx="68" cy="68" r="65" fill="none" stroke="#C7A9EF" strokeWidth="4" strokeLinecap="round" strokeDasharray={`${(concluidosHoje / Math.max(1, exercicios.length)) * 408.4} 408.4`} style={{ transition: "stroke-dasharray .65s ease" }} />
@@ -3390,7 +3390,7 @@ export default function App() {
                   <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}><strong style={{ color: "#E6E8ED", fontSize: "18px" }}>{Math.max(0, Math.ceil(estimativaSessaoSeg / 60))}<small style={{ fontSize: "10px", fontWeight: 500 }}> min</small></strong><span style={{ fontSize: "10px" }}>estimativa</span></div>
                 </div>
               </section>
-              <section style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <section style={{ display: "flex", width: "100%", minWidth: "0", boxSizing: "border-box", flexDirection: "column", gap: "12px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}><strong style={{ color: "#E6E8ED", fontSize: "13px" }}>Sua semana</strong><span style={{ color: "#C7A9EF", fontSize: "14px" }}>↗</span></div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(7,minmax(0,1fr))", gap: "5px" }}>
                   {janelaDias.map((d) => {
@@ -3720,10 +3720,13 @@ export default function App() {
                   <div
                     key={ex.id}
                     style={{
-                      padding: ehDesktop ? "15px 16px" : "12px",
-                      borderRadius: "7px",
-                      background: ex.feito ? "rgba(21,25,32,.92)" : "#11131A",
+                      padding: ehDesktop ? "15px 17px" : "12px 10px",
+                      borderRadius: "9px",
+                      background: ex.feito ? "rgba(17,19,26,.72)" : "#11131A",
                       border: `1px solid ${ex.feito ? "rgba(199,169,239,.25)" : "#252A35"}`,
+                      boxSizing: "border-box",
+                      width: "100%",
+                      minWidth: "0",
                       display: "flex",
                       flexDirection: "row",
                       alignItems: "center",
@@ -3732,15 +3735,16 @@ export default function App() {
                       opacity: ex.feito ? 0.82 : 1,
                     }}
                   >
-                    <span style={{ color: "#9AA1AE", fontSize: "16px", fontWeight: 700, minWidth: "24px", flexShrink: 0 }}>{String(indiceExercicio + 1).padStart(2, "0")}</span>
+                    <span style={{ color: "#9AA1AE", fontSize: "17px", fontWeight: 750, width: "32px", minWidth: "32px", flexShrink: 0, letterSpacing: "-.02em" }}>{String(indiceExercicio + 1).padStart(2, "0")}</span>
                     <div
                       style={{
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
                         gap: "10px",
-                        flex: 1,
-                        minWidth: "180px",
+                        flex: "1 1 180px",
+                        minWidth: "0",
+                        boxSizing: "border-box",
                       }}
                     >
                       <div>
@@ -3754,8 +3758,8 @@ export default function App() {
                               border: "none",
                               padding: 0,
                               color: "#F1EEF7",
-                              fontSize: "14px",
-                              fontWeight: 600,
+                              fontSize: "13px",
+                              fontWeight: 650,
                               cursor: "pointer",
                               textAlign: "left",
                             }}
@@ -3782,11 +3786,12 @@ export default function App() {
                           style={{
                             display: "flex",
                             alignItems: "center",
-                            gap: "10px",
+                            gap: "9px",
                             marginTop: "6px",
-                            fontSize: "12px",
+                            fontSize: "11px",
                             color: "#BEB7CA",
                             flexWrap: "wrap",
+                            minWidth: "0",
                           }}
                         >
                           <span>{ex.seriesReps}</span>
@@ -3798,12 +3803,14 @@ export default function App() {
                               display: "inline-flex",
                               alignItems: "center",
                               gap: "5px",
-                              background: "none",
-                              border: "none",
+                              background: "rgba(199,169,239,.06)",
+                              border: "1px solid rgba(199,169,239,.62)",
+                              borderRadius: "5px",
                               color: "#AAB2C0",
                               cursor: "pointer",
                               fontSize: "11px",
-                              padding: 0,
+                              padding: "3px 6px",
+                              whiteSpace: "nowrap",
                             }}
                           >
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
@@ -3854,17 +3861,25 @@ export default function App() {
                         type="button"
                         onClick={() => alternarFeito(ex)}
                         style={{
-                          padding: "7px 11px",
-                          borderRadius: "8px",
-                          border: "none",
-                          background: ex.feito ? "#9ADFC2" : "rgba(190, 170, 225, 0.14)",
-                          color: ex.feito ? "#111827" : "#EEEAF5",
+                          width: "34px",
+                          height: "34px",
+                          minWidth: "34px",
+                          padding: "0",
+                          borderRadius: "50%",
+                          border: `1px solid ${ex.feito ? "rgba(154,223,194,.45)" : "#29303C"}`,
+                          background: ex.feito ? "rgba(154,223,194,.16)" : "transparent",
+                          color: ex.feito ? "#9ADFC2" : "#9AA1AE",
+                          display: "grid",
+                          placeItems: "center",
                           fontSize: "12px",
                           fontWeight: 600,
                           cursor: "pointer",
+                          flexShrink: 0,
                         }}
+                        aria-label={ex.feito ? "Desmarcar exercício concluído" : "Marcar exercício como concluído"}
+                        title={ex.feito ? "Exercício concluído" : "Marcar exercício"}
                       >
-                        {ex.feito ? "Feito" : "Marcar"}
+                        {ex.feito ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 4 4L19 6" /></svg> : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 4 4L19 6" /></svg>}
                       </button>
                     </div>
 
@@ -3875,9 +3890,13 @@ export default function App() {
                       onChange={(e) => atualizarEsforcoExercicio(ex, e.target.value)}
                       style={{
                         ...campoTexto,
+                        width: "100%",
+                        minWidth: "0",
+                        boxSizing: "border-box",
                         padding: "6px 8px",
                         fontSize: "11px",
-                        background: "rgba(38, 54, 75, 0.72)",
+                        borderRadius: "6px",
+                        background: "rgba(13, 15, 21, 0.72)",
                       }}
                     />
 
