@@ -17,19 +17,23 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
     padraoPontos.width = 4;
     padraoPontos.height = 4;
     const pctx = padraoPontos.getContext("2d");
-    pctx.fillStyle = "rgba(15, 15, 20, 0.12)";
+
+    pctx.fillStyle = "rgba(0, 0, 0, 0.20)";
     pctx.fillRect(0, 0, 1.2, 1.2);
-    pctx.fillStyle = "rgba(255, 255, 255, 0.22)";
+    pctx.fillStyle = "rgba(197, 178, 255, 0.12)";
     pctx.fillRect(2.5, 2.5, 1, 1);
 
     function ajustarTamanho() {
       const pai = canvas.parentElement;
       if (!pai) return;
+
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const largura = Math.max(1, pai.clientWidth);
       const altura = Math.max(1, pai.clientHeight);
+
       canvas.width = Math.floor(largura * dpr);
       canvas.height = Math.floor(altura * dpr);
+
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
@@ -39,14 +43,15 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
     function desenhar() {
       const pai = canvas.parentElement;
       if (!pai) return;
+
       const w = pai.clientWidth;
       const h = pai.clientHeight;
 
       tempo += 0.014;
       ctx.clearRect(0, 0, w, h);
 
-      // Fundo grafite escuro, sem tonalidade azulada
-      ctx.fillStyle = "#1B1B22";
+      // Fundo preto grafite
+      ctx.fillStyle = "#090a0e";
       ctx.fillRect(0, 0, w, h);
 
       // Calcula a borda esquerda/superior da escultura
@@ -82,14 +87,15 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
       ctx.closePath();
       ctx.clip();
 
-      // Gradiente pastel
+      // Gradiente preto, grafite e lilás
       const gradPastel = ctx.createLinearGradient(0, h, w, 0);
-      gradPastel.addColorStop(0.0, "#f472b6");
-      gradPastel.addColorStop(0.2, "#fb923c");
-      gradPastel.addColorStop(0.42, "#fde047");
-      gradPastel.addColorStop(0.64, "#6ee7b7");
-      gradPastel.addColorStop(0.83, "#7dd3fc");
-      gradPastel.addColorStop(1.0, "#c4b5fd");
+
+      gradPastel.addColorStop(0.0, "#0b0b10");
+      gradPastel.addColorStop(0.2, "#111019");
+      gradPastel.addColorStop(0.42, "#191526");
+      gradPastel.addColorStop(0.64, "#29203b");
+      gradPastel.addColorStop(0.83, "#40315e");
+      gradPastel.addColorStop(1.0, "#59417b");
 
       ctx.fillStyle = gradPastel;
       ctx.fillRect(0, 0, w, h);
@@ -107,6 +113,7 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
         for (let p = 0; p <= 40; p++) {
           const nx = p / 40;
           const x = nx * w;
+
           const y =
             offsetBase +
             Math.sin(nx * Math.PI * 2.2 + tempo + d * 1.15) * amp +
@@ -125,19 +132,20 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
           offsetBase + amp * 2.5
         );
 
-        gradDobra.addColorStop(0, "rgba(255, 255, 255, 0.42)");
-        gradDobra.addColorStop(0.45, "rgba(255, 255, 255, 0.05)");
-        gradDobra.addColorStop(1, "rgba(10, 10, 14, 0.34)");
+        gradDobra.addColorStop(0, "rgba(197, 178, 255, 0.20)");
+        gradDobra.addColorStop(0.45, "rgba(197, 178, 255, 0.035)");
+        gradDobra.addColorStop(1, "rgba(0, 0, 0, 0.42)");
 
         ctx.fillStyle = gradDobra;
         ctx.fill();
 
-        // Linha de destaque na crista da onda
+        // Linha de destaque lilás na crista da onda
         ctx.beginPath();
 
         for (let p = 0; p <= 40; p++) {
           const nx = p / 40;
           const x = nx * w;
+
           const y =
             offsetBase +
             Math.sin(nx * Math.PI * 2.2 + tempo + d * 1.15) * amp +
@@ -147,16 +155,17 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
           else ctx.lineTo(x, y);
         }
 
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.52)";
+        ctx.strokeStyle = "rgba(197, 178, 255, 0.30)";
         ctx.lineWidth = 1.5;
         ctx.stroke();
       }
 
-      // Luz direcional lateral
+      // Luz direcional lilás suave
       const luzLateral = ctx.createLinearGradient(0, 0, w, h);
-      luzLateral.addColorStop(0, "rgba(255, 255, 255, 0.28)");
-      luzLateral.addColorStop(0.5, "rgba(255, 255, 255, 0.0)");
-      luzLateral.addColorStop(1, "rgba(0, 0, 0, 0.24)");
+
+      luzLateral.addColorStop(0, "rgba(197, 178, 255, 0.14)");
+      luzLateral.addColorStop(0.5, "rgba(197, 178, 255, 0.015)");
+      luzLateral.addColorStop(1, "rgba(0, 0, 0, 0.35)");
 
       ctx.fillStyle = luzLateral;
       ctx.fillRect(0, 0, w, h);
@@ -171,7 +180,7 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
 
       ctx.restore();
 
-      // Contorno suave na borda esculpida
+      // Contorno suave lilás na borda esculpida
       ctx.beginPath();
       ctx.moveTo(pontosBorda[0].x, pontosBorda[0].y);
 
@@ -179,7 +188,7 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
         ctx.lineTo(pontosBorda[i].x, pontosBorda[i].y);
       }
 
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.45)";
+      ctx.strokeStyle = "rgba(197, 178, 255, 0.42)";
       ctx.lineWidth = modo === "linha" ? 2 : 1.6;
       ctx.stroke();
 
@@ -207,7 +216,7 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
         overflow: "hidden",
         pointerEvents: "none",
         boxShadow: ehLinha
-          ? "1px 0 10px rgba(244, 114, 182, 0.35)"
+          ? "1px 0 10px rgba(197, 178, 255, 0.25)"
           : "none",
       }}
     >
