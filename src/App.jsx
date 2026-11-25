@@ -1248,6 +1248,18 @@ export default function App() {
 
   const proximoExercicio = exercicios.find((ex) => !ex.feito) || exercicios[0] || null;
   const concluidosHoje = exercicios.filter((e) => e.feito).length;
+  // Resumo visual da sessão: usa as séries configuradas e o descanso de cada exercício.
+  const totalSeriesTreino = exercicios.reduce((total, ex) => {
+    const match = String(ex.seriesReps || "").match(/(\d+)\s*[xX×]/);
+    return total + (match ? Math.max(0, Number(match[1]) || 0) : 0);
+  }, 0);
+  const estimativaSessaoSeg = exercicios.reduce((total, ex) => {
+    const match = String(ex.seriesReps || "").match(/(\d+)\s*[xX×]\s*(\d+)/);
+    const series = match ? Math.max(0, Number(match[1]) || 0) : 0;
+    const descanso = Math.max(0, Number(ex.descanso) || 0);
+    // Aproximação de 40 segundos de execução por série + descanso entre séries.
+    return total + (series * 40) + (Math.max(0, series - 1) * descanso);
+  }, 0);
   const duracaoSessaoSeg = Number(duracaoPorData[dataSelecionada] || 0);
   const tempoAtivoSeg = Number(tempoAtivoPorData[dataSelecionada] ?? duracaoSessaoSeg);
   const tempoDescansoSeg = Math.max(0, duracaoSessaoSeg - tempoAtivoSeg);
@@ -3286,10 +3298,46 @@ export default function App() {
 
       {/* PÁGINA 1: HOJE (focada em treino, tempo, água e observação) */}
       {abaAtiva === "hoje" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px", position: "relative", paddingRight: ehDesktop ? "294px" : "0px" }}>
+          {/* Painel lateral da sessão e semana: adicionado sem remover o calendário original. */}
+          {ehDesktop && (
+            <aside style={{ position: "absolute", top: "0px", right: "0px", width: "270px", minHeight: "520px", boxSizing: "border-box", borderLeft: "1px solid rgba(148,163,184,.16)", paddingLeft: "30px", color: "#9AA1AE", display: "flex", flexDirection: "column", gap: "24px" }}>
+              <section style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
+                <div style={{ alignSelf: "stretch", fontSize: "10px", fontWeight: 700, color: "#9AA1AE", letterSpacing: ".04em" }}>SESSÃO DE HOJE</div>
+                <div style={{ position: "relative", width: "136px", height: "136px", margin: "20px auto 8px" }}>
+                  <svg width="136" height="136" viewBox="0 0 136 136" style={{ transform: "rotate(-90deg)" }}>
+                    <circle cx="68" cy="68" r="65" fill="none" stroke="#242833" strokeWidth="4" />
+                    <circle cx="68" cy="68" r="65" fill="none" stroke="#C7A9EF" strokeWidth="4" strokeLinecap="round" strokeDasharray={`${(concluidosHoje / Math.max(1, exercicios.length)) * 408.4} 408.4`} style={{ transition: "stroke-dasharray .65s ease" }} />
+                  </svg>
+                  <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px" }}>
+                    <div style={{ color: "#E6E8ED", fontSize: "44px", fontWeight: 750, lineHeight: 1 }}>{concluidosHoje}<span style={{ color: "#9AA1AE", fontSize: "20px" }}>/{exercicios.length}</span></div>
+                    <span style={{ fontSize: "10px", color: "#9AA1AE" }}>concluídos</span>
+                  </div>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", width: "100%", textAlign: "center", borderBottom: "1px solid rgba(148,163,184,.16)", paddingBottom: "22px" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "7px", borderRight: "1px solid rgba(148,163,184,.16)" }}><strong style={{ color: "#E6E8ED", fontSize: "18px" }}>{totalSeriesTreino}</strong><span style={{ fontSize: "10px" }}>séries</span></div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}><strong style={{ color: "#E6E8ED", fontSize: "18px" }}>{Math.max(0, Math.ceil(estimativaSessaoSeg / 60))}<small style={{ fontSize: "10px", fontWeight: 500 }}> min</small></strong><span style={{ fontSize: "10px" }}>estimativa</span></div>
+                </div>
+              </section>
+              <section style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}><strong style={{ color: "#E6E8ED", fontSize: "13px" }}>Sua semana</strong><span style={{ color: "#C7A9EF", fontSize: "14px" }}>↗</span></div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(7,minmax(0,1fr))", gap: "5px" }}>
+                  {janelaDias.map((d) => {
+                    const treinouNoDia = dashboardData.datasConcluidasSet.has(d.dataISO);
+                    const selecionada = d.dataISO === dataSelecionada;
+                    return (
+                      <button key={`semana-lateral-${d.dataISO}`} type="button" disabled={d.dataISO > hojeISO} onClick={() => { if (d.dataISO > hojeISO) return; setCronometroRodando(false); setDataSelecionada(d.dataISO); }} title={d.dataISO} style={{ minWidth: 0, height: "28px", borderRadius: "4px", border: treinouNoDia ? "1px solid rgba(199,169,239,.3)" : "1px solid rgba(148,163,184,.12)", background: treinouNoDia ? "#C7A9EF" : selecionada ? "rgba(199,169,239,.08)" : "rgba(20,22,29,.72)", color: treinouNoDia ? "#17131F" : "#9AA1AE", fontSize: "10px", cursor: d.dataISO > hojeISO ? "not-allowed" : "pointer", opacity: d.dataISO > hojeISO ? .25 : 1, display: "grid", placeItems: "center" }}>{treinouNoDia ? "✓" : d.numeroDia}</button>
+                    );
+                  })}
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(7,minmax(0,1fr))", gap: "5px", textAlign: "center", fontSize: "9px", color: "#717987" }}>{janelaDias.map((d) => <span key={`letra-lateral-${d.dataISO}`}>{d.letra}</span>)}</div>
+                <button type="button" onClick={() => abrirPagina("dashboard")} style={{ border: "none", background: "transparent", padding: "0", alignSelf: "flex-start", color: "#C7A9EF", fontSize: "10px", fontWeight: 650, cursor: "pointer" }}>Ver meu progresso ↗</button>
+              </section>
+            </aside>
+          )}
           <div
             style={{
-              display: "flex",
+              display: ehDesktop ? "none" : "flex",
               alignItems: "center",
               justifyContent: "space-between",
               gap: ehDesktop ? "24px" : "10px",
@@ -3649,9 +3697,9 @@ export default function App() {
           {/* Resumo da sessão + Puxar último treino parecido */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
             <div>
-              <div style={{ fontSize: "10px", letterSpacing: "0.1em", color: "#9E96AD" }}>SEU TREINO</div>
-              <div style={{ fontSize: "16px", fontWeight: 700, marginTop: "3px" }}>
-                {exercicios.length === 0 ? "Dia de descanso" : "Sessão programada"}
+              <div style={{ fontSize: "10px", letterSpacing: "0.04em", color: "#9AA1AE", fontWeight: 700 }}>SEU TREINO</div>
+              <div style={{ fontSize: ehDesktop ? "20px" : "18px", fontWeight: 750, marginTop: "5px", letterSpacing: "-0.025em", color: "#E6E8ED" }}>
+                {exercicios.length === 0 ? "Dia de descanso" : `Treino de ${infoDia?.nome?.toLowerCase() || "hoje"}`}
               </div>
             </div>
 
@@ -3722,11 +3770,11 @@ export default function App() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: ehDesktop ? "repeat(2, 1fr)" : "1fr",
-                gap: "10px",
+                gridTemplateColumns: "1fr",
+                gap: "8px",
               }}
             >
-              {exercicios.map((ex) => {
+              {exercicios.map((ex, indiceExercicio) => {
                 const chaveHist = ex.nome.trim().toLowerCase();
                 const histEx = (historicoPorExercicio[chaveHist] || []).filter(
                   (h) => h.dataISO !== dataSelecionada
@@ -3746,22 +3794,27 @@ export default function App() {
                   <div
                     key={ex.id}
                     style={{
-                      padding: "12px",
-                      borderRadius: "10px",
-                      background: "rgba(49, 43, 63, 0.58)",
-                      border: "1px solid rgba(190, 170, 225, 0.14)",
+                      padding: ehDesktop ? "15px 16px" : "12px",
+                      borderRadius: "7px",
+                      background: ex.feito ? "rgba(21,25,32,.92)" : "#11131A",
+                      border: `1px solid ${ex.feito ? "rgba(199,169,239,.25)" : "#252A35"}`,
                       display: "flex",
-                      flexDirection: "column",
-                      gap: "8px",
-                      opacity: ex.feito ? 0.72 : 1,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                      gap: "10px",
+                      opacity: ex.feito ? 0.82 : 1,
                     }}
                   >
+                    <span style={{ color: "#9AA1AE", fontSize: "16px", fontWeight: 700, minWidth: "24px", flexShrink: 0 }}>{String(indiceExercicio + 1).padStart(2, "0")}</span>
                     <div
                       style={{
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
                         gap: "10px",
+                        flex: 1,
+                        minWidth: "180px",
                       }}
                     >
                       <div>
@@ -3814,16 +3867,20 @@ export default function App() {
                           <button
                             type="button"
                             onClick={() => acionarDescansoDeExercicio(ex.descanso)}
-                            title="Iniciar timer com este descanso"
+                            title={`Iniciar timer de descanso: ${ex.descanso} segundos`}
                             style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "5px",
                               background: "none",
                               border: "none",
-                              color: "#DCCCF5",
+                              color: "#AAB2C0",
                               cursor: "pointer",
-                              fontSize: "12px",
+                              fontSize: "11px",
                               padding: 0,
                             }}
                           >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
                             {ex.descanso}s
                           </button>
                           <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "#F1EEF7" }}>
@@ -3968,13 +4025,13 @@ export default function App() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: ehDesktop ? "repeat(2, 1fr)" : "1fr",
+              gridTemplateColumns: "1fr",
               gap: "12px",
             }}
           >
-            <div style={{ padding: "14px", borderRadius: "10px", background: "rgba(49, 43, 63, 0.58)", border: "1px solid rgba(190, 170, 225, 0.14)" }}>
+            <div style={{ padding: "14px", borderRadius: "7px", background: "#0D0F14", border: "1px solid #252A35", display: "flex", flexDirection: "column", gap: "12px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                <span style={{ fontSize: "13px", fontWeight: 600 }}>Água</span>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "16px", fontWeight: 700, color: "#E6E8ED" }}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8FC7F4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3.5C9.2 7.1 6 10.2 6 14a6 6 0 0 0 12 0c0-3.8-3.2-6.9-6-10.5Z"/><path d="M4.5 10.5C3.2 12.2 2.5 13.6 2.5 15a4 4 0 0 0 4 4"/></svg>Água do dia</span>
                 <label style={{ fontSize: "12px", color: "#BEB7CA" }}>
                   Peso{" "}
                   <input
@@ -3983,11 +4040,11 @@ export default function App() {
                     onChange={(e) => setPesoKg(e.target.value)}
                     style={{
                       width: "52px",
-                      background: "rgba(29, 27, 39, 0.72)",
+                      background: "#11141B",
                       color: "#F1EEF7",
-                      border: "1px solid rgba(190, 170, 225, 0.19)",
+                      border: "1px solid #252A35",
                       borderRadius: "6px",
-                      padding: "3px 6px",
+                      padding: "6px 8px",
                       fontSize: "12px",
                     }}
                   />{" "}
@@ -3995,14 +4052,16 @@ export default function App() {
                 </label>
               </div>
 
-              <div style={{ fontSize: "12px", color: "#BEB7CA", marginBottom: "8px" }}>
-                {aguaHojeMl} ml de {metaAguaMl} ml ({aguaPct}%)
+              <div style={{ fontSize: "12px", color: "#BEB7CA", marginBottom: "8px", display: "flex", alignItems: "baseline", gap: "5px" }}>
+                <strong style={{ fontSize: "32px", letterSpacing: "-0.04em", color: "#E6E8ED", lineHeight: 1 }}>{aguaHojeMl.toLocaleString("pt-BR")}</strong><span style={{ fontSize: "11px", color: "#9AA1AE" }}>ml</span><span style={{ marginLeft: "auto", fontSize: "11px", color: "#9AA1AE" }}>{aguaPct}% da meta</span>
               </div>
 
-              <div style={{ height: "4px", background: "rgba(148, 163, 184, 0.18)", borderRadius: "999px", overflow: "hidden", marginBottom: "10px" }}>
-                <div style={{ width: `${aguaPct}%`, height: "100%", background: "#C4A5EC" }} />
+              <div style={{ height: "7px", background: "#252333", borderRadius: "999px", overflow: "hidden", marginBottom: "10px" }}>
+                <div style={{ width: `${aguaPct}%`, height: "100%", background: "#C7A9EF", borderRadius: "999px", transition: "width .25s ease" }} />
               </div>
 
+              <div style={{ fontSize: "10px", color: "#9AA1AE", marginTop: "-7px" }}>{aguaHojeMl >= metaAguaMl ? "Meta diária atingida!" : `Faltam ${(metaAguaMl - aguaHojeMl).toLocaleString("pt-BR")} ml para a meta.`}</div>
+              <div style={{ fontSize: "10px", color: "#8D96A4", lineHeight: 1.5 }}>Estimativa de 35 ml/kg por dia. Necessidades variam; siga orientação profissional em caso de restrição de líquidos.</div>
               <form
                 onSubmit={adicionarAguaDigitada}
                 style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px" }}
@@ -4022,6 +4081,9 @@ export default function App() {
                     minWidth: 0,
                     flex: 1,
                     padding: "9px 10px",
+                    background: "#11141B",
+                    borderColor: "#252A35",
+                    fontSize: "11px",
                     opacity: diaPodeEditar ? 1 : 0.55,
                   }}
                 />
@@ -4030,16 +4092,19 @@ export default function App() {
                   disabled={!diaPodeEditar || !aguaEntradaMl || Number(aguaEntradaMl) <= 0}
                   style={{ ...btnSecundario, flex: "none", padding: "9px 12px", opacity: !diaPodeEditar || !aguaEntradaMl || Number(aguaEntradaMl) <= 0 ? 0.5 : 1 }}
                 >
-                  Adicionar
+                  ＋
                 </button>
               </form>
 
-              <div style={{ display: "flex", gap: "8px" }}>
-                <button type="button" onClick={() => somarAgua(250)} disabled={!diaPodeEditar} style={{ ...btnSecundario, opacity: diaPodeEditar ? 1 : 0.5 }}>
-                  +250 ml
+              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                <button type="button" onClick={() => somarAgua(250)} disabled={!diaPodeEditar} style={{ ...btnSecundario, flex: 1, padding: "9px 6px", borderColor: "#252A35", background: "#0D0F14", fontSize: "11px", opacity: diaPodeEditar ? 1 : 0.5 }}>
+                  ＋ 250 ml
                 </button>
-                <button type="button" onClick={() => somarAgua(500)} disabled={!diaPodeEditar} style={{ ...btnSecundario, opacity: diaPodeEditar ? 1 : 0.5 }}>
-                  +500 ml
+                <button type="button" onClick={() => somarAgua(500)} disabled={!diaPodeEditar} style={{ ...btnSecundario, flex: 1, padding: "9px 6px", borderColor: "#252A35", background: "#0D0F14", fontSize: "11px", opacity: diaPodeEditar ? 1 : 0.5 }}>
+                  ＋ 500 ml
+                </button>
+                <button type="button" onClick={() => somarAgua(750)} disabled={!diaPodeEditar} style={{ ...btnSecundario, flex: 1, padding: "9px 6px", borderColor: "#252A35", background: "#0D0F14", fontSize: "11px", opacity: diaPodeEditar ? 1 : 0.5 }}>
+                  ＋ 750 ml
                 </button>
               </div>
             </div>
