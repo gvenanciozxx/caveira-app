@@ -3120,6 +3120,46 @@ export default function App() {
           box-shadow: 0 5px 18px rgba(0, 0, 0, .07) !important;
           backdrop-filter: blur(10px) !important;
         }
+        /* Padronização global das páginas do menu: superfícies viram camadas leves,
+           mantendo ações, campos, estados coloridos e componentes de navegação intactos. */
+        div[style*="linear-gradient(145deg, #17161F"],
+        div[style*="linear-gradient(145deg, #1D1B27"],
+        div[style*="linear-gradient(145deg, #11141a"],
+        div[style*="background: rgba(29, 27, 39, 0.72)"],
+        div[style*="background: rgba(49, 43, 63, 0.78)"],
+        div[style*="background: rgba(49, 43, 63, 0.58)"],
+        div[style*="background: rgba(35, 32, 46, 0.76)"],
+        div[style*="background: rgba(31, 29, 42, 0.91)"],
+        div[style*="background: rgba(28, 27, 34, 0.88)"],
+        div[style*="background: rgba(24, 23, 31, .97)"],
+        div[style*="background: rgba(17,20,26,.94)"],
+        div[style*="background: rgba(17,20,26,.92)"],
+        div[style*="background: rgba(13, 15, 21, 0.72)"],
+        div[style*="background: rgba(20,22,28,.38)"],
+        div[style*="background: rgba(19, 35, 55, .58)"],
+        div[style*="background: rgba(44,67,96,.48)"],
+        div[style*="background: rgba(44,67,96,.46)"],
+        div[style*="background: rgba(44,67,96,.42)"],
+        div[style*="background: rgba(38,54,75, .48)"],
+        div[style*="background: rgba(38,54,75,.48)"] {
+          background: rgba(13, 15, 21, .20) !important;
+          border-color: rgba(190, 170, 225, .10) !important;
+          box-shadow: 0 5px 18px rgba(0, 0, 0, .06) !important;
+          -webkit-backdrop-filter: blur(10px) !important;
+          backdrop-filter: blur(10px) !important;
+        }
+        /* Cabeçalhos das demais páginas adotam a mesma apresentação aberta do Montar Treinos. */
+        header > div:first-child > div:first-child {
+          background: transparent !important;
+          border: none !important;
+          padding: 0 !important;
+          border-radius: 0 !important;
+        }
+        /* Contêineres informativos com bordas muito marcadas ficam discretos. */
+        div[style*="border: 1px solid rgba(190, 170, 225, 0.14)"],
+        div[style*="border: 1px solid rgba(190, 170, 225, 0.19)"] {
+          border-color: rgba(190, 170, 225, .10) !important;
+        }
         /* Blocos "próxima sessão" e assinatura Caveira no rodapé do painel lateral. */
         .caveira-proxima-sessao {
           border-top: 1px solid rgba(148, 163, 184, .16);
