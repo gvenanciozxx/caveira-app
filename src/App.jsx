@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import EfeitoRelevoPastel from "./EfeitoRelevoPastel";
 import { supabase } from "./supabase";
 
@@ -571,18 +571,9 @@ export default function App() {
 
   // Reaplica o tema claro aos estilos inline renderizados (React converte HEX em RGB no DOM).
   // Este efeito é exclusivamente visual e não altera estados de dados nem handlers.
-  useLayoutEffect(() => {
+  useEffect(() => {
     const raiz = document.querySelector('[data-caveira-theme]');
     if (!raiz) return;
-    // Aplica o atributo no DOM antes da pintura, para o clique refletir o tema imediatamente.
-    raiz.setAttribute("data-caveira-theme", temaApp);
-    if (temaApp === "claro") {
-      document.documentElement.setAttribute("data-caveira-theme", "claro");
-      document.body.setAttribute("data-caveira-theme", "claro");
-    } else {
-      document.documentElement.removeAttribute("data-caveira-theme");
-      document.body.removeAttribute("data-caveira-theme");
-    }
     const classesTema = ["cv-claro-surface", "cv-claro-text", "cv-claro-dark-button"];
     const limpar = (el) => classesTema.forEach((c) => el.classList.remove(c));
     if (temaApp !== "claro") {
@@ -3878,17 +3869,6 @@ export default function App() {
         }
 
         /* Tema claro — overrides estritamente visuais e escopados ao app. */
-        /* Tema controlado pelo clique: aplicação imediata no documento inteiro. */
-        html[data-caveira-theme="claro"],
-        body[data-caveira-theme="claro"] {
-          background: #F4F2F7 !important;
-          color: #24212B !important;
-          color-scheme: light !important;
-        }
-        html[data-caveira-theme="claro"] body {
-          background-color: #F4F2F7 !important;
-          background-image: none !important;
-        }
         [data-caveira-theme="claro"] {
           --cv-bg: #F4F2F7;
           --cv-surface: #FFFFFF;
@@ -4165,6 +4145,26 @@ export default function App() {
         [data-caveira-theme="claro"] .cv-claro-surface textarea { background-color: #FFFFFF !important; color: #24212B !important; border-color: #CFC7DA !important; }
         [data-caveira-theme="claro"] .cv-claro-surface button:not(.cv-claro-dark-button) { background-color: #E9E1F2 !important; color: #30243F !important; border-color: #BFAED4 !important; opacity: 1 !important; }
         [data-caveira-theme="claro"] .cv-claro-surface button:disabled:not(.cv-claro-dark-button) { background-color: #DCD6E5 !important; color: #635A70 !important; opacity: 1 !important; }
+        /* Correção isolada do selo no cabeçalho: remove o retângulo branco no tema claro. */
+        [data-caveira-theme="claro"] header > div:first-child > div:first-child > div:first-child {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          border: none !important;
+          box-shadow: none !important;
+          padding: 0 !important;
+          border-radius: 0 !important;
+        }
+        [data-caveira-theme="claro"] header > div:first-child > div:first-child > div:first-child span {
+          color: #716A7D !important;
+        }
+        /* O cabeçalho inteiro permanece sem painel; somente a linha inferior é mantida. */
+        [data-caveira-theme="claro"] header {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          box-shadow: none !important;
+        }
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
         <span style={{ width: 6, height: 6, borderRadius: "50%", background: estaOnline ? "#B99AE7" : "#E9C987" }} />
@@ -4191,7 +4191,7 @@ export default function App() {
           maskImage: "radial-gradient(ellipse 78% 76% at 100% 100%, #000 18%, rgba(0,0,0,0.72) 48%, rgba(0,0,0,0.22) 76%, transparent 100%)",
         }}
       >
-        <EfeitoRelevoPastel modo="aberto" tema={temaApp} />
+        <EfeitoRelevoPastel modo="aberto" />
       </div>
       {/* Sidebar compacta no desktop — mantém acesso rápido e animações do app */}
       {!menuAberto && ehDesktop && (
@@ -4223,7 +4223,7 @@ export default function App() {
             }}
           >
             <div style={{ position: "absolute", top: 0, right: -12, bottom: 0, width: 42, opacity: 0.7 }}>
-              <EfeitoRelevoPastel modo="aberto" tema={temaApp} />
+              <EfeitoRelevoPastel modo="aberto" />
             </div>
           </div>
           <div style={{ flex: 1 }} />
@@ -4293,7 +4293,7 @@ export default function App() {
               boxSizing: "border-box",
             }}
           >
-            <EfeitoRelevoPastel modo="aberto" tema={temaApp} />
+            <EfeitoRelevoPastel modo="aberto" />
 
             <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "14px", flex: 1, minHeight: 0 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
@@ -6737,7 +6737,7 @@ export default function App() {
               <label style={{ ...rotuloCampo, marginBottom: 0 }}>{textoUi("Tema do aplicativo", "App theme")}</label>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 7 }}>
                 {[{ id: "escuro", pt: "Escuro", en: "Dark" }, { id: "claro", pt: "Claro", en: "Light" }].map(opt => (
-                  <button key={opt.id} type="button" aria-pressed={temaApp === opt.id} onClick={() => { setTemaApp(opt.id); const raizTema = document.querySelector('[data-caveira-theme]'); if (raizTema) raizTema.setAttribute("data-caveira-theme", opt.id); if (opt.id === "claro") { document.documentElement.setAttribute("data-caveira-theme", "claro"); document.body.setAttribute("data-caveira-theme", "claro"); } else { document.documentElement.removeAttribute("data-caveira-theme"); document.body.removeAttribute("data-caveira-theme"); } }} style={{ ...btnSecundario, background: temaApp === opt.id ? "rgba(197,178,255,.18)" : "transparent", borderColor: temaApp === opt.id ? "rgba(197,178,255,.55)" : "rgba(190,170,225,.18)", color: temaApp === opt.id ? (temaApp === "claro" ? "#60458f" : "#E6D8FA") : (temaApp === "claro" ? "#5f596b" : "#BEB7CA") }}>
+                  <button key={opt.id} type="button" aria-pressed={temaApp === opt.id} onClick={() => setTemaApp(opt.id)} style={{ ...btnSecundario, background: temaApp === opt.id ? "rgba(197,178,255,.18)" : "transparent", borderColor: temaApp === opt.id ? "rgba(197,178,255,.55)" : "rgba(190,170,225,.18)", color: temaApp === opt.id ? (temaApp === "claro" ? "#60458f" : "#E6D8FA") : (temaApp === "claro" ? "#5f596b" : "#BEB7CA") }}>
                     {textoUi(opt.pt, opt.en)}
                   </button>
                 ))}
