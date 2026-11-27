@@ -694,6 +694,9 @@ export default function App() {
   const [exercicioFiltro, setExercicioFiltro] = useState("TODOS");
   const [diaSemanaFiltro, setDiaSemanaFiltro] = useState("TODOS");
   const [periodoFiltro, setPeriodoFiltro] = useState("4w");
+  const [dataInicioDashboard, setDataInicioDashboard] = useState(() => { const d = new Date(hojeISO + "T12:00:00"); d.setDate(d.getDate() - 6); return formatarDataISO(d); });
+  const [dataFimDashboard, setDataFimDashboard] = useState(hojeISO);
+  const [relatorioPeriodoAberto, setRelatorioPeriodoAberto] = useState(false);
   const [buscaNota, setBuscaNota] = useState("");
   const [textoBackup, setTextoBackup] = useState("");
   const [statusBackup, setStatusBackup] = useState("");
@@ -2138,20 +2141,21 @@ export default function App() {
       });
     });
 
+    const inicioPeriodo = dataInicioDashboard || "0000-01-01";
+    const fimPeriodo = dataFimDashboard || hojeISO;
+    const feitosNoPeriodo = feitos.filter((l) => l.dataISO >= inicioPeriodo && l.dataISO <= fimPeriodo);
     const mesAtual = hojeISO.slice(0, 7);
-    const treinosMes = new Set(
-      feitos.filter((l) => l.dataISO.startsWith(mesAtual)).map((l) => l.dataISO)
-    ).size;
+    const treinosMes = new Set(feitosNoPeriodo.map((l) => l.dataISO)).size;
 
     const metaMensalSegura = Math.max(1, Number(metaTreinosMes) || 1);
     const metaMensalPct = Math.min(100, Math.round((treinosMes / metaMensalSegura) * 100));
 
     let maiorCarga = null;
-    feitos.forEach((l) => {
+    feitosNoPeriodo.forEach((l) => {
       if (!maiorCarga || l.carga > maiorCarga.carga) maiorCarga = l;
     });
 
-    const datas = Array.from(datasConcluidasSet).sort();
+    const datas = Array.from(new Set(feitosNoPeriodo.map((l) => l.dataISO))).sort();
     // A sequência continua válida durante o dia seguinte ao último treino.
     // Assim, uma ausência só zera o contador depois que o dia sem treino termina.
     let streak = 0;
@@ -2172,12 +2176,7 @@ export default function App() {
 
     const foguinhoAtivo = streak > 0;
 
-    const corte = new Date(hojeISO + "T12:00:00");
-    if (periodoFiltro === "4w") corte.setDate(corte.getDate() - 28);
-    if (periodoFiltro === "3m") corte.setMonth(corte.getMonth() - 3);
-
-    const historico = feitos
-      .filter((l) => (periodoFiltro === "all" ? true : new Date(l.dataISO + "T12:00:00") >= corte))
+    const historico = feitosNoPeriodo
       .filter((l) => (diaSemanaFiltro === "TODOS" ? true : l.diaChave === diaSemanaFiltro))
       .filter((l) => (exercicioFiltro === "TODOS" ? true : l.nome === exercicioFiltro))
       .sort((a, b) => a.dataISO.localeCompare(b.dataISO));
@@ -2194,10 +2193,12 @@ export default function App() {
     let diasSonoRuim7d = 0;
     let minCardio7d = 0;
 
-    const baseHoje = new Date(hojeISO + "T12:00:00");
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(baseHoje);
-      d.setDate(baseHoje.getDate() - i);
+    const baseInicio = new Date(inicioPeriodo + "T12:00:00");
+    const baseFim = new Date(fimPeriodo + "T12:00:00");
+    const quantidadeDiasPeriodo = Math.max(1, Math.floor((baseFim - baseInicio) / 86400000) + 1);
+    for (let i = 0; i < quantidadeDiasPeriodo; i++) {
+      const d = new Date(baseInicio);
+      d.setDate(baseInicio.getDate() + i);
       const iso = formatarDataISO(d);
       const ml = Number(aguaPorData[iso] || 0);
       somaAgua7Dias += ml;
@@ -2244,9 +2245,9 @@ export default function App() {
       });
     }
 
-    for (let i = 7; i < 14; i++) {
-      const d = new Date(baseHoje);
-      d.setDate(baseHoje.getDate() - i);
+    for (let i = 1; i <= quantidadeDiasPeriodo; i++) {
+      const d = new Date(baseInicio);
+      d.setDate(baseInicio.getDate() - i);
       const iso = formatarDataISO(d);
       const ch = getChaveDiaDaData(iso);
       const mapaDia = logsPorData[iso] || {};
@@ -2257,7 +2258,7 @@ export default function App() {
       });
     }
 
-    const mediaAgua7DiasMl = Math.round(somaAgua7Dias / 7);
+    const mediaAgua7DiasMl = Math.round(somaAgua7Dias / Math.max(1, agua7Dias.length));
     const diffVolumeSemanal = volume7dAtual - volume7dAnterior;
     const pctVolumeSemanal =
       volume7dAnterior > 0 ? Math.round((diffVolumeSemanal / volume7dAnterior) * 100) : null;
@@ -2282,7 +2283,7 @@ export default function App() {
     });
 
     const contagemSinais = {};
-    Object.values(sinaisCorpoPorData).forEach((lista) => {
+    Object.entries(sinaisCorpoPorData).filter(([dataISO]) => dataISO >= inicioPeriodo && dataISO <= fimPeriodo).forEach(([, lista]) => {
       (lista || []).forEach((s) => {
         contagemSinais[s] = (contagemSinais[s] || 0) + 1;
       });
@@ -2313,7 +2314,7 @@ export default function App() {
       atividade7Dias,
       refeicoes7d: atividade7Dias.reduce((soma, d) => soma + d.refeicoes, 0),
       cafeina7d: atividade7Dias.reduce((soma, d) => soma + d.cafeina, 0),
-      mochilaMedia7d: Math.round(atividade7Dias.reduce((soma, d) => soma + d.mochilaPct, 0) / 7),
+      mochilaMedia7d: Math.round(atividade7Dias.reduce((soma, d) => soma + d.mochilaPct, 0) / Math.max(1, atividade7Dias.length)),
       suplementosAtivos: suplementos.filter((item) => item.status === "Ativo").length,
       volume7dAtual,
       diffVolumeSemanal,
@@ -2329,6 +2330,8 @@ export default function App() {
     logsPorData,
     hojeISO,
     periodoFiltro,
+    dataInicioDashboard,
+    dataFimDashboard,
     diaSemanaFiltro,
     exercicioFiltro,
     metaTreinosMes,
@@ -6419,6 +6422,19 @@ export default function App() {
 
       {abaAtiva === "dashboard" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          {!relatorioPeriodoAberto ? <>
+          <section style={{ ...cardClean, width: "100%", boxSizing: "border-box", display: "grid", gap: 12, order: -10 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+              <div><div style={{ ...labelMini, marginBottom: 4 }}>FILTRO GERAL DO DASHBOARD</div><div style={{ fontSize: 12, color: "#BEB7CA" }}>Escolha o período para atualizar os indicadores e gráficos do Dashboard.</div></div>
+              <div style={{ fontSize: 10, color: "#9E96AD" }}>Calendário • dia / mês / ano</div>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: ehDesktop ? "minmax(180px,1fr) minmax(180px,1fr) auto" : "1fr", gap: 10, alignItems: "end" }}>
+              <label style={{ display: "grid", gap: 5, fontSize: 11, color: "#BEB7CA" }}>Data inicial<input type="date" value={dataInicioDashboard} max={dataFimDashboard || hojeISO} onChange={(e) => setDataInicioDashboard(e.target.value)} style={campoTexto} /></label>
+              <label style={{ display: "grid", gap: 5, fontSize: 11, color: "#BEB7CA" }}>Data final<input type="date" value={dataFimDashboard} min={dataInicioDashboard} max={hojeISO} onChange={(e) => setDataFimDashboard(e.target.value)} style={campoTexto} /></label>
+              <button type="button" disabled={!dataInicioDashboard || !dataFimDashboard || dataInicioDashboard > dataFimDashboard} onClick={() => setRelatorioPeriodoAberto(true)} style={{ ...btnSecundario, flex: "none", padding: "10px 16px", background: "#A98BDD", color: "#15131C", border: 0, fontWeight: 800, opacity: dataInicioDashboard > dataFimDashboard ? .5 : 1 }}>Ver relatório</button>
+            </div>
+            <div style={{ fontSize: 9, color: "#8F879B" }}>Dica: selecione a primeira e a última data. O Dashboard considera os registros existentes nesse intervalo.</div>
+          </section>
           <section style={{ ...cardClean, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
             <div>
               <div style={{ ...labelMini, marginBottom: 5 }}>OBSERVAÇÕES DO TREINO</div>
@@ -6429,7 +6445,7 @@ export default function App() {
           </section>
           {/* Resumo semanal automático */}
           <div style={cardClean}>
-            <div style={{ ...labelMini, marginBottom: "6px" }}>Resumo da semana (7 dias)</div>
+            <div style={{ ...labelMini, marginBottom: "6px" }}>Resumo do período selecionado</div>
             <div style={{ fontSize: "12px", color: "#EEEAF5", lineHeight: 1.5 }}>
               <strong>{dashboardData.treinos7d}</strong> treino(s) •{" "}
               <strong>{dashboardData.volume7dAtual.toLocaleString("pt-BR")} kg</strong> de volume • cardio{" "}
@@ -6441,7 +6457,7 @@ export default function App() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
             <div style={cardClean}>
-              <div style={labelMini}>{textoUi('Mês', 'Month')}</div>
+              <div style={labelMini}>Dias com treino no período</div>
               <div style={valorMini}>{dashboardData.treinosMes}</div>
             </div>
             <div style={cardClean}>
@@ -6499,254 +6515,19 @@ export default function App() {
             </div>
           )}
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: ehDesktop ? "repeat(2, 1fr)" : "1fr",
-              gap: "12px",
-            }}
-          >
-            <div style={cardClean}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                <span style={labelMini}>{textoUi("Meta mensal de treinos", "Monthly workout goal")}</span>
-                <label style={{ fontSize: "11px", color: "#BEB7CA" }}>
-                  {textoUi("Meta", "Goal")} {" "}
-                  <input
-                    type="number"
-                    min={1}
-                    max={31}
-                    value={metaTreinosMes}
-                    onChange={(e) => setMetaTreinosMes(e.target.value)}
-                    style={{
-                      width: "44px",
-                      background: "rgba(29, 27, 39, 0.72)",
-                      color: "#F1EEF7",
-                      border: "1px solid rgba(190, 170, 225, 0.19)",
-                      borderRadius: "6px",
-                      padding: "2px 5px",
-                      fontSize: "11px",
-                    }}
-                  />{" "}
-                  dias
-                </label>
+          <div style={{ ...cardClean, display: "grid", gap: 10 }}>
+            <div style={{ fontSize: 12, color: "#BEB7CA", fontWeight: 700 }}>Histórico de cargas no período</div>
+            {dashboardData.historico.length === 0 ? (
+              <div style={{ fontSize: "12px", color: "#9E96AD" }}>{textoUi('Sem treinos concluídos no filtro.', 'No completed workouts in this filter.')}</div>
+            ) : dashboardData.historico.map((item, i) => (
+              <div key={`${item.dataISO}-${i}`}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#BEB7CA", marginBottom: "3px" }}>
+                  <span>{item.dataISO} • {item.nome}</span><span>{item.carga}kg</span>
+                </div>
+                <div style={{ height: "4px", background: "rgba(148, 163, 184, 0.18)", borderRadius: "999px" }}><div style={{ width: `${Math.max(10, Math.round((item.carga / dashboardData.maxCarga) * 100))}%`, height: "100%", background: "#F1EEF7", borderRadius: "999px" }} /></div>
               </div>
-              <div style={{ fontSize: "13px", fontWeight: 600, marginBottom: "6px" }}>
-                {dashboardData.treinosMes}/{dashboardData.metaMensalSegura} dias ({dashboardData.metaMensalPct}%)
-              </div>
-              <div style={{ height: "4px", background: "rgba(148, 163, 184, 0.18)", borderRadius: "999px", overflow: "hidden" }}>
-                <div style={{ width: `${dashboardData.metaMensalPct}%`, height: "100%", background: "#C7A9EF" }} />
-              </div>
-            </div>
-
-            <div style={cardClean}>
-              <div style={labelMini}>{textoUi('Volume nos últimos 7 dias', 'Volume over the last 7 days')}</div>
-              <div style={{ fontSize: "13px", fontWeight: 600, marginTop: "6px" }}>
-                {dashboardData.volume7dAtual.toLocaleString("pt-BR")} kg
-              </div>
-              <div style={{ fontSize: "11px", color: "#9E96AD", marginTop: "4px" }}>
-                vs 7d anteriores:{" "}
-                <span style={{ color: dashboardData.diffVolumeSemanal >= 0 ? "#9ADFC2" : "#F19AAB" }}>
-                  {dashboardData.diffVolumeSemanal >= 0 ? "+" : ""}
-                  {dashboardData.diffVolumeSemanal.toLocaleString("pt-BR")} kg
-                  {dashboardData.pctVolumeSemanal !== null
-                    ? ` (${dashboardData.pctVolumeSemanal >= 0 ? "+" : ""}${dashboardData.pctVolumeSemanal}%)`
-                    : ""}
-                </span>
-              </div>
-            </div>
+            ))}
           </div>
-
-          <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "10px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "8px" }}>
-              <span style={labelMini}>{textoUi('Água nos últimos 7 dias', 'Water over the last 7 days')}</span>
-              <span style={{ fontSize: "12px", fontWeight: 600 }}>
-                {textoUi("Média de", "Average")} {dashboardData.mediaAgua7DiasMl} {textoUi("ml/dia", "ml/day")} • {textoUi("Meta", "Goal")} {metaAguaMl} {textoUi("ml/dia", "ml/day")} ({pesoKg} kg)
-              </span>
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "6px" }}>
-              {dashboardData.agua7Dias.map((item) => {
-                const pct = Math.min(100, Math.round((item.ml / metaAguaMl) * 100));
-                return (
-                  <div
-                    key={item.dataISO}
-                    title={`${item.dataISO}: ${item.ml} ml`}
-                    style={{
-                      background: "rgba(29, 27, 39, 0.72)",
-                      border: "1px solid rgba(190, 170, 225, 0.14)",
-                      borderRadius: "7px",
-                      padding: "6px 4px",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
-                    <span style={{ fontSize: "10px", color: "#9E96AD" }}>{item.rotulo}</span>
-                    <div
-                      style={{
-                        width: "100%",
-                        maxWidth: "18px",
-                        height: "36px",
-                        background: "rgba(148, 163, 184, 0.20)",
-                        borderRadius: "5px",
-                        display: "flex",
-                        alignItems: "flex-end",
-                        overflow: "hidden",
-                      }}
-                    >
-                      <div style={{ width: "100%", height: `${pct}%`, background: "#C4A5EC" }} />
-                    </div>
-                    <span style={{ fontSize: "10px", color: "#BEB7CA" }}>{item.ml}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "12px" }}>
-            <div>
-              <div style={{ fontSize: "13px", fontWeight: 700 }}>{textoUi("Painel geral de atividades", "Activity overview")}</div>
-              <div style={{ fontSize: "11px", color: "#9E96AD", marginTop: "3px" }}>{textoUi("Visão dos registros dos últimos 7 dias. Cada linha mostra os dados disponíveis daquele dia.", "Overview of records from the last 7 days. Each row shows the data available for that day.")}</div>
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: ehDesktop ? "repeat(4, 1fr)" : "repeat(2, 1fr)", gap: "8px" }}>
-              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>{textoUi('Refeições marcadas', 'Meals logged')}</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.refeicoes7d}</div></div>
-              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>{textoUi('Cafeína registrada', 'Caffeine logged')}</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.cafeina7d}</div></div>
-              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>{textoUi('Mochila média', 'Average gear checklist')}</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.mochilaMedia7d}%</div></div>
-              <div style={{ background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: "8px", padding: "9px" }}><div style={labelMini}>Suplementos ativos</div><div style={{ fontSize: "18px", fontWeight: 800 }}>{dashboardData.suplementosAtivos}</div></div>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              {dashboardData.atividade7Dias.map((dia) => {
-                const barras = [
-                  { nome: "Água", valor: dia.aguaMl, unidade: "ml", max: Math.max(metaAguaMl, ...dashboardData.atividade7Dias.map((x) => x.aguaMl), 1), cor: "#C4A5EC" },
-                  { nome: "Tempo ativo", valor: dia.duracaoMin, unidade: "min", max: Math.max(60, ...dashboardData.atividade7Dias.map((x) => x.duracaoMin), 1), cor: "#C7A9EF" },
-                  { nome: "Cardio", valor: dia.cardioMin, unidade: "min", max: Math.max(30, ...dashboardData.atividade7Dias.map((x) => x.cardioMin), 1), cor: "#9DDFC8" },
-                  { nome: "Volume", valor: dia.volumeKg, unidade: "kg", max: Math.max(100, ...dashboardData.atividade7Dias.map((x) => x.volumeKg), 1), cor: "#E6C17C" },
-                ];
-                return (
-                  <div key={dia.dataISO} style={{ padding: "9px", borderRadius: "8px", background: "rgba(29, 27, 39, 0.72)", border: "1px solid rgba(190, 170, 225, 0.14)", display: "grid", gridTemplateColumns: ehDesktop ? "58px 1fr 1fr" : "42px 1fr", gap: "8px", alignItems: "center" }}>
-                    <div style={{ fontSize: "11px", color: "#BEB7CA", fontWeight: 700 }}>{dia.rotulo}</div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "7px" }}>
-                      {barras.map((barra) => <div key={barra.nome} style={{ minWidth: 0 }}><div style={{ display: "flex", justifyContent: "space-between", gap: "4px", fontSize: "9px", color: "#9E96AD", marginBottom: "3px" }}><span>{barra.nome}</span><strong style={{ color: "#EEEAF5" }}>{barra.valor}{barra.unidade}</strong></div><div style={{ height: "5px", borderRadius: "99px", background: "rgba(148, 163, 184, 0.20)", overflow: "hidden" }}><div style={{ width: `${Math.min(100, Math.round((barra.valor / barra.max) * 100))}%`, height: "100%", background: barra.cor, borderRadius: "99px" }} /></div></div>)}
-                    </div>
-                    <div style={{ gridColumn: ehDesktop ? "auto" : "2", display: "flex", flexWrap: "wrap", gap: "5px", fontSize: "9px", color: "#9E96AD" }}>
-                      <span>{dia.treino ? textoUi("✓ Treino", "✓ Workout") : textoUi("— Treino", "— Workout")}</span><span>• {dia.refeicoes} {textoUi("refeições", "meals")}</span><span>• {dia.cafeina} {textoUi("cafeína", "caffeine")}</span><span>• {textoUi("Mochila", "Gear")} {dia.mochilaPct}%</span><span>• {dia.sinais} {textoUi("sinais", "signals")}</span><span>• {textoUi("Sono:", "Sleep:")} {dia.sono}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div style={{ fontSize: "10px", color: "#9E96AD" }}>{textoUi("Os itens sem registro aparecem como zero ou “Não registrado”; suplementos ativos representam sua lista atual, não um consumo diário.", "Unlogged items appear as zero or “Not recorded”; active supplements represent your current list, not daily intake.")}</div>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: ehDesktop ? "repeat(2, 1fr)" : "1fr",
-              gap: "12px",
-            }}
-          >
-            <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "10px" }}>
-              <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-                {[
-                  { id: "4w", nome: "4 sem" },
-                  { id: "3m", nome: "3 meses" },
-                  { id: "all", nome: "Tudo" },
-                ].map((p) => (
-                  <button
-                    key={p.id}
-                    type="button"
-                    onClick={() => setPeriodoFiltro(p.id)}
-                    style={{
-                      padding: "5px 9px",
-                      borderRadius: "6px",
-                      border: "none",
-                      background: periodoFiltro === p.id ? "#222228" : "#111827",
-                      color: periodoFiltro === p.id ? "#F1EEF7" : "#9E96AD",
-                      fontSize: "11px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {p.nome}
-                  </button>
-                ))}
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-                <select value={diaSemanaFiltro} onChange={(e) => setDiaSemanaFiltro(e.target.value)} style={campoTexto}>
-                  <option value="TODOS">Todos os dias</option>
-                  {DIAS_SEMANA.map((d) => (
-                    <option key={d.chave} value={d.chave}>
-                      {d.rotulo}
-                    </option>
-                  ))}
-                </select>
-
-                <select value={exercicioFiltro} onChange={(e) => setExercicioFiltro(e.target.value)} style={campoTexto}>
-                  <option value="TODOS">{textoUi('Todos os exercícios', 'All exercises')}</option>
-                  {dashboardData.exerciciosNomes.map((n) => (
-                    <option key={n} value={n}>
-                      {n}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {dashboardData.historico.length === 0 ? (
-                <div style={{ fontSize: "12px", color: "#9E96AD" }}>{textoUi('Sem treinos concluídos no filtro.', 'No completed workouts in this filter.')}</div>
-              ) : (
-                dashboardData.historico.map((item, i) => (
-                  <div key={`${item.dataISO}-${i}`}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        fontSize: "11px",
-                        color: "#BEB7CA",
-                        marginBottom: "3px",
-                      }}
-                    >
-                      <span>
-                        {item.dataISO} • {item.nome}
-                      </span>
-                      <span>{item.carga}kg</span>
-                    </div>
-                    <div style={{ height: "4px", background: "rgba(148, 163, 184, 0.18)", borderRadius: "999px" }}>
-                      <div
-                        style={{
-                          width: `${Math.max(10, Math.round((item.carga / dashboardData.maxCarga) * 100))}%`,
-                          height: "100%",
-                          background: "#F1EEF7",
-                          borderRadius: "999px",
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "8px" }}>
-              <input
-                type="text"
-                placeholder="Buscar observação..."
-                value={buscaNota}
-                onChange={(e) => setBuscaNota(e.target.value)}
-                style={campoTexto}
-              />
-              {notas.length === 0 ? (
-                <div style={{ fontSize: "12px", color: "#9E96AD" }}>Nenhuma nota.</div>
-              ) : (
-                notas.map((n) => (
-                  <div key={n.dataISO} style={{ fontSize: "12px", paddingTop: "6px", borderTop: "1px solid rgba(190, 170, 225, 0.14)" }}>
-                    <span style={{ color: "#BEB7CA", marginRight: "8px" }}>{n.dataISO}</span>
-                    <span>{n.texto}</span>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-
 
 
           {/* Gráficos integrados: evolução real dos registros */}
@@ -6757,8 +6538,8 @@ export default function App() {
               const max = Math.max(1, ...validos.map((x) => Number(x.valor)));
               return <div style={painel}><div style={{fontWeight:800,fontSize:13}}>{titulo}</div>{validos.length ? <div style={{display:"grid",gridTemplateColumns:`repeat(${Math.min(validos.length,8)},minmax(0,1fr))`,gap:7,alignItems:"end",minHeight:125}}>{validos.slice(-8).map((x,i)=><div key={`${x.rotulo}-${i}`} title={`${x.rotulo}: ${x.valor}${unidade}`} style={{display:"grid",gap:5,justifyItems:"center",minWidth:0}}><strong style={{fontSize:9,color:"#E9DFFC",whiteSpace:"nowrap"}}>{Number(x.valor).toLocaleString("pt-BR")}{unidade}</strong><div style={{height:78,width:"100%",maxWidth:34,display:"flex",alignItems:"end",background:"rgba(148,163,184,.12)",borderRadius:7,overflow:"hidden"}}><div style={{width:"100%",height:`${Math.max(3,Number(x.valor)/max*100)}%`,background:cor,borderRadius:7}}/></div><span style={{fontSize:9,color:"#AAA1B8",textAlign:"center",overflowWrap:"anywhere"}}>{x.rotulo}</span></div>)}</div> : <div style={{fontSize:11,color:"#AAA1B8"}}>{textoUi('Ainda não há registros suficientes para este gráfico.', 'Not enough records for this chart yet.')}</div>}</div>;
             };
-            const ultimosPR = registrosPR.slice().sort((a,b)=>(a.data||"").localeCompare(b.data||"")).slice(-8).map(x=>({rotulo:(x.exercicio||"PR").slice(0,9),valor:Number(x.carga)}));
-            const medidas = medidasCorporais.slice().sort((a,b)=>(a.data||"").localeCompare(b.data||"")).slice(-8);
+            const ultimosPR = registrosPR.filter(x => x.data >= dataInicioDashboard && x.data <= dataFimDashboard).slice().sort((a,b)=>(a.data||"").localeCompare(b.data||"")).slice(-8).map(x=>({rotulo:(x.exercicio||"PR").slice(0,9),valor:Number(x.carga)}));
+            const medidas = medidasCorporais.filter(x => x.data >= dataInicioDashboard && x.data <= dataFimDashboard).slice().sort((a,b)=>(a.data||"").localeCompare(b.data||"")).slice(-8);
             const agua = dashboardData.agua7Dias.map(x=>({rotulo:x.rotulo,valor:Number(x.ml)||0}));
             const volume = dashboardData.atividade7Dias.map(x=>({rotulo:x.rotulo,valor:Number(x.volumeKg)||0}));
             const treinos = dashboardData.atividade7Dias.map(x=>({rotulo:x.rotulo,valor:x.treino?1:0}));
@@ -6766,6 +6547,23 @@ export default function App() {
             const cargasTreino = (dashboardData.historico || []).slice(-8).map(x=>({rotulo:(x.dataISO||x.nome||"Treino").slice(5,10),valor:Number(x.carga)||0}));
             return <div style={{display:"grid",gap:12}}><div><h3 style={{margin:"2px 0 4px",fontSize:16}}>{textoUi('Gráficos de evolução', 'Progress charts')}</h3><p style={{...labelMini,margin:0}}>{textoUi("Visualizações calculadas a partir dos registros reais. Os gráficos ganham histórico conforme você registra atividades.", "Charts are calculated from actual records. History grows as you log activities.")}</p></div><div style={{display:"grid",gridTemplateColumns:ehDesktop?"repeat(2,minmax(0,1fr))":"1fr",gap:12}}>{barras("Recordes pessoais por exercício",ultimosPR," kg","#B99AE7")}{barras("Cargas dos treinos registrados",cargasTreino," kg","#B89AE7")}{barras("Peso corporal (últimas medições)",medidas.filter(x=>x.peso).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peso)}))," kg","#C4A5EC")}{barras("Cintura (últimas medições)",medidas.filter(x=>x.cintura).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.cintura)}))," cm","#a78bfa")}{barras("Peito (últimas medições)",medidas.filter(x=>x.peito).map(x=>({rotulo:x.data?.slice(5)||"Data",valor:Number(x.peito)}))," cm","#9DDFC8")}{barras("Hidratação diária — 7 dias",agua," ml","#C4A5EC")}{barras("Volume de treino — 7 dias",volume," kg","#E6C17C")}{barras("Dias com treino — 7 dias",treinos,"","#9DDFC8")}{barras("Cardio — 7 dias",cardio," min","#a78bfa")}</div><div style={painel}><strong style={{fontSize:13}}>{textoUi("Metas pessoais", "Personal goals")}</strong>{metasPessoais.length?metasPessoais.map(m=><div key={m.id} style={{display:"flex",justifyContent:"space-between",gap:8,fontSize:11,borderTop:"1px solid rgba(148,190,215,.12)",paddingTop:7}}><span>{m.nome}</span><strong style={{color:m.concluida?"#B7EBD0":"#D6C4F1"}}>{m.concluida?"Concluída":"Em andamento"}</strong></div>):<span style={labelMini}>{textoUi("Nenhuma meta cadastrada.", "No goals added.")}</span>}</div></div>;
           })()}
+          </> : <section style={{ display: "grid", gap: 14 }}>
+            <div style={{ ...cardClean, display: "grid", gap: 10 }}>
+              <button type="button" onClick={() => setRelatorioPeriodoAberto(false)} style={{ ...btnSecundario, flex: "none", width: "fit-content", padding: "7px 12px" }}>← Voltar ao Dashboard</button>
+              <div style={{ ...labelMini, color: "#D6C4F1" }}>CAVEIRA APP • RELATÓRIO DO PERÍODO</div>
+              <h2 style={{ margin: 0, fontSize: 20 }}>Relatório de desempenho</h2>
+              <div style={{ fontSize: 12, color: "#BEB7CA" }}>{dataInicioDashboard} até {dataFimDashboard}</div>
+              <div style={{ fontSize: 10, color: "#9E96AD" }}>Os dados abaixo consideram os registros disponíveis no intervalo selecionado.</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                <button type="button" onClick={() => window.print()} style={{ ...btnSecundario, flex: "none", padding: "9px 13px" }}>Imprimir relatório</button>
+                <button type="button" onClick={() => window.print()} style={{ ...btnSecundario, flex: "none", padding: "9px 13px", background: "#A98BDD", color: "#15131C", border: 0, fontWeight: 800 }}>Baixar PDF</button>
+              </div>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))", gap: 9 }}>
+              {[{n:"Dias com treino",v:dashboardData.treinos7d},{n:"Volume de treino",v:`${dashboardData.volume7dAtual.toLocaleString("pt-BR")} kg`},{n:"Cardio",v:`${dashboardData.minCardio7d} min`},{n:"Média de água",v:`${dashboardData.mediaAgua7DiasMl} ml/dia`},{n:"Refeições",v:dashboardData.refeicoes7d},{n:"Cafeína",v:dashboardData.cafeina7d}].map(x=><div key={x.n} style={cardClean}><div style={labelMini}>{x.n}</div><strong style={{fontSize:19,color:"#E4D8F7"}}>{x.v}</strong></div>)}
+            </div>
+            <div style={{ ...cardClean, display: "grid", gap: 9 }}><strong style={{fontSize:13}}>Registros diários</strong>{dashboardData.atividade7Dias.length ? dashboardData.atividade7Dias.map(d=><div key={d.dataISO} style={{borderTop:"1px solid rgba(190,170,225,.14)",paddingTop:8,fontSize:11,display:"flex",justifyContent:"space-between",gap:8,flexWrap:"wrap"}}><strong>{d.dataISO}</strong><span>{d.treino?"Treino concluído":"Sem treino"} • Água {d.aguaMl} ml • Volume {d.volumeKg} kg • Cardio {d.cardioMin} min</span></div>) : <span style={labelMini}>Nenhum registro no período selecionado.</span>}</div>
+          </section>}
         </div>
       )}
 
