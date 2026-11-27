@@ -4796,8 +4796,7 @@ export default function App() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5m-4 0h8"/></svg>
               </button>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-              <span style={{ fontSize: 10, color: microfoneObservacaoAtivo ? "#F0A0A8" : "#9E96AD" }}>{microfoneObservacaoAtivo ? "Ouvindo sua observação..." : "Enter para salvar • Shift + Enter para pular linha"}</span>
+            <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
               <button type="button" onClick={salvarObservacaoTreino} disabled={!novaObservacaoTreino.trim() || !diaPodeEditar} style={{ ...btnSecundario, flex: "none", padding: "7px 12px", opacity: !novaObservacaoTreino.trim() || !diaPodeEditar ? .5 : 1 }}>Salvar observação</button>
             </div>
             {statusResumo && <div style={{ fontSize: "11px", color: "#BEB7CA", whiteSpace: "pre-wrap" }}>{statusResumo}</div>}
