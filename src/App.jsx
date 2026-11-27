@@ -4015,6 +4015,80 @@ export default function App() {
           color: #55466C !important;
           box-shadow: 0 4px 16px rgba(45,35,65,.07) !important;
         }
+        /* Correção de contraste: cobre estilos inline com e sem espaços após os dois-pontos. */
+        [data-caveira-theme="claro"] [style*="#0D0F14"],
+        [data-caveira-theme="claro"] [style*="#0d0f14"],
+        [data-caveira-theme="claro"] [style*="#0D0F14"],
+        [data-caveira-theme="claro"] [style*="#050506"],
+        [data-caveira-theme="claro"] [style*="#11141B"],
+        [data-caveira-theme="claro"] [style*="#11141b"],
+        [data-caveira-theme="claro"] [style*="#252A35"],
+        [data-caveira-theme="claro"] [style*="#252a35"],
+        [data-caveira-theme="claro"] [style*="#252333"],
+        [data-caveira-theme="claro"] [style*="#17161F"],
+        [data-caveira-theme="claro"] [style*="#1D1B27"],
+        [data-caveira-theme="claro"] [style*="#191720"] {
+          background-color: #FFFFFF !important;
+          background-image: none !important;
+          border-color: #D8D1E2 !important;
+          color: #292431 !important;
+        }
+        [data-caveira-theme="claro"] [style*="#E6E8ED"],
+        [data-caveira-theme="claro"] [style*="#F1EEF7"],
+        [data-caveira-theme="claro"] [style*="#EEEAF5"],
+        [data-caveira-theme="claro"] [style*="#DCCCF5"],
+        [data-caveira-theme="claro"] [style*="#DCCAF5"],
+        [data-caveira-theme="claro"] [style*="#D8C5F2"],
+        [data-caveira-theme="claro"] [style*="#D6C4F1"],
+        [data-caveira-theme="claro"] [style*="#C4A5EC"],
+        [data-caveira-theme="claro"] [style*="#BEB7CA"],
+        [data-caveira-theme="claro"] [style*="#9E96AD"],
+        [data-caveira-theme="claro"] [style*="#AAA1B8"],
+        [data-caveira-theme="claro"] [style*="#9C8BB5"],
+        [data-caveira-theme="claro"] [style*="#9299A6"],
+        [data-caveira-theme="claro"] [style*="#89909C"],
+        [data-caveira-theme="claro"] [style*="#9AA1AE"],
+        [data-caveira-theme="claro"] [style*="#8D96A4"] {
+          color: #292431 !important;
+        }
+        [data-caveira-theme="claro"] header {
+          background: transparent !important;
+          background-color: transparent !important;
+          border-color: transparent !important;
+          box-shadow: none !important;
+        }
+        [data-caveira-theme="claro"] button {
+          color: #292431 !important;
+          background-color: #F0EAF7 !important;
+          border: 1px solid #CFC3DE !important;
+          opacity: 1 !important;
+          box-shadow: 0 2px 5px rgba(45,35,65,.07) !important;
+        }
+        [data-caveira-theme="claro"] button:disabled {
+          background-color: #E7E1ED !important;
+          color: #716A7D !important;
+          opacity: .82 !important;
+        }
+        [data-caveira-theme="claro"] button[style*="#A98BDD"],
+        [data-caveira-theme="claro"] button[style*="#C7A9EF"],
+        [data-caveira-theme="claro"] button[style*="#9ADFC2"],
+        [data-caveira-theme="claro"] button[style*="#B7EBD0"],
+        [data-caveira-theme="claro"] button[style*="#9DDFC8"],
+        [data-caveira-theme="claro"] button[style*="#E9C987"],
+        [data-caveira-theme="claro"] button[style*="#F1A8B8"],
+        [data-caveira-theme="claro"] button[style*="#F19AAB"],
+        [data-caveira-theme="claro"] button[style*="#E5A17E"],
+        [data-caveira-theme="claro"] button[style*="#A9E8CB"] {
+          background-color: #D9C8F0 !important;
+          color: #292431 !important;
+          border-color: #B9A4D7 !important;
+        }
+        [data-caveira-theme="claro"] button[style*="#888"],
+        [data-caveira-theme="claro"] button[style*="rgba(136"] {
+          background-color: #E4DDEA !important;
+          color: #292431 !important;
+          border-color: #C8BED5 !important;
+        }
         [data-caveira-theme="claro"] svg { color: inherit; }
         [data-caveira-theme="claro"] ::selection { background: rgba(177,145,225,.28); color: #302B3A; }
       `}</style>
