@@ -2137,18 +2137,25 @@ export default function App() {
     });
 
     const datas = Array.from(datasConcluidasSet).sort();
+    // A sequência continua válida durante o dia seguinte ao último treino.
+    // Assim, uma ausência só zera o contador depois que o dia sem treino termina.
     let streak = 0;
-    if (datas.length > 0) {
+    const ultimaDataTreinada = datas[datas.length - 1] || "";
+    const ontemDate = new Date(`${hojeISO}T12:00:00`);
+    ontemDate.setDate(ontemDate.getDate() - 1);
+    const ontemISO = formatarDataISO(ontemDate);
+    const sequenciaAindaValida = ultimaDataTreinada === hojeISO || ultimaDataTreinada === ontemISO;
+    if (datas.length > 0 && sequenciaAindaValida) {
       streak = 1;
       for (let i = datas.length - 1; i > 0; i--) {
-        const d1 = new Date(datas[i] + "T12:00:00");
-        const d2 = new Date(datas[i - 1] + "T12:00:00");
+        const d1 = new Date(`${datas[i]}T12:00:00`);
+        const d2 = new Date(`${datas[i - 1]}T12:00:00`);
         if (Math.round((d1 - d2) / 86400000) === 1) streak += 1;
         else break;
       }
     }
 
-    const foguinhoAtivo = datasConcluidasSet.has(hojeISO);
+    const foguinhoAtivo = streak > 0;
 
     const corte = new Date(hojeISO + "T12:00:00");
     if (periodoFiltro === "4w") corte.setDate(corte.getDate() - 28);
@@ -4433,20 +4440,27 @@ export default function App() {
 
           {/* Calculadora de anilhas removida da interface conforme solicitação. */}
 
-          {/* Programação semanal visível na tela principal, independente dos cards de exercícios salvos. */}
-          <section style={{ display: "grid", gap: 10, marginBottom: 2 }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-              <div><div style={{ color: "#9E96AD", fontSize: 10, fontWeight: 800, letterSpacing: ".08em" }}>PLANEJAMENTO</div><h3 style={{ margin: "4px 0 0", fontSize: 15, color: "#E6E8ED" }}>Sua programação semanal</h3></div>
-              <button type="button" onClick={() => abrirPagina("montar")} style={{ ...btnSecundario, flex: "none", padding: "7px 10px", fontSize: 10 }}>Editar semana</button>
+          {/* Calendário flutuante de constância: substitui os antigos cards de programação semanal. */}
+          <section aria-label="Sequência de treinos e calendário semanal" style={{ display: "flex", alignItems: "center", gap: ehDesktop ? "18px" : "9px", width: "100%", minWidth: 0, padding: "3px 0 7px", margin: "0 0 2px", background: "transparent", border: "none", boxShadow: "none", backdropFilter: "none", WebkitBackdropFilter: "none" }}>
+            <div title={dashboardData.foguinhoAtivo ? `${dashboardData.streak} dia(s) consecutivo(s) de treino` : "Treine hoje para iniciar uma sequência"} style={{ width: ehDesktop ? "42px" : "34px", flex: "0 0 auto", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "3px" }}>
+                <svg width={ehDesktop ? "20" : "18"} height={ehDesktop ? "20" : "18"} viewBox="0 0 24 24" fill={dashboardData.foguinhoAtivo ? "#F39A54" : "none"} stroke={dashboardData.foguinhoAtivo ? "#FFB36B" : "#77717F"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ filter: dashboardData.foguinhoAtivo ? "drop-shadow(0 0 7px rgba(255,145,65,.72))" : "none", transition: "all .25s ease" }}>
+                  <path d="M12 3c.5 3.4-1.8 5.6-3.5 7.4-1.5 1.6-2.5 3.2-2.5 5.3a6 6 0 0 0 12 0c0-2.5-1.3-4.3-2.6-5.8-1.1-1.3-2.1-2.5-1.9-4.5-1.3.4-1.6 1-1.6 1.6z" />
+                </svg>
+                <strong style={{ color: dashboardData.foguinhoAtivo ? "#F6B078" : "#A09AA8", fontSize: "13px", fontWeight: 750, lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>{dashboardData.streak}</strong>
+              </div>
+              <span style={{ color: "#85808D", fontSize: "8px", letterSpacing: ".04em" }}>Semanas</span>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: ehDesktop ? "repeat(4,minmax(0,1fr))" : "repeat(2,minmax(0,1fr))", gap: 8 }}>
-              {DIAS_SEMANA.map((dia) => {
-                const listaDia = rotina[dia.chave] || [];
-                return <div key={`rotina-semanal-${dia.chave}`} style={{ ...cardClean, minWidth: 0, padding: "11px 12px", display: "grid", gap: 6, borderColor: listaDia.length ? "rgba(199,169,239,.24)" : "rgba(190,170,225,.12)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 5 }}><strong style={{ color: "#DCCCF5", fontSize: 11 }}>{dia.nome}</strong><span style={{ color: "#8F899B", fontSize: 9 }}>{listaDia.length ? `${listaDia.length} exerc.` : "Descanso"}</span></div>
-                  {listaDia.length ? <div style={{ display: "grid", gap: 4 }}>{listaDia.slice(0, 4).map((item) => <span key={item.id} style={{ color: "#C7C2D0", fontSize: 10, lineHeight: 1.35, overflowWrap: "anywhere" }}>• {item.nome}</span>)}{listaDia.length > 4 && <span style={{ color: "#9E96AD", fontSize: 9 }}>+ {listaDia.length - 4} exercícios</span>}</div> : <span style={{ color: "#777F8D", fontSize: 10 }}>Nenhum exercício programado</span>}
-                  <button type="button" onClick={() => { setDiaMontagem(dia.chave); abrirPagina("montar"); }} style={{ border: "none", background: "transparent", color: "#BCA6DF", padding: "3px 0 0", textAlign: "left", fontSize: 9, fontWeight: 750, cursor: "pointer" }}>Editar este dia ↗</button>
-                </div>;
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7,minmax(0,1fr))", alignItems: "center", gap: ehDesktop ? "8px" : "2px", flex: 1, minWidth: 0 }}>
+              {janelaDias.map((d) => {
+                const selecionada = d.dataISO === dataSelecionada;
+                const treinouNoDia = dashboardData.datasConcluidasSet.has(d.dataISO);
+                const diaFuturo = d.dataISO > hojeISO;
+                return <button key={`calendario-constancia-${d.dataISO}`} type="button" disabled={diaFuturo} onClick={() => { if (diaFuturo) return; setCronometroRodando(false); setDataSelecionada(d.dataISO); }} title={`${d.rotulo} ${d.numeroDia}${treinouNoDia ? " — treino concluído" : ""}`} style={{ minWidth: 0, padding: "5px 2px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "5px", border: selecionada ? "1px solid rgba(213,194,242,.24)" : "1px solid transparent", borderRadius: "10px", background: selecionada ? "rgba(255,255,255,.055)" : "transparent", color: d.ehHoje || selecionada ? "#F1EEF7" : "#AAA4B1", cursor: diaFuturo ? "default" : "pointer", opacity: diaFuturo ? .25 : 1, boxShadow: selecionada ? "0 5px 18px rgba(0,0,0,.12)" : "none", transition: "background .2s ease,border .2s ease" }}>
+                  <span style={{ fontSize: ehDesktop ? "10px" : "9px", fontWeight: d.ehHoje || selecionada ? 700 : 450, lineHeight: 1.1, whiteSpace: "nowrap" }}>{d.ehHoje ? "Hoje" : letraDiaUi(d.chave, d.letra)}</span>
+                  <span style={{ fontSize: ehDesktop ? "13px" : "12px", fontWeight: selecionada || treinouNoDia ? 700 : 450, lineHeight: 1.1, color: treinouNoDia ? "#F0C29E" : selecionada ? "#E5D8F5" : "#D0CBD4" }}>{d.numeroDia}</span>
+                  <span style={{ width: "4px", height: "4px", borderRadius: "50%", background: treinouNoDia ? "#F2A66E" : "transparent", boxShadow: treinouNoDia ? "0 0 7px rgba(242,166,110,.7)" : "none" }} />
+                </button>;
               })}
             </div>
           </section>
