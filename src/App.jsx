@@ -4158,6 +4158,15 @@ export default function App() {
         [data-caveira-theme="claro"] header > div:first-child > div:first-child > div:first-child span {
           color: #716A7D !important;
         }
+        [data-caveira-theme="claro"] .caveira-header-badge {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          border: none !important;
+          box-shadow: none !important;
+          padding: 0 !important;
+          border-radius: 0 !important;
+        }
         /* O cabeçalho inteiro permanece sem painel; somente a linha inferior é mantida. */
         [data-caveira-theme="claro"] header {
           background: transparent !important;
@@ -4369,14 +4378,15 @@ export default function App() {
           {abaAtiva !== "hoje" && <button type="button" onClick={voltarPaginaAnterior} aria-label={textoUi("Voltar página anterior", "Go back")} title={textoUi("Voltar", "Back")} style={{ marginTop: 2, flex: "none", width: 30, height: 30, display: "grid", placeItems: "center", border: "1px solid rgba(190,170,225,.14)", borderRadius: 8, background: "rgba(35,32,46,.28)", color: "#BEB7CA", cursor: "pointer", fontSize: 18, lineHeight: 1 }}>‹</button>}
           <div style={{ minWidth: 0 }}>
           <div
+            className="caveira-header-badge"
             style={{
               display: "inline-flex",
               alignItems: "center",
               gap: "8px",
-              padding: abaAtiva === "montar" ? "0" : "4px 10px",
+              padding: abaAtiva === "montar" || temaApp === "claro" ? "0" : "4px 10px",
               borderRadius: "8px",
-              background: abaAtiva === "montar" ? "transparent" : "rgba(49, 43, 63, 0.58)",
-              border: abaAtiva === "montar" ? "none" : "1px solid rgba(190, 170, 225, 0.14)",
+              background: abaAtiva === "montar" || temaApp === "claro" ? "transparent" : "rgba(49, 43, 63, 0.58)",
+              border: abaAtiva === "montar" || temaApp === "claro" ? "none" : "1px solid rgba(190, 170, 225, 0.14)",
               marginBottom: "8px",
             }}
           >
