@@ -3974,7 +3974,6 @@ export default function App() {
                 <button type="button" onClick={() => abrirPagina("cards")} style={estiloMenuAtivo("cards", abaAtiva)}>{renderIconeMenu("biblioteca", 17)}<span>{textoUi("Cards de Exercícios", "Exercise Cards")}</span></button>
                 <button type="button" onClick={() => abrirPagina("exercicios")} style={estiloMenuAtivo("exercicios", abaAtiva)}>{renderIconeMenu("biblioteca", 17)}<span>{textoUi("Biblioteca de Exercícios", "Exercise Library")}</span></button>
                 <button type="button" onClick={() => abrirPagina("desempenho")} style={estiloMenuAtivo("desempenho", abaAtiva)}>{renderIconeMenu("desempenho", 17)}<span>{textoUi("Central de Desempenho", "Performance Center")}</span></button>
-                <button type="button" onClick={() => abrirPagina("relatorios")} style={estiloMenuAtivo("relatorios", abaAtiva)}>{renderIconeMenu("relatorios", 17)}<span>{textoUi("Relatórios", "Reports")}</span></button>
                 <button type="button" onClick={() => abrirPagina("conquistas")} style={estiloMenuAtivo("conquistas", abaAtiva)}>{renderIconeMenu("conquistas", 17)}<span>{textoUi("Conquistas", "Achievements")}</span></button>
                 <button type="button" onClick={() => { setMenuAberto(false); setModoFocoLimpo(true); }} style={btnMenu}>{renderIconeMenu("foco", 17)}<span>{textoUi("Modo Foco", "Focus Mode")}</span></button>
 
