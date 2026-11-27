@@ -4373,35 +4373,6 @@ export default function App() {
               flexWrap: "wrap",
             }}
           >
-            <div style={{ display: "inline-flex", gap: "6px", flexWrap: "wrap" }}>
-              {[
-                { id: "normal", label: "Dia normal" },
-                { id: "cansado", label: "Dia cansado" },
-                { id: "pesado", label: "Dia pesado" },
-              ].map((st) => {
-                const ativo = estadoDia === st.id;
-                return (
-                  <button
-                    key={st.id}
-                    type="button"
-                    onClick={() => definirEstadoDia(st.id)}
-                    style={{
-                      padding: "5px 10px",
-                      borderRadius: "7px",
-                      border: "1px solid rgba(190, 170, 225, 0.19)",
-                      background: ativo ? "rgba(190, 170, 225, 0.14)" : "#111827",
-                      color: ativo ? "#DCCCF5" : "#BEB7CA",
-                      fontSize: "11px",
-                      fontWeight: ativo ? 700 : 400,
-                      cursor: "pointer",
-                    }}
-                  >
-                    {st.label}
-                  </button>
-                );
-              })}
-            </div>
-
             {exercicios.length > 0 && (
               <button
                 type="button"
@@ -4420,21 +4391,6 @@ export default function App() {
               </button>
             )}
           </div>
-
-          {estadoDia === "cansado" && (
-            <div
-              style={{
-                fontSize: "11px",
-                color: "#E9C987",
-                background: "rgba(251, 191, 36, 0.08)",
-                padding: "8px 10px",
-                borderRadius: "8px",
-                border: "1px solid rgba(251, 191, 36, 0.25)",
-              }}
-            >
-              {textoUi('Dia cansado: priorize execução limpa e evite forçar carga máxima hoje.', 'Low-energy day: prioritize clean form and avoid maximum loads today.')}
-            </div>
-          )}
 
           {/* Checklist pré-treino e aquecimento removidos conforme solicitação visual/funcional. */}
 
@@ -4653,7 +4609,7 @@ export default function App() {
                                 {textoUi("Última:", "Last:")} <strong style={{ color: "#BEB7CA" }}>{ultimoRegistro.carga}kg</strong> ({ultimoRegistro.dataISO.slice(5)})
                               </span>
                             )}
-                            {sugestaoSubir && estadoDia !== "cansado" && (
+                            {sugestaoSubir && (
                               <span style={{ color: "#9ADFC2", marginLeft: ultimoRegistro ? "8px" : 0 }}>
                                 • Subir +2kg?
                               </span>
@@ -4744,35 +4700,35 @@ export default function App() {
             )
           )}
 
-          {/* Sinais do corpo */}
-          <div style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "8px" }}>
-            <span style={{ fontSize: "11px", color: "#BEB7CA", fontWeight: 600 }}>Como o corpo respondeu</span>
-            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-              {SINAIS_CORPO.map((sinal) => {
-                const ativo = sinaisDia.includes(sinal);
-                return (
-                  <button
-                    key={sinal}
-                    type="button"
-                    onClick={() => alternarSinalCorpo(sinal)}
-                    style={{
-                      padding: "4px 9px",
-                      borderRadius: "7px",
-                      border: "1px solid rgba(190, 170, 225, 0.19)",
-                      background: ativo ? "rgba(125, 211, 252, 0.14)" : "#111827",
-                      color: ativo ? "#DCCCF5" : "#BEB7CA",
-                      fontSize: "11px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {sinal}
-                  </button>
-                );
-              })}
+          {/* Observações do treino: anotações úteis para acompanhar a sessão e planejar ajustes. */}
+          <div style={{ padding: "14px", borderRadius: "10px", background: "rgba(49, 43, 63, 0.58)", border: "1px solid rgba(190, 170, 225, 0.14)", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+              <span style={{ fontSize: "13px", fontWeight: 650 }}>{textoUi('Observações do treino', 'Workout notes')}</span>
+              <button
+                type="button"
+                onClick={copiarResumoDoDia}
+                style={{ ...btnSecundario, flex: "none", padding: "4px 9px", fontSize: "11px" }}
+              >
+                Copiar resumo
+              </button>
             </div>
+            <div style={{ fontSize: "11px", lineHeight: 1.55, color: "#9E96AD" }}>
+              Anote informações importantes desta sessão, como cargas utilizadas, dificuldades, evolução, recordes pessoais ou ajustes que deseja fazer nos próximos treinos.
+            </div>
+            <textarea
+              rows={3}
+              placeholder="Ex.: aumentei a carga no supino, senti dificuldade na última série..."
+              aria-label="Observações do treino"
+              value={observacoes[dataSelecionada] || ""}
+              onChange={(e) => setObservacoes((prev) => ({ ...prev, [dataSelecionada]: e.target.value }))}
+              style={campoTexto}
+            />
+            {statusResumo && (
+              <div style={{ fontSize: "11px", color: "#BEB7CA", whiteSpace: "pre-wrap" }}>{statusResumo}</div>
+            )}
           </div>
 
-          {/* Água + Observação */}
+          {/* Controle de hidratação */}
           <div
             style={{
               display: "grid",
@@ -4860,28 +4816,7 @@ export default function App() {
               </div>
             </div>
 
-            <div style={{ padding: "14px", borderRadius: "10px", background: "rgba(49, 43, 63, 0.58)", border: "1px solid rgba(190, 170, 225, 0.14)", display: "flex", flexDirection: "column", gap: "8px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "13px", fontWeight: 600 }}>{textoUi('Observação', 'Note')}</span>
-                <button
-                  type="button"
-                  onClick={copiarResumoDoDia}
-                  style={{ ...btnSecundario, flex: "none", padding: "4px 9px", fontSize: "11px" }}
-                >
-                  Copiar resumo
-                </button>
-              </div>
-              <textarea
-                rows={3}
-                placeholder="Observação do dia..."
-                value={observacoes[dataSelecionada] || ""}
-                onChange={(e) => setObservacoes((prev) => ({ ...prev, [dataSelecionada]: e.target.value }))}
-                style={campoTexto}
-              />
-              {statusResumo && (
-                <div style={{ fontSize: "11px", color: "#BEB7CA", whiteSpace: "pre-wrap" }}>{statusResumo}</div>
-              )}
-            </div>
+
           </div>
           </fieldset>
         </div>
