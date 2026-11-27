@@ -568,6 +568,50 @@ export default function App() {
   useEffect(() => { try { localStorage.setItem("caveira-fonte", preferenciaFonte); } catch {} }, [preferenciaFonte]);
   useEffect(() => { try { localStorage.setItem("caveira-idioma", idiomaApp); } catch {} }, [idiomaApp]);
   useEffect(() => { try { localStorage.setItem("caveira-tema", temaApp); } catch {} }, [temaApp]);
+
+  // Reaplica o tema claro aos estilos inline renderizados (React converte HEX em RGB no DOM).
+  // Este efeito é exclusivamente visual e não altera estados de dados nem handlers.
+  useEffect(() => {
+    const raiz = document.querySelector('[data-caveira-theme]');
+    if (!raiz) return;
+    const classesTema = ["cv-claro-surface", "cv-claro-text", "cv-claro-dark-button"];
+    const limpar = (el) => classesTema.forEach((c) => el.classList.remove(c));
+    if (temaApp !== "claro") {
+      raiz.querySelectorAll(".cv-claro-surface, .cv-claro-text, .cv-claro-dark-button").forEach(limpar);
+      return;
+    }
+    const rgb = (value) => {
+      const m = String(value || "").match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+      return m ? m.slice(1).map(Number) : null;
+    };
+    const escuro = (c) => c && Math.max(...c) < 68 && (c[0] + c[1] + c[2]) / 3 < 48;
+    const claroNeutro = (c) => c && (Math.min(...c) > 175) && (Math.max(...c)-Math.min(...c) < 65);
+    const avaliar = (el) => {
+      const st = el.getAttribute("style") || "";
+      limpar(el);
+      if (!st) return;
+      const bg = rgb(el.style.backgroundColor || el.style.background);
+      const grad = /linear-gradient|radial-gradient/i.test(el.style.background || el.style.backgroundImage) && /#(?:0[0-9a-f]|1[0-9a-f]|2[0-9a-f])/i.test(st);
+      if (escuro(bg) || grad) {
+        el.classList.add("cv-claro-surface");
+        if (el.tagName === "BUTTON") el.classList.add("cv-claro-dark-button");
+      }
+      const color = rgb(el.style.color);
+      if (claroNeutro(color) || (color && color[0] > 185 && color[2] > 185 && color[1] > 145)) el.classList.add("cv-claro-text");
+    };
+    const varrer = (node) => {
+      if (node.nodeType !== 1) return;
+      if (node.matches("[style]")) avaliar(node);
+      node.querySelectorAll?.("[style]").forEach(avaliar);
+    };
+    varrer(raiz);
+    const observer = new MutationObserver((changes) => changes.forEach((change) => {
+      if (change.type === "attributes") avaliar(change.target);
+      else change.addedNodes.forEach(varrer);
+    }));
+    observer.observe(raiz, { subtree: true, childList: true, attributes: true, attributeFilter: ["style"] });
+    return () => observer.disconnect();
+  }, [temaApp]);
   const [dataSelecionada, setDataSelecionada] = useState(hojeISO);
   const [rotina, setRotina] = useState(ROTINA_INICIAL);
   const [focoDiasPorChave, setFocoDiasPorChave] = useState({});
@@ -4091,6 +4135,16 @@ export default function App() {
         }
         [data-caveira-theme="claro"] svg { color: inherit; }
         [data-caveira-theme="claro"] ::selection { background: rgba(177,145,225,.28); color: #302B3A; }
+        /* Regras por classe: detectam valores RGB serializados no DOM, evitando falhas dos seletores HEX inline. */
+        [data-caveira-theme="claro"] .cv-claro-surface { background-color: #FFFFFF !important; background-image: none !important; border-color: #D8D1E2 !important; color: #24212B !important; box-shadow: 0 3px 14px rgba(40,30,55,.055) !important; }
+        [data-caveira-theme="claro"] .cv-claro-text { color: #24212B !important; }
+        [data-caveira-theme="claro"] button.cv-claro-dark-button { background: #7652A5 !important; background-color: #7652A5 !important; color: #FFFFFF !important; border: 1px solid #65448F !important; opacity: 1 !important; box-shadow: 0 2px 5px rgba(45,35,65,.14) !important; }
+        [data-caveira-theme="claro"] button.cv-claro-dark-button:disabled { background: #D8D1E2 !important; color: #51485E !important; border-color: #C6BBD5 !important; opacity: 1 !important; }
+        [data-caveira-theme="claro"] .cv-claro-surface input,
+        [data-caveira-theme="claro"] .cv-claro-surface select,
+        [data-caveira-theme="claro"] .cv-claro-surface textarea { background-color: #FFFFFF !important; color: #24212B !important; border-color: #CFC7DA !important; }
+        [data-caveira-theme="claro"] .cv-claro-surface button:not(.cv-claro-dark-button) { background-color: #E9E1F2 !important; color: #30243F !important; border-color: #BFAED4 !important; opacity: 1 !important; }
+        [data-caveira-theme="claro"] .cv-claro-surface button:disabled:not(.cv-claro-dark-button) { background-color: #DCD6E5 !important; color: #635A70 !important; opacity: 1 !important; }
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
         <span style={{ width: 6, height: 6, borderRadius: "50%", background: estaOnline ? "#B99AE7" : "#E9C987" }} />
