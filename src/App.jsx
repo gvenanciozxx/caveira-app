@@ -3894,18 +3894,48 @@ export default function App() {
             radial-gradient(ellipse 55% 42% at 100% 100%, rgba(128,96,173,.09), transparent 72%),
             radial-gradient(ellipse 40% 32% at 0% 100%, rgba(157,190,180,.06), transparent 72%) !important;
         }
-        [data-caveira-theme="claro"] aside {
-          background: linear-gradient(160deg, #FFFFFF, #F5F2F9) !important;
-          border-color: var(--cv-border) !important;
+        /* Painel de sessão e barra inferior: sem placas brancas no tema claro. */
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          border-color: transparent !important;
           color: var(--cv-text) !important;
-          box-shadow: 12px 0 36px rgba(45,35,65,.07) !important;
+          box-shadow: none !important;
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
         }
-        [data-caveira-theme="claro"] header,
-        [data-caveira-theme="claro"] nav[style*="position: fixed"] {
-          background: rgba(255,255,255,.96) !important;
+        [data-caveira-theme="claro"] header {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
           border-color: var(--cv-border) !important;
           color: var(--cv-text) !important;
-          box-shadow: 0 5px 22px rgba(45,35,65,.055) !important;
+          box-shadow: none !important;
+        }
+        [data-caveira-theme="claro"] nav.caveira-barra-inferior {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          border-top-color: transparent !important;
+          box-shadow: none !important;
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+        }
+        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          border: 1px solid transparent !important;
+          box-shadow: none !important;
+          color: var(--cv-text-muted) !important;
+        }
+        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"] {
+          background: #8060AD !important;
+          background-color: #8060AD !important;
+          color: #FFFFFF !important;
+          border: 1px solid #72539D !important;
+          box-shadow: 0 2px 6px rgba(45,35,65,.12) !important;
         }
         /* Containers com superfícies originalmente grafite/pretas. */
         [data-caveira-theme="claro"] [style*="background: rgba(35, 32, 46"],
@@ -7190,6 +7220,7 @@ export default function App() {
 
       {/* Barra Inferior */}
       <nav
+        className="caveira-barra-inferior"
         style={{
           position: "fixed",
           bottom: 0,
@@ -7216,6 +7247,8 @@ export default function App() {
             <button
               key={aba.id}
               type="button"
+              className="caveira-aba-inferior"
+              aria-current={ativa ? "page" : undefined}
               onClick={() => abrirPagina(aba.id)}
               style={{
                 padding: "8px",
