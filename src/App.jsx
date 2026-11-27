@@ -3973,8 +3973,7 @@ export default function App() {
         [data-caveira-theme="claro"] [style*="background: #11141B"],
         [data-caveira-theme="claro"] [style*="background: linear-gradient(145deg, #11141a"],
         [data-caveira-theme="claro"] [style*="background: linear-gradient(145deg, rgba(35,34,47"],
-        [data-caveira-theme="claro"] [style*="background: linear-gradient(145deg, rgba(35,33,46"],
-        [data-caveira-theme="claro"] [style*="background: radial-gradient(circle at 50% 0%" {
+        [data-caveira-theme="claro"] [style*="background: linear-gradient(145deg, rgba(35,33,46"] {
           background: #FFFFFF !important;
           border-color: var(--cv-border) !important;
           color: var(--cv-text) !important;
@@ -4145,34 +4144,28 @@ export default function App() {
         [data-caveira-theme="claro"] .cv-claro-surface textarea { background-color: #FFFFFF !important; color: #24212B !important; border-color: #CFC7DA !important; }
         [data-caveira-theme="claro"] .cv-claro-surface button:not(.cv-claro-dark-button) { background-color: #E9E1F2 !important; color: #30243F !important; border-color: #BFAED4 !important; opacity: 1 !important; }
         [data-caveira-theme="claro"] .cv-claro-surface button:disabled:not(.cv-claro-dark-button) { background-color: #DCD6E5 !important; color: #635A70 !important; opacity: 1 !important; }
-        /* Correção isolada do selo no cabeçalho: remove o retângulo branco no tema claro. */
-        [data-caveira-theme="claro"] header > div:first-child > div:first-child > div:first-child {
+        /* Tema claro: cabeçalho e selo sem fundos artificiais; regra por classe, sem depender da estrutura. */
+        [data-caveira-theme="claro"] header {
           background: transparent !important;
           background-color: transparent !important;
           background-image: none !important;
-          border: none !important;
+          border-bottom-color: var(--cv-border) !important;
           box-shadow: none !important;
-          padding: 0 !important;
-          border-radius: 0 !important;
-        }
-        [data-caveira-theme="claro"] header > div:first-child > div:first-child > div:first-child span {
-          color: #716A7D !important;
         }
         [data-caveira-theme="claro"] .caveira-header-badge {
           background: transparent !important;
           background-color: transparent !important;
           background-image: none !important;
-          border: none !important;
+          border: 0 !important;
           box-shadow: none !important;
           padding: 0 !important;
           border-radius: 0 !important;
         }
-        /* O cabeçalho inteiro permanece sem painel; somente a linha inferior é mantida. */
-        [data-caveira-theme="claro"] header {
+        [data-caveira-theme="claro"] .caveira-header-badge span {
+          color: var(--cv-text-muted) !important;
           background: transparent !important;
           background-color: transparent !important;
           background-image: none !important;
-          box-shadow: none !important;
         }
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
