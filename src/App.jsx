@@ -4114,35 +4114,77 @@ export default function App() {
           opacity: 1 !important;
           box-shadow: 0 2px 5px rgba(45,35,65,.07) !important;
         }
-        /* Menu lateral: mantém a aparência grafite original no tema claro,
-           sem os fundos claros globais dos botões; restrito ao drawer. */
+        /* Menu lateral: overrides isolados para impedir que as regras globais do tema claro clareiem a navegação. */
+        [data-caveira-theme="claro"] .caveira-menu-drawer,
+        [data-caveira-theme="claro"] aside.caveira-menu-compacto {
+          background: linear-gradient(145deg, #241B35 0%, #302342 52%, #241B35 100%) !important;
+          background-color: #2B203D !important;
+          color: #FFFFFF !important;
+          border-right-color: rgba(197,178,255,.22) !important;
+          box-shadow: 18px 0 48px rgba(0,0,0,.32) !important;
+        }
         [data-caveira-theme="claro"] .caveira-menu-drawer button {
           background: transparent !important;
           background-color: transparent !important;
           background-image: none !important;
           border-color: transparent !important;
-          color: #AAB2BF !important;
+          color: #FFFFFF !important;
           box-shadow: none !important;
           opacity: 1 !important;
         }
+        [data-caveira-theme="claro"] .caveira-menu-drawer button span,
+        [data-caveira-theme="claro"] .caveira-menu-drawer button svg,
+        [data-caveira-theme="claro"] .caveira-menu-drawer > div span {
+          color: #FFFFFF !important;
+        }
         [data-caveira-theme="claro"] .caveira-menu-drawer button[style*="#252833"] {
-          background: #252833 !important;
-          background-color: #252833 !important;
-          color: #F2F4F8 !important;
-          border-color: rgba(255,255,255,.035) !important;
-          box-shadow: inset 0 0 18px rgba(197,178,255,.035) !important;
+          background: #493461 !important;
+          background-color: #493461 !important;
+          color: #FFFFFF !important;
+          border-color: rgba(255,255,255,.07) !important;
+          box-shadow: inset 0 0 18px rgba(197,178,255,.045) !important;
         }
         [data-caveira-theme="claro"] .caveira-menu-drawer button[aria-label="Fechar menu"] {
-          background: rgba(17,20,26,.94) !important;
-          background-color: rgba(17,20,26,.94) !important;
-          border: 1px solid rgba(197,178,255,.55) !important;
-          color: #AEB5C2 !important;
+          background: rgba(49,35,70,.94) !important;
+          background-color: rgba(49,35,70,.94) !important;
+          border: 1px solid rgba(197,178,255,.22) !important;
+          color: #FFFFFF !important;
         }
-        [data-caveira-theme="claro"] .caveira-menu-drawer .caveira-usuario-nome {
-          color: #F1EEF7 !important;
-        }
+        [data-caveira-theme="claro"] .caveira-menu-drawer .caveira-usuario-nome,
         [data-caveira-theme="claro"] .caveira-menu-drawer .caveira-usuario-email {
-          color: #BEB7CA !important;
+          color: #FFFFFF !important;
+        }
+        [data-caveira-theme="claro"] .caveira-menu-drawer img,
+        [data-caveira-theme="claro"] .caveira-menu-compacto img {
+          background: transparent !important;
+          background-color: transparent !important;
+          border: 0 !important;
+          box-shadow: none !important;
+        }
+        [data-caveira-theme="claro"] .caveira-menu-compacto button {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          border: 0 !important;
+          box-shadow: none !important;
+          color: #FFFFFF !important;
+        }
+        [data-caveira-theme="claro"] .caveira-menu-compacto button.caveira-logo-menu-compacto {
+          background: transparent !important;
+          background-color: transparent !important;
+          border: 0 !important;
+          outline: 0 !important;
+          box-shadow: none !important;
+          padding: 0 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-menu-compacto button[aria-label="Abrir perfil e menu"] {
+          background: linear-gradient(135deg,#d8a9ed,#a7b9ff) !important;
+          background-color: #C7A9EF !important;
+          color: #FFFFFF !important;
+          border: 0 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-menu-compacto button[aria-label="Sair"] {
+          color: #FFFFFF !important;
         }
         [data-caveira-theme="claro"] button:disabled {
           background-color: #E7E1ED !important;
@@ -4260,6 +4302,7 @@ export default function App() {
       {/* Sidebar compacta no desktop — mantém acesso rápido e animações do app */}
       {!menuAberto && ehDesktop && (
         <aside
+          className="caveira-menu-compacto"
           aria-label="Navegação compacta"
           style={{
             position: "fixed", left: 0, top: 0, bottom: 0,
@@ -4270,7 +4313,7 @@ export default function App() {
             padding: "18px 0 16px", boxSizing: "border-box",
           }}
         >
-          <button type="button" onClick={() => setMenuAberto(true)} title="Expandir menu" aria-label="Expandir menu"
+          <button className="caveira-logo-menu-compacto" type="button" onClick={() => setMenuAberto(true)} title="Expandir menu" aria-label="Expandir menu"
             style={{ border: 0, background: "transparent", padding: 0, cursor: "pointer", marginBottom: 24 }}>
             {renderLogo(34)}
           </button>
