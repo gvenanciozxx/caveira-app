@@ -659,6 +659,10 @@ export default function App() {
   const [exerciciosSalvosCards, setExerciciosSalvosCards] = useState([]);
   const [novoExercicioSalvoNome, setNovoExercicioSalvoNome] = useState("");
   const [novoExercicioSalvoGrupo, setNovoExercicioSalvoGrupo] = useState("superior");
+  const [formNovoTreinoCardAberto, setFormNovoTreinoCardAberto] = useState(false);
+  const [novoCardSeriesReps, setNovoCardSeriesReps] = useState("4x10");
+  const [novoCardDescanso, setNovoCardDescanso] = useState(60);
+  const [novoCardCarga, setNovoCardCarga] = useState(20);
   const [substituicaoCardAbertaId, setSubstituicaoCardAbertaId] = useState(null);
   const [substituicaoCardAlvoId, setSubstituicaoCardAlvoId] = useState("");
 
@@ -1921,6 +1925,9 @@ export default function App() {
         grupoMuscular: grupo,
         equipamento: exercicio?.equipamento || exercicio?.[2] || "",
         instrucoes: exercicio?.instrucoes || exercicio?.[3] || "",
+        seriesReps: exercicio?.seriesReps || "",
+        descanso: exercicio?.descanso ?? null,
+        carga: exercicio?.carga ?? null,
       }];
     });
   }
@@ -1928,8 +1935,12 @@ export default function App() {
   function adicionarExercicioSalvoManual(e) {
     e.preventDefault();
     if (!novoExercicioSalvoNome.trim()) return;
-    salvarExercicioNosCards({ nome: novoExercicioSalvoNome.trim(), grupoMuscular: grupoTreinoSelecionado });
+    salvarExercicioNosCards({ nome: novoExercicioSalvoNome.trim(), grupoMuscular: grupoTreinoSelecionado, seriesReps: novoCardSeriesReps.trim() || "4x10", descanso: Math.max(5, Number(novoCardDescanso) || 60), carga: Math.max(0, Number(novoCardCarga) || 0) });
     setNovoExercicioSalvoNome("");
+    setNovoCardSeriesReps("4x10");
+    setNovoCardDescanso(60);
+    setNovoCardCarga(20);
+    setFormNovoTreinoCardAberto(false);
   }
 
   function substituirExercicioDaRotina(exercicioSalvo, dia, idAlvo) {
@@ -6643,14 +6654,22 @@ export default function App() {
               <div><div style={{ color: "#9E96AD", fontSize: 10, letterSpacing: ".08em" }}>CARD DE EXERCÍCIOS</div><h2 style={{ margin: "4px 0", fontSize: 19, color: grupoAtualCards.cor }}>{grupoAtualCards.nome}</h2><p style={{ ...labelMini, margin: 0 }}>{grupoAtualCards.descricao}</p></div>
               <button type="button" onClick={() => { setGrupoTreinoSelecionado(null); setSubstituicaoCardAbertaId(null); }} style={btnSecundario}>← Voltar aos cards</button>
             </div>
-            <form onSubmit={adicionarExercicioSalvoManual} style={{ ...cardClean, display: "grid", gridTemplateColumns: "minmax(0,1fr) auto", gap: 8 }}>
-              <input value={novoExercicioSalvoNome} onChange={(e) => setNovoExercicioSalvoNome(e.target.value)} placeholder="Nome do exercício para guardar" style={campoTexto}/>
-              <button type="submit" disabled={!novoExercicioSalvoNome.trim()} style={{ ...btnSecundario, background: "#C7A9EF", color: "#17131F", border: 0, opacity: novoExercicioSalvoNome.trim() ? 1 : .45 }}>Salvar exercício</button>
-              <div style={{ gridColumn: "1 / -1", color: "#9E96AD", fontSize: 10 }}>O exercício será salvo diretamente em {grupoAtualCards.nome}.</div>
-            </form>
+            <div style={{ ...cardClean, display: "grid", gap: 10 }}>
+              <button type="button" onClick={() => setFormNovoTreinoCardAberto((aberto) => !aberto)} style={{ ...btnSecundario, justifySelf: "start", background: "#C7A9EF", color: "#17131F", border: 0, fontWeight: 800 }}>＋ {formNovoTreinoCardAberto ? "Fechar formulário" : "Adicionar treino"}</button>
+              {formNovoTreinoCardAberto && <form onSubmit={adicionarExercicioSalvoManual} style={{ display: "grid", gap: 9 }}>
+                <div><label style={rotuloCampo}>Nome do exercício</label><input value={novoExercicioSalvoNome} onChange={(e) => setNovoExercicioSalvoNome(e.target.value)} placeholder="Ex.: Supino reto" style={campoTexto}/></div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(115px,1fr))", gap: 8 }}>
+                  <div><label style={rotuloCampo}>Séries x repetições</label><input value={novoCardSeriesReps} onChange={(e) => setNovoCardSeriesReps(e.target.value)} placeholder="4x10" style={campoTexto}/></div>
+                  <div><label style={rotuloCampo}>Descanso (segundos)</label><input type="number" min="5" step="5" value={novoCardDescanso} onChange={(e) => setNovoCardDescanso(e.target.value)} style={campoTexto}/></div>
+                  <div><label style={rotuloCampo}>Carga (kg)</label><input type="number" min="0" step="0.5" value={novoCardCarga} onChange={(e) => setNovoCardCarga(e.target.value)} style={campoTexto}/></div>
+                </div>
+                <div style={{ color: "#9E96AD", fontSize: 10 }}>O exercício será salvo em {grupoAtualCards.nome}, com as configurações informadas.</div>
+                <button type="submit" disabled={!novoExercicioSalvoNome.trim()} style={{ ...btnSecundario, background: "#C7A9EF", color: "#17131F", border: 0, fontWeight: 800, opacity: novoExercicioSalvoNome.trim() ? 1 : .45 }}>Salvar treino</button>
+              </form>}
+            </div>
             {salvosDoGrupo.length === 0 ? <div style={{ ...cardClean, textAlign: "center", padding: 20 }}><p style={labelMini}>Ainda não há exercícios salvos neste card. Você pode guardar um exercício acima ou usar “Salvar nos cards” na Biblioteca de Exercícios.</p></div> : <div style={{ display: "grid", gap: 9 }}>
               {salvosDoGrupo.map((item) => <div key={item.id} style={{ ...cardClean, display: "grid", gap: 8 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "flex-start" }}><div style={{ minWidth: 0 }}><strong style={{ color: "#F1EEF7", fontSize: 14 }}>{item.nome}</strong>{item.equipamento && <div style={{ color: "#B9A8D2", fontSize: 10, marginTop: 4 }}>{item.equipamento}</div>}{item.instrucoes && <p style={{ color: "#AAA1B8", fontSize: 11, lineHeight: 1.5, margin: "6px 0 0" }}>{item.instrucoes}</p>}</div><button type="button" onClick={() => setExerciciosSalvosCards((prev) => prev.filter((x) => x.id !== item.id))} title="Remover dos cards" style={{ ...btnCarga, color: "#F19AAB", flexShrink: 0 }}>×</button></div>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "flex-start" }}><div style={{ minWidth: 0 }}><strong style={{ color: "#F1EEF7", fontSize: 14 }}>{item.nome}</strong>{(item.seriesReps || item.descanso != null || item.carga != null) && <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 5, color: "#C7A9EF", fontSize: 10 }}><span>{item.seriesReps || "Séries não definidas"}</span>{item.descanso != null && <span>• {item.descanso}s descanso</span>}{item.carga != null && <span>• {item.carga} kg</span>}</div>}{item.equipamento && <div style={{ color: "#B9A8D2", fontSize: 10, marginTop: 4 }}>{item.equipamento}</div>}{item.instrucoes && <p style={{ color: "#AAA1B8", fontSize: 11, lineHeight: 1.5, margin: "6px 0 0" }}>{item.instrucoes}</p>}</div><button type="button" onClick={() => setExerciciosSalvosCards((prev) => prev.filter((x) => x.id !== item.id))} title="Remover dos cards" style={{ ...btnCarga, color: "#F19AAB", flexShrink: 0 }}>×</button></div>
                 <button type="button" onClick={() => { setSubstituicaoCardAbertaId((atual) => atual === item.id ? null : item.id); setSubstituicaoCardAlvoId(""); }} style={{ ...btnSecundario, width: "100%", color: "#DCCCF5" }}>{substituicaoCardAbertaId === item.id ? "Fechar substituição" : "Substituir exercício do treino"}</button>
                 {substituicaoCardAbertaId === item.id && <div style={{ display: "grid", gap: 8, padding: 10, borderRadius: 10, background: "rgba(199,169,239,.07)", border: "1px solid rgba(199,169,239,.16)" }}>
                   <label style={rotuloCampo}>Dia da semana</label>
@@ -6828,7 +6847,7 @@ export default function App() {
       >
         {[
           { id: "hoje", rotulo: textoUi("Hoje", "Today") },
-          { id: "montar", rotulo: textoUi("Montar", "Build") },
+          { id: "montar", rotulo: textoUi("Montar treino", "Build workout") },
           { id: "timer", rotulo: textoUi("Timer", "Timer") },
         ].map((aba) => {
           const ativa = abaAtiva === aba.id;
