@@ -3913,30 +3913,7 @@ export default function App() {
           color: var(--cv-text) !important;
           box-shadow: none !important;
         }
-        [data-caveira-theme="claro"] nav.caveira-barra-inferior {
-          background: transparent !important;
-          background-color: transparent !important;
-          background-image: none !important;
-          border-top-color: transparent !important;
-          box-shadow: none !important;
-          backdrop-filter: none !important;
-          -webkit-backdrop-filter: none !important;
-        }
-        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior {
-          background: transparent !important;
-          background-color: transparent !important;
-          background-image: none !important;
-          border: 1px solid transparent !important;
-          box-shadow: none !important;
-          color: var(--cv-text-muted) !important;
-        }
-        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"] {
-          background: #8060AD !important;
-          background-color: #8060AD !important;
-          color: #FFFFFF !important;
-          border: 1px solid #72539D !important;
-          box-shadow: 0 2px 6px rgba(45,35,65,.12) !important;
-        }
+        /* Barra inferior: seu visual grafite original é mantido também no tema claro. */
         /* Containers com superfícies originalmente grafite/pretas. */
         [data-caveira-theme="claro"] [style*="background: rgba(35, 32, 46"],
         [data-caveira-theme="claro"] [style*="background: rgba(31, 29, 42"],
@@ -4137,6 +4114,36 @@ export default function App() {
           opacity: 1 !important;
           box-shadow: 0 2px 5px rgba(45,35,65,.07) !important;
         }
+        /* Menu lateral: mantém a aparência grafite original no tema claro,
+           sem os fundos claros globais dos botões; restrito ao drawer. */
+        [data-caveira-theme="claro"] .caveira-menu-drawer button {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          border-color: transparent !important;
+          color: #AAB2BF !important;
+          box-shadow: none !important;
+          opacity: 1 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-menu-drawer button[style*="#252833"] {
+          background: #252833 !important;
+          background-color: #252833 !important;
+          color: #F2F4F8 !important;
+          border-color: rgba(255,255,255,.035) !important;
+          box-shadow: inset 0 0 18px rgba(197,178,255,.035) !important;
+        }
+        [data-caveira-theme="claro"] .caveira-menu-drawer button[aria-label="Fechar menu"] {
+          background: rgba(17,20,26,.94) !important;
+          background-color: rgba(17,20,26,.94) !important;
+          border: 1px solid rgba(197,178,255,.55) !important;
+          color: #AEB5C2 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-menu-drawer .caveira-usuario-nome {
+          color: #F1EEF7 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-menu-drawer .caveira-usuario-email {
+          color: #BEB7CA !important;
+        }
         [data-caveira-theme="claro"] button:disabled {
           background-color: #E7E1ED !important;
           color: #716A7D !important;
@@ -4196,6 +4203,31 @@ export default function App() {
           background: transparent !important;
           background-color: transparent !important;
           background-image: none !important;
+        }
+        /* Reaplica o acabamento original da barra após os overrides globais de tema. */
+        [data-caveira-theme="claro"] nav.caveira-barra-inferior {
+          background: rgba(28, 27, 34, 0.88) !important;
+          background-color: rgba(28, 27, 34, 0.88) !important;
+          background-image: none !important;
+          border-top: 1px solid rgba(190, 170, 225, 0.15) !important;
+          box-shadow: none !important;
+          backdrop-filter: none !important;
+          -webkit-backdrop-filter: none !important;
+        }
+        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          border: none !important;
+          box-shadow: none !important;
+          color: #9E96AD !important;
+        }
+        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"] {
+          background: #282432 !important;
+          background-color: #282432 !important;
+          color: #F1EEF7 !important;
+          border: none !important;
+          box-shadow: none !important;
         }
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
@@ -4304,6 +4336,7 @@ export default function App() {
           }}
         >
           <aside
+            className="caveira-menu-drawer"
             onClick={(e) => e.stopPropagation()}
             style={{
               position: ehDesktop ? "fixed" : "relative",
@@ -4377,7 +4410,7 @@ export default function App() {
             <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "9px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 8px", background: "transparent", borderTop: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: 0, minWidth: 0, paddingTop: "16px" }}>
                 <div style={{ width: "34px", height: "34px", borderRadius: "50%", flexShrink: 0, overflow: "hidden", display: "grid", placeItems: "center", background: "#342B46", border: "1px solid #74618F", color: "#DCCCF5", fontWeight: 800, fontSize: "13px" }}>{perfilFoto ? <img src={perfilFoto} alt="Foto de perfil" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : (authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0, 1).toUpperCase()}</div>
-                <div style={{ minWidth: 0, flex: 1 }}><div style={{ color: "#F1EEF7", fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.user_metadata?.nome || "Usuário"}</div><div style={{ color: "#BEB7CA", fontSize: "10px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.email}</div></div>
+                <div style={{ minWidth: 0, flex: 1 }}><div className="caveira-usuario-nome" style={{ color: "#F1EEF7", fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.user_metadata?.nome || "Usuário"}</div><div className="caveira-usuario-email" style={{ color: "#BEB7CA", fontSize: "10px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.email}</div></div>
                 <button type="button" onClick={sairDaConta} title="Sair da conta" aria-label="Sair da conta" style={{ border: 0, background: "transparent", color: "#89909c", cursor: "pointer", display: "grid", placeItems: "center", padding: 8 }}>{renderIconeMenu("sair", 18)}</button>
               </div>
             </div>
