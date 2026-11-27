@@ -652,6 +652,11 @@ export default function App() {
 
   const [exercicioHistoricoAberto, setExercicioHistoricoAberto] = useState(null);
   const [grupoTreinoSelecionado, setGrupoTreinoSelecionado] = useState(null);
+  const [exerciciosSalvosCards, setExerciciosSalvosCards] = useState([]);
+  const [novoExercicioSalvoNome, setNovoExercicioSalvoNome] = useState("");
+  const [novoExercicioSalvoGrupo, setNovoExercicioSalvoGrupo] = useState("superior");
+  const [substituicaoCardAbertaId, setSubstituicaoCardAbertaId] = useState(null);
+  const [substituicaoCardAlvoId, setSubstituicaoCardAlvoId] = useState("");
 
   // Recursos Premium adicionais: desempenho, medidas, metas e biblioteca.
   const [registrosPR, setRegistrosPR] = useState([]);
@@ -765,6 +770,7 @@ export default function App() {
 
   const estadoPersistido = {
     rotina,
+    exerciciosSalvosCards,
     focoDiasPorChave,
     presets,
     logsPorData,
@@ -806,6 +812,29 @@ export default function App() {
   function aplicarSnapshotPersistido(dados) {
     const d = dados || {};
     if (d.rotina) setRotina(d.rotina);
+    if (Array.isArray(d.exerciciosSalvosCards)) {
+      setExerciciosSalvosCards(d.exerciciosSalvosCards);
+    } else {
+      // Migração compatível: aproveita exercícios já existentes nas rotinas e modelos antigos.
+      const exerciciosLegados = [
+        ...Object.values(d.rotina || {}).flat(),
+        ...(Array.isArray(d.presets) ? d.presets.flatMap((preset) => preset.exercicios || []) : []),
+      ];
+      const unicos = new Map();
+      exerciciosLegados.forEach((item) => {
+        const nome = String(item?.nome || "").trim();
+        if (!nome) return;
+        const chave = nome.toLowerCase();
+        if (!unicos.has(chave)) unicos.set(chave, {
+          id: `migrado-${chave.replace(/[^a-z0-9]+/gi, "-")}`,
+          nome,
+          grupoMuscular: identificarGrupoTreino(item),
+          equipamento: item.equipamento || "",
+          instrucoes: item.instrucoes || "",
+        });
+      });
+      setExerciciosSalvosCards(Array.from(unicos.values()));
+    }
     if (d.focoDiasPorChave) setFocoDiasPorChave(d.focoDiasPorChave);
     if (Array.isArray(d.presets)) setPresets(d.presets);
     if (d.logsPorData) setLogsPorData(d.logsPorData);
@@ -1245,6 +1274,7 @@ export default function App() {
     setIntervaloFase("trabalho");
     setIntervaloRestante(40);
     setRotina(ROTINA_INICIAL);
+    setExerciciosSalvosCards([]);
     setFocoDiasPorChave({});
     setPresets(PRESETS_INICIAIS);
     setLogsPorData({});
@@ -1286,7 +1316,7 @@ export default function App() {
     setResetErro("");
     setStatusDadosNuvem("Resetando e sincronizando seus dados...");
     const snapshotResetado = {
-      rotina: ROTINA_INICIAL, focoDiasPorChave: {}, presets: PRESETS_INICIAIS,
+      rotina: ROTINA_INICIAL, exerciciosSalvosCards: [], focoDiasPorChave: {}, presets: PRESETS_INICIAIS,
       logsPorData: {}, observacoes: {}, duracaoPorData: {}, tempoAtivoPorData: {},
       aquecimentoPorData: {}, estadoDiaPorData: {}, checklistPorData: {}, sinaisCorpoPorData: {},
       sonoPorData: {}, motivoSemTreinoPorData: {}, refeicoesModelos: REFEICOES_PADRAO_INICIAIS,
@@ -1859,6 +1889,42 @@ export default function App() {
     if (!Number.isFinite(quantidade) || quantidade <= 0) return;
     somarAgua(Math.round(quantidade));
     setAguaEntradaMl("");
+  }
+
+  function salvarExercicioNosCards(exercicio, grupoForcado = null) {
+    const nome = String(exercicio?.nome || exercicio?.[0] || "").trim();
+    if (!nome) return;
+    const grupo = grupoForcado || exercicio?.grupoMuscular || identificarGrupoTreino({ nome, grupo: exercicio?.grupo || exercicio?.[1] });
+    setExerciciosSalvosCards((prev) => {
+      if (prev.some((item) => item.nome.trim().toLowerCase() === nome.toLowerCase())) return prev;
+      return [...prev, {
+        id: `card-ex-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        nome,
+        grupoMuscular: grupo,
+        equipamento: exercicio?.equipamento || exercicio?.[2] || "",
+        instrucoes: exercicio?.instrucoes || exercicio?.[3] || "",
+      }];
+    });
+  }
+
+  function adicionarExercicioSalvoManual(e) {
+    e.preventDefault();
+    if (!novoExercicioSalvoNome.trim()) return;
+    salvarExercicioNosCards({ nome: novoExercicioSalvoNome.trim(), grupoMuscular: grupoTreinoSelecionado });
+    setNovoExercicioSalvoNome("");
+  }
+
+  function substituirExercicioDaRotina(exercicioSalvo, dia, idAlvo) {
+    if (!exercicioSalvo || !dia || !idAlvo) return;
+    setRotina((prev) => ({
+      ...prev,
+      [dia]: (prev[dia] || []).map((item) => item.id === idAlvo
+        ? { ...item, nome: exercicioSalvo.nome, grupoMuscular: exercicioSalvo.grupoMuscular }
+        : item),
+    }));
+    setSubstituicaoCardAbertaId(null);
+    setSubstituicaoCardAlvoId("");
+    setAbaAtiva("hoje");
   }
 
   function adicionarExercicio(e) {
@@ -2436,6 +2502,7 @@ export default function App() {
       }
     }
     if (parsed.rotina && typeof parsed.rotina === "object") setRotina(parsed.rotina);
+    if (Array.isArray(parsed.exerciciosSalvosCards)) setExerciciosSalvosCards(parsed.exerciciosSalvosCards);
     if (parsed.focoDiasPorChave && typeof parsed.focoDiasPorChave === "object") {
       setFocoDiasPorChave(parsed.focoDiasPorChave);
     }
@@ -3825,6 +3892,7 @@ export default function App() {
 
                 <div style={{ height: 1, background: "rgba(148,163,184,.14)", margin: "10px 2px 8px", flexShrink: 0 }} />
                 <span style={rotuloSecaoMenu}>{textoUi("TREINO & DESEMPENHO", "TRAINING & PERFORMANCE")}</span>
+                <button type="button" onClick={() => abrirPagina("cards")} style={estiloMenuAtivo("cards", abaAtiva)}>{renderIconeMenu("biblioteca", 17)}<span>{textoUi("Cards de Exercícios", "Exercise Cards")}</span></button>
                 <button type="button" onClick={() => abrirPagina("exercicios")} style={estiloMenuAtivo("exercicios", abaAtiva)}>{renderIconeMenu("biblioteca", 17)}<span>{textoUi("Biblioteca de Exercícios", "Exercise Library")}</span></button>
                 <button type="button" onClick={() => abrirPagina("desempenho")} style={estiloMenuAtivo("desempenho", abaAtiva)}>{renderIconeMenu("desempenho", 17)}<span>{textoUi("Central de Desempenho", "Performance Center")}</span></button>
                 <button type="button" onClick={() => abrirPagina("relatorios")} style={estiloMenuAtivo("relatorios", abaAtiva)}>{renderIconeMenu("relatorios", 17)}<span>{textoUi("Relatórios", "Reports")}</span></button>
@@ -3902,6 +3970,7 @@ export default function App() {
             {abaAtiva === "mochila" && textoUi("Mochila & Ritmo.", "Pack & Pace.")}
             {abaAtiva === "desempenho" && textoUi("Central de Desempenho.", "Performance Center.")}
             {abaAtiva === "exercicios" && textoUi("Biblioteca de Exercícios.", "Exercise Library.")}
+            {abaAtiva === "cards" && textoUi("Cards de Exercícios.", "Exercise Cards.")}
             {abaAtiva === "conquistas" && textoUi("Conquistas.", "Achievements.")}
             {abaAtiva === "relatorios" && textoUi("Relatórios.", "Reports.")}
             {abaAtiva === "configuracoes" && textoUi("Configurações.", "Settings.")}
@@ -3911,7 +3980,7 @@ export default function App() {
             <span style={{ fontSize: "12px", color: "#9E96AD" }}>
               {abaAtiva === "montar"
                 ? "Uma semana bem planejada começa aqui."
-                : abaAtiva === "configuracoes" ? textoUi("Gerencie seu perfil e as opções de segurança do aplicativo.", "Manage your profile and app security options.") : `${infoDia?.nome}, ${diaSel} de ${MESES_CURTOS[(mesSel || 1) - 1]?.toLowerCase()}${focoDiasPorChave[chaveDia] ? ` • Foco: ${focoDiasPorChave[chaveDia]}` : ""}`}
+                : abaAtiva === "configuracoes" ? textoUi("Gerencie seu perfil e as opções de segurança do aplicativo.", "Manage your profile and app security options.") : abaAtiva === "cards" ? "Seus exercícios guardados para montar e atualizar os treinos." : `${infoDia?.nome}, ${diaSel} de ${MESES_CURTOS[(mesSel || 1) - 1]?.toLowerCase()}${focoDiasPorChave[chaveDia] ? ` • Foco: ${focoDiasPorChave[chaveDia]}` : ""}`}
             </span>
             {abaAtiva === "hoje" && dataSelecionada !== hojeISO && (
               <button
@@ -4364,6 +4433,24 @@ export default function App() {
 
           {/* Calculadora de anilhas removida da interface conforme solicitação. */}
 
+          {/* Programação semanal visível na tela principal, independente dos cards de exercícios salvos. */}
+          <section style={{ display: "grid", gap: 10, marginBottom: 2 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+              <div><div style={{ color: "#9E96AD", fontSize: 10, fontWeight: 800, letterSpacing: ".08em" }}>PLANEJAMENTO</div><h3 style={{ margin: "4px 0 0", fontSize: 15, color: "#E6E8ED" }}>Sua programação semanal</h3></div>
+              <button type="button" onClick={() => abrirPagina("montar")} style={{ ...btnSecundario, flex: "none", padding: "7px 10px", fontSize: 10 }}>Editar semana</button>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: ehDesktop ? "repeat(4,minmax(0,1fr))" : "repeat(2,minmax(0,1fr))", gap: 8 }}>
+              {DIAS_SEMANA.map((dia) => {
+                const listaDia = rotina[dia.chave] || [];
+                return <div key={`rotina-semanal-${dia.chave}`} style={{ ...cardClean, minWidth: 0, padding: "11px 12px", display: "grid", gap: 6, borderColor: listaDia.length ? "rgba(199,169,239,.24)" : "rgba(190,170,225,.12)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 5 }}><strong style={{ color: "#DCCCF5", fontSize: 11 }}>{dia.nome}</strong><span style={{ color: "#8F899B", fontSize: 9 }}>{listaDia.length ? `${listaDia.length} exerc.` : "Descanso"}</span></div>
+                  {listaDia.length ? <div style={{ display: "grid", gap: 4 }}>{listaDia.slice(0, 4).map((item) => <span key={item.id} style={{ color: "#C7C2D0", fontSize: 10, lineHeight: 1.35, overflowWrap: "anywhere" }}>• {item.nome}</span>)}{listaDia.length > 4 && <span style={{ color: "#9E96AD", fontSize: 9 }}>+ {listaDia.length - 4} exercícios</span>}</div> : <span style={{ color: "#777F8D", fontSize: 10 }}>Nenhum exercício programado</span>}
+                  <button type="button" onClick={() => { setDiaMontagem(dia.chave); abrirPagina("montar"); }} style={{ border: "none", background: "transparent", color: "#BCA6DF", padding: "3px 0 0", textAlign: "left", fontSize: 9, fontWeight: 750, cursor: "pointer" }}>Editar este dia ↗</button>
+                </div>;
+              })}
+            </div>
+          </section>
+
           {/* Resumo da sessão + Puxar último treino parecido */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
             <div>
@@ -4409,63 +4496,15 @@ export default function App() {
             </div>
           </div>
 
-          {/* Tela inicial: somente os seis cards. A lista aparece na página do grupo selecionado. */}
-          {!grupoTreinoAtual && <div style={{ marginTop: "14px", marginBottom: "14px" }}>
-            <div
-              aria-label="Grupos musculares do treino"
-              style={{ display: "flex", gap: "10px", overflowX: "auto", overflowY: "hidden", padding: "3px 2px 12px", scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", scrollbarWidth: "thin" }}
-            >
-              {gruposMuscularesCards.map((grupo) => {
-                const ativo = grupoTreinoSelecionado === grupo.id;
-                const quantidade = exerciciosPorGrupoTreino[grupo.id]?.length || 0;
-                return (
-                  <button
-                    key={grupo.id}
-                    type="button"
-                    aria-pressed={ativo}
-                    onClick={() => setGrupoTreinoSelecionado(grupo.id)}
-                    style={{ flex: "0 0 clamp(190px, 27vw, 230px)", minHeight: "142px", scrollSnapAlign: "start", textAlign: "left", padding: "13px 14px", borderRadius: "13px", border: `1px solid ${ativo ? grupo.cor : "rgba(190,170,225,.18)"}`, background: ativo ? `linear-gradient(145deg, ${grupo.cor}20, rgba(20,22,31,.96))` : "linear-gradient(145deg, rgba(35,34,47,.94), rgba(17,19,27,.96))", color: "#E6E8ED", cursor: "pointer", boxShadow: ativo ? `0 0 0 1px ${grupo.cor}22, 0 8px 22px rgba(0,0,0,.18)` : "0 6px 18px rgba(0,0,0,.12)", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "8px", transition: "border-color .18s, background .18s", boxSizing: "border-box" }}
-                  >
-                    <span aria-hidden="true" style={{ width: "43px", height: "43px", display: "grid", placeItems: "center", borderRadius: "12px", background: `${grupo.cor}18`, border: `1px solid ${grupo.cor}38`, flexShrink: 0 }}>
-                      <svg viewBox="0 0 48 48" width="31" height="31" fill="none" stroke={grupo.cor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        {grupo.id === "superior" && <><path d="M12 18c3-5 7-6 11-3l4 4 5-2 5 5-5 5-5-2-4 5-8-2-4-5"/><path d="M17 16l-3-5m17 9 4-5"/><path d="M18 28l-2 9m12-8 4 8"/></>}
-                        {grupo.id === "inferior" && <><path d="M17 7l2 13-3 8-2 12h8l3-12 2-8 2 8 3 12h8l-4-13-3-8 1-12"/><path d="M17 20h14M16 29h17"/></>}
-                        {grupo.id === "core" && <><path d="M16 7c2 3 5 4 8 4s6-1 8-4l4 8-4 7 2 17H14l2-17-4-7z"/><path d="M24 12v25M17 20l7 3 7-3M17 28l7 2 7-2"/></>}
-                        {grupo.id === "antebracos" && <><path d="M18 39l-4-12 3-13c.4-2 3-2 3 0v7l2-13c.3-2.5 3.2-2.3 3.3.1l.2 10 2-8c.6-2.2 3.5-1.5 3.1.8l-1 9 2-5c.8-2 3.5-.8 2.7 1.3l-2.6 13-6 10z"/><path d="M18 29l8 2"/></>}
-                        {grupo.id === "cardio" && <><circle cx="29" cy="8" r="4"/><path d="M24 15l-6 8 7 5 5-7 5 4M18 23l-7-1-4 6M25 28l-6 8-7 4M30 22l4 9 8 2"/></>}
-                        {grupo.id === "mobilidade" && <><circle cx="25" cy="8" r="4"/><path d="M23 14l-7 9 8 5 7-7M16 23l-8-1m16 6-6 10m13-17 8 7m-15-1 10 10"/></>}
-                      </svg>
-                    </span>
-                    <span style={{ fontSize: "12px", fontWeight: 800, letterSpacing: ".035em", lineHeight: 1.2 }}>{grupo.nome}</span>
-                    <span style={{ fontSize: "10px", color: "#A8A4B2", lineHeight: 1.4, minHeight: "28px" }}>{grupo.descricao}</span>
-                    <span style={{ fontSize: "9px", color: grupo.cor, fontWeight: 700, letterSpacing: ".04em" }}>{quantidade} {quantidade === 1 ? "EXERCÍCIO" : "EXERCÍCIOS"}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>}
-
-          {grupoTreinoAtual && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "14px" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", flexWrap: "wrap" }}>
-                <div>
-                  <div style={{ fontSize: "10px", color: "#9E96AD", letterSpacing: ".06em" }}>GRUPO MUSCULAR</div>
-                  <div style={{ fontSize: "18px", color: "#DCCCF5", fontWeight: 800, marginTop: 4 }}>{grupoTreinoAtual.nome}</div>
-                  <div style={{ fontSize: "11px", color: "#A8A4B2", marginTop: 3 }}>{grupoTreinoAtual.descricao}</div>
-                </div>
-                <button type="button" onClick={() => setGrupoTreinoSelecionado(null)} style={{ border: "1px solid rgba(190,170,225,.22)", background: "rgba(190,170,225,.08)", color: "#DCCCF5", borderRadius: "7px", padding: "8px 12px", fontSize: "11px", cursor: "pointer" }}>← Voltar aos grupos</button>
-              </div>
-            </div>
-          )}
-
-          {grupoTreinoAtual && (
-            exerciciosVisiveisTreino.length === 0 ? (
+          {true && (
+            exercicios.length === 0 ? (
               <div style={{ ...cardClean, textAlign: "center", padding: "20px 14px", color: "#9E96AD", fontSize: "12px" }}>
-                Nenhum exercício deste grupo está cadastrado neste treino.
+                Nenhum exercício cadastrado para este dia.
+                <button type="button" onClick={() => abrirPagina("montar")} style={{ ...btnSecundario, marginTop: 10 }}>Montar treino</button>
               </div>
             ) : (
               <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "8px" }}>
-                {exerciciosVisiveisTreino.map((ex, indiceExercicio) => {
+                {exercicios.map((ex, indiceExercicio) => {
 
                 const chaveHist = ex.nome.trim().toLowerCase();
                 const histEx = (historicoPorExercicio[chaveHist] || []).filter(
@@ -6752,6 +6791,54 @@ export default function App() {
         </div>;
       })()}
 
+
+      {abaAtiva === "cards" && (() => {
+        const grupoAtualCards = gruposMuscularesCards.find((grupo) => grupo.id === grupoTreinoSelecionado);
+        const salvosDoGrupo = exerciciosSalvosCards.filter((item) => item.grupoMuscular === grupoTreinoSelecionado);
+        return <div style={{ display: "grid", gap: 14 }}>
+          <div style={{ ...cardClean, display: "grid", gap: 7 }}>
+            <div style={{ color: "#C7A9EF", fontSize: 10, fontWeight: 800, letterSpacing: ".12em" }}>SUA BIBLIOTECA PESSOAL</div>
+            <h2 style={{ margin: 0, fontSize: 19, color: "#F1EEF7" }}>Guarde exercícios para reutilizar</h2>
+            <p style={{ ...labelMini, margin: 0 }}>Os exercícios salvos aqui ficam separados da programação semanal. Quando quiser trocar um movimento, encontre-o no card e substitua um exercício do dia escolhido, mantendo séries, repetições, descanso e carga já configurados.</p>
+          </div>
+          {!grupoAtualCards ? <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))", gap: 10 }}>
+            {gruposMuscularesCards.map((grupo) => {
+              const quantidade = exerciciosSalvosCards.filter((item) => item.grupoMuscular === grupo.id).length;
+              return <button key={grupo.id} type="button" onClick={() => setGrupoTreinoSelecionado(grupo.id)} style={{ minHeight: 142, textAlign: "left", padding: 15, borderRadius: 14, border: "1px solid rgba(190,170,225,.18)", background: "linear-gradient(145deg, rgba(35,34,47,.94), rgba(17,19,27,.96))", color: "#E6E8ED", cursor: "pointer", display: "flex", flexDirection: "column", gap: 8 }}>
+                <span style={{ width: 42, height: 42, display: "grid", placeItems: "center", borderRadius: 12, background: `${grupo.cor}18`, border: `1px solid ${grupo.cor}38`, color: grupo.cor, fontSize: 22, fontWeight: 800 }}>{grupo.id === "superior" ? "↗" : grupo.id === "inferior" ? "⌁" : grupo.id === "core" ? "◇" : grupo.id === "antebracos" ? "✳" : grupo.id === "cardio" ? "⌁" : "⤢"}</span>
+                <strong style={{ fontSize: 12, letterSpacing: ".035em" }}>{grupo.nome}</strong>
+                <span style={{ color: "#A8A4B2", fontSize: 10, lineHeight: 1.45 }}>{grupo.descricao}</span>
+                <span style={{ color: grupo.cor, fontSize: 10, fontWeight: 800 }}>{quantidade} {quantidade === 1 ? "EXERCÍCIO SALVO" : "EXERCÍCIOS SALVOS"}</span>
+              </button>;
+            })}
+          </div> : <div style={{ display: "grid", gap: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+              <div><div style={{ color: "#9E96AD", fontSize: 10, letterSpacing: ".08em" }}>CARD DE EXERCÍCIOS</div><h2 style={{ margin: "4px 0", fontSize: 19, color: grupoAtualCards.cor }}>{grupoAtualCards.nome}</h2><p style={{ ...labelMini, margin: 0 }}>{grupoAtualCards.descricao}</p></div>
+              <button type="button" onClick={() => { setGrupoTreinoSelecionado(null); setSubstituicaoCardAbertaId(null); }} style={btnSecundario}>← Voltar aos cards</button>
+            </div>
+            <form onSubmit={adicionarExercicioSalvoManual} style={{ ...cardClean, display: "grid", gridTemplateColumns: "minmax(0,1fr) auto", gap: 8 }}>
+              <input value={novoExercicioSalvoNome} onChange={(e) => setNovoExercicioSalvoNome(e.target.value)} placeholder="Nome do exercício para guardar" style={campoTexto}/>
+              <button type="submit" disabled={!novoExercicioSalvoNome.trim()} style={{ ...btnSecundario, background: "#C7A9EF", color: "#17131F", border: 0, opacity: novoExercicioSalvoNome.trim() ? 1 : .45 }}>Salvar exercício</button>
+              <div style={{ gridColumn: "1 / -1", color: "#9E96AD", fontSize: 10 }}>O exercício será salvo diretamente em {grupoAtualCards.nome}.</div>
+            </form>
+            {salvosDoGrupo.length === 0 ? <div style={{ ...cardClean, textAlign: "center", padding: 20 }}><p style={labelMini}>Ainda não há exercícios salvos neste card. Você pode guardar um exercício acima ou usar “Salvar nos cards” na Biblioteca de Exercícios.</p></div> : <div style={{ display: "grid", gap: 9 }}>
+              {salvosDoGrupo.map((item) => <div key={item.id} style={{ ...cardClean, display: "grid", gap: 8 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "flex-start" }}><div style={{ minWidth: 0 }}><strong style={{ color: "#F1EEF7", fontSize: 14 }}>{item.nome}</strong>{item.equipamento && <div style={{ color: "#B9A8D2", fontSize: 10, marginTop: 4 }}>{item.equipamento}</div>}{item.instrucoes && <p style={{ color: "#AAA1B8", fontSize: 11, lineHeight: 1.5, margin: "6px 0 0" }}>{item.instrucoes}</p>}</div><button type="button" onClick={() => setExerciciosSalvosCards((prev) => prev.filter((x) => x.id !== item.id))} title="Remover dos cards" style={{ ...btnCarga, color: "#F19AAB", flexShrink: 0 }}>×</button></div>
+                <button type="button" onClick={() => { setSubstituicaoCardAbertaId((atual) => atual === item.id ? null : item.id); setSubstituicaoCardAlvoId(""); }} style={{ ...btnSecundario, width: "100%", color: "#DCCCF5" }}>{substituicaoCardAbertaId === item.id ? "Fechar substituição" : "Substituir exercício do treino"}</button>
+                {substituicaoCardAbertaId === item.id && <div style={{ display: "grid", gap: 8, padding: 10, borderRadius: 10, background: "rgba(199,169,239,.07)", border: "1px solid rgba(199,169,239,.16)" }}>
+                  <label style={rotuloCampo}>Dia da semana</label>
+                  <select value={diaMontagem} onChange={(e) => { setDiaMontagem(e.target.value); setSubstituicaoCardAlvoId(""); }} style={campoTexto}>{DIAS_SEMANA.map((dia) => <option key={dia.chave} value={dia.chave}>{dia.nome}</option>)}</select>
+                  <label style={rotuloCampo}>Qual exercício deseja substituir?</label>
+                  <select value={substituicaoCardAlvoId} onChange={(e) => setSubstituicaoCardAlvoId(e.target.value)} style={campoTexto}><option value="">Selecione um exercício do dia</option>{(rotina[diaMontagem] || []).map((alvo) => <option key={alvo.id} value={String(alvo.id)}>{alvo.nome}</option>)}</select>
+                  <button type="button" disabled={!substituicaoCardAlvoId} onClick={() => substituirExercicioDaRotina(item, diaMontagem, (rotina[diaMontagem] || []).find((alvo) => String(alvo.id) === substituicaoCardAlvoId)?.id)} style={{ ...btnSecundario, background: "#C7A9EF", color: "#17131F", border: 0, opacity: substituicaoCardAlvoId ? 1 : .45 }}>Confirmar substituição</button>
+                  <span style={{ color: "#9E96AD", fontSize: 10 }}>A troca mantém as séries, repetições, descanso, carga e histórico vinculado ao exercício da rotina.</span>
+                </div>}
+              </div>)}
+            </div>}
+          </div>}
+        </div>;
+      })()}
+
       {abaAtiva === "exercicios" && (() => {
         const biblioteca = [
           ["Supino reto com barra", "Peito", "Barra e banco", "Deite com os pés firmes no chão, escápulas apoiadas e pegada um pouco além dos ombros. Desça a barra controladamente até a região média do peito e empurre sem perder a estabilidade."],
@@ -6870,7 +6957,7 @@ export default function App() {
           return <svg viewBox="0 0 180 190" role="img" aria-label={`${exercicio[0]} — ${fase === "inicial" ? "posição inicial" : "execução"}`} style={{ width: "100%", height: 180 }}>{figura}</svg>;
         };
         const filtrados = biblioteca.filter((e) => e.join(" ").toLowerCase().includes(buscaBiblioteca.toLowerCase()));
-        return <div style={{ display: "grid", gap: 12 }}><div style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.22)", backdropFilter: "blur(16px)" }}><h2 style={{ margin: "0 0 6px", fontSize: 19 }}>{textoUi('Biblioteca de exercícios', 'Exercise library')}</h2><p style={labelMini}>{textoUi("Referência rápida de grupos musculares e execução. Ajuste exercícios à sua condição e orientação profissional.", "Quick reference for muscle groups and exercise form. Adapt exercises to your condition and professional guidance.")}</p><input value={buscaBiblioteca} onChange={(e) => setBuscaBiblioteca(e.target.value)} placeholder={textoUi("Buscar exercício ou grupo muscular...", "Search exercise or muscle group...")} style={campoTexto}/></div><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 10 }}>{filtrados.map((e) => <div key={e[0]} style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.18)", backdropFilter: "blur(14px)" }}><div style={{ color: "#D6C4F1", fontSize: 10, fontWeight: 800, letterSpacing: ".08em" }}>{e[1].toUpperCase()}</div><strong style={{ display: "block", margin: "6px 0", fontSize: 14 }}>{e[0]}</strong><div style={{ color: "#D6C4F1", fontSize: 10, marginBottom: 7 }}>Equipamento: {e[2]}</div><p style={{ color: "#AAA1B8", fontSize: 12, lineHeight: 1.55, margin: 0 }}>{e[3]}</p><button type="button" onClick={() => setExercicioDemonstracaoAberto(e)} style={{ marginTop: 12, width: "100%", minHeight: 36, borderRadius: 10, border: "1px solid rgba(199,169,239,.34)", background: "rgba(199,169,239,.12)", color: "#DCCAF5", fontSize: 11, fontWeight: 850, letterSpacing: ".12em", cursor: "pointer" }}>VER</button></div>)}</div>{!filtrados.length && <p style={labelMini}>{textoUi('Nenhum exercício encontrado.', 'No exercises found.')}</p>}{exercicioDemonstracaoAberto && <div role="presentation" onClick={() => setExercicioDemonstracaoAberto(null)} style={{ position: "fixed", inset: 0, zIndex: 10000, background: "rgba(5,7,13,.82)", backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}><section role="dialog" aria-modal="true" aria-label={`Demonstração: ${exercicioDemonstracaoAberto[0]}`} onClick={(ev) => ev.stopPropagation()} style={{ width: "min(100%, 620px)", maxHeight: "min(88vh, 760px)", overflowY: "auto", borderRadius: 22, padding: 20, background: "linear-gradient(145deg, rgba(35,33,46,.98), rgba(17,20,30,.98))", border: "1px solid rgba(199,169,239,.28)", boxShadow: "0 24px 80px rgba(0,0,0,.5)" }}><div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}><div><div style={{ color: "#C7A9EF", fontSize: 10, fontWeight: 850, letterSpacing: ".16em" }}>GUIA VISUAL DO EXERCÍCIO</div><h2 style={{ margin: "7px 0 4px", fontSize: 21, color: "#F4EFFB" }}>{exercicioDemonstracaoAberto[0]}</h2><div style={{ color: "#B9A8D2", fontSize: 12 }}>{exercicioDemonstracaoAberto[1]} • {exercicioDemonstracaoAberto[2]}</div></div><button type="button" onClick={() => setExercicioDemonstracaoAberto(null)} aria-label="Fechar demonstração" style={{ width: 34, height: 34, borderRadius: 10, border: "1px solid rgba(199,169,239,.24)", background: "rgba(255,255,255,.06)", color: "#F4EFFB", fontSize: 20, cursor: "pointer" }}>×</button></div><div style={{ marginTop: 18, display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}><div style={{ borderRadius: 16, padding: 12, background: "linear-gradient(180deg, rgba(199,169,239,.12), rgba(255,255,255,.025))", border: "1px solid rgba(199,169,239,.16)" }}><div style={{ fontSize: 10, fontWeight: 850, color: "#DCCAF5", letterSpacing: ".12em", marginBottom: 8 }}>01 • POSIÇÃO INICIAL</div>{desenharExercicio(exercicioDemonstracaoAberto, "inicial")}<div style={{ textAlign: "center", fontSize: 10, color: "#AAA1B8" }}>Prepare a postura e estabilize o corpo</div></div><div style={{ borderRadius: 16, padding: 12, background: "linear-gradient(180deg, rgba(199,169,239,.12), rgba(255,255,255,.025))", border: "1px solid rgba(199,169,239,.16)" }}><div style={{ fontSize: 10, fontWeight: 850, color: "#DCCAF5", letterSpacing: ".12em", marginBottom: 8 }}>02 • EXECUÇÃO</div>{desenharExercicio(exercicioDemonstracaoAberto, "final")}<div style={{ textAlign: "center", fontSize: 10, color: "#AAA1B8" }}>Execute o movimento com controle</div></div></div><div style={{ marginTop: 14, borderRadius: 14, padding: 14, background: "rgba(255,255,255,.04)", border: "1px solid rgba(199,169,239,.12)" }}><div style={{ color: "#DCCAF5", fontSize: 10, fontWeight: 850, letterSpacing: ".12em", marginBottom: 6 }}>ORIENTAÇÃO DE EXECUÇÃO</div><p style={{ margin: 0, color: "#D2CADB", fontSize: 13, lineHeight: 1.65 }}>{exercicioDemonstracaoAberto[3]}</p></div><p style={{ margin: "12px 2px 0", color: "#93899F", fontSize: 10, lineHeight: 1.5 }}>Ilustrações específicas por família de movimento, com posições inicial e final. Ajuste a amplitude e a carga à sua capacidade e priorize a execução segura.</p><button type="button" onClick={() => setExercicioDemonstracaoAberto(null)} style={{ marginTop: 14, width: "100%", minHeight: 42, borderRadius: 12, border: 0, background: "#C7A9EF", color: "#17131F", fontWeight: 850, cursor: "pointer" }}>FECHAR</button></section></div>}</div>;
+        return <div style={{ display: "grid", gap: 12 }}><div style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.22)", backdropFilter: "blur(16px)" }}><h2 style={{ margin: "0 0 6px", fontSize: 19 }}>{textoUi('Biblioteca de exercícios', 'Exercise library')}</h2><p style={labelMini}>{textoUi("Referência rápida de grupos musculares e execução. Ajuste exercícios à sua condição e orientação profissional.", "Quick reference for muscle groups and exercise form. Adapt exercises to your condition and professional guidance.")}</p><input value={buscaBiblioteca} onChange={(e) => setBuscaBiblioteca(e.target.value)} placeholder={textoUi("Buscar exercício ou grupo muscular...", "Search exercise or muscle group...")} style={campoTexto}/></div><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 10 }}>{filtrados.map((e) => <div key={e[0]} style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.18)", backdropFilter: "blur(14px)" }}><div style={{ color: "#D6C4F1", fontSize: 10, fontWeight: 800, letterSpacing: ".08em" }}>{e[1].toUpperCase()}</div><strong style={{ display: "block", margin: "6px 0", fontSize: 14 }}>{e[0]}</strong><div style={{ color: "#D6C4F1", fontSize: 10, marginBottom: 7 }}>Equipamento: {e[2]}</div><p style={{ color: "#AAA1B8", fontSize: 12, lineHeight: 1.55, margin: 0 }}>{e[3]}</p><div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 7, marginTop: 12 }}><button type="button" onClick={() => setExercicioDemonstracaoAberto(e)} style={{ minHeight: 36, borderRadius: 10, border: "1px solid rgba(199,169,239,.34)", background: "rgba(199,169,239,.12)", color: "#DCCAF5", fontSize: 11, fontWeight: 850, letterSpacing: ".12em", cursor: "pointer" }}>VER</button><button type="button" onClick={() => salvarExercicioNosCards({ nome: e[0], grupo: e[1], equipamento: e[2], instrucoes: e[3] })} style={{ minHeight: 36, borderRadius: 10, border: "1px solid rgba(157,223,200,.3)", background: "rgba(157,223,200,.1)", color: "#B7EBD0", fontSize: 10, fontWeight: 800, cursor: "pointer" }}>SALVAR NOS CARDS</button></div></div>)}</div>{!filtrados.length && <p style={labelMini}>{textoUi('Nenhum exercício encontrado.', 'No exercises found.')}</p>}{exercicioDemonstracaoAberto && <div role="presentation" onClick={() => setExercicioDemonstracaoAberto(null)} style={{ position: "fixed", inset: 0, zIndex: 10000, background: "rgba(5,7,13,.82)", backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}><section role="dialog" aria-modal="true" aria-label={`Demonstração: ${exercicioDemonstracaoAberto[0]}`} onClick={(ev) => ev.stopPropagation()} style={{ width: "min(100%, 620px)", maxHeight: "min(88vh, 760px)", overflowY: "auto", borderRadius: 22, padding: 20, background: "linear-gradient(145deg, rgba(35,33,46,.98), rgba(17,20,30,.98))", border: "1px solid rgba(199,169,239,.28)", boxShadow: "0 24px 80px rgba(0,0,0,.5)" }}><div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}><div><div style={{ color: "#C7A9EF", fontSize: 10, fontWeight: 850, letterSpacing: ".16em" }}>GUIA VISUAL DO EXERCÍCIO</div><h2 style={{ margin: "7px 0 4px", fontSize: 21, color: "#F4EFFB" }}>{exercicioDemonstracaoAberto[0]}</h2><div style={{ color: "#B9A8D2", fontSize: 12 }}>{exercicioDemonstracaoAberto[1]} • {exercicioDemonstracaoAberto[2]}</div></div><button type="button" onClick={() => setExercicioDemonstracaoAberto(null)} aria-label="Fechar demonstração" style={{ width: 34, height: 34, borderRadius: 10, border: "1px solid rgba(199,169,239,.24)", background: "rgba(255,255,255,.06)", color: "#F4EFFB", fontSize: 20, cursor: "pointer" }}>×</button></div><div style={{ marginTop: 18, display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}><div style={{ borderRadius: 16, padding: 12, background: "linear-gradient(180deg, rgba(199,169,239,.12), rgba(255,255,255,.025))", border: "1px solid rgba(199,169,239,.16)" }}><div style={{ fontSize: 10, fontWeight: 850, color: "#DCCAF5", letterSpacing: ".12em", marginBottom: 8 }}>01 • POSIÇÃO INICIAL</div>{desenharExercicio(exercicioDemonstracaoAberto, "inicial")}<div style={{ textAlign: "center", fontSize: 10, color: "#AAA1B8" }}>Prepare a postura e estabilize o corpo</div></div><div style={{ borderRadius: 16, padding: 12, background: "linear-gradient(180deg, rgba(199,169,239,.12), rgba(255,255,255,.025))", border: "1px solid rgba(199,169,239,.16)" }}><div style={{ fontSize: 10, fontWeight: 850, color: "#DCCAF5", letterSpacing: ".12em", marginBottom: 8 }}>02 • EXECUÇÃO</div>{desenharExercicio(exercicioDemonstracaoAberto, "final")}<div style={{ textAlign: "center", fontSize: 10, color: "#AAA1B8" }}>Execute o movimento com controle</div></div></div><div style={{ marginTop: 14, borderRadius: 14, padding: 14, background: "rgba(255,255,255,.04)", border: "1px solid rgba(199,169,239,.12)" }}><div style={{ color: "#DCCAF5", fontSize: 10, fontWeight: 850, letterSpacing: ".12em", marginBottom: 6 }}>ORIENTAÇÃO DE EXECUÇÃO</div><p style={{ margin: 0, color: "#D2CADB", fontSize: 13, lineHeight: 1.65 }}>{exercicioDemonstracaoAberto[3]}</p></div><p style={{ margin: "12px 2px 0", color: "#93899F", fontSize: 10, lineHeight: 1.5 }}>Ilustrações específicas por família de movimento, com posições inicial e final. Ajuste a amplitude e a carga à sua capacidade e priorize a execução segura.</p><button type="button" onClick={() => setExercicioDemonstracaoAberto(null)} style={{ marginTop: 14, width: "100%", minHeight: 42, borderRadius: 12, border: 0, background: "#C7A9EF", color: "#17131F", fontWeight: 850, cursor: "pointer" }}>FECHAR</button></section></div>}</div>;
       })()}
 
       {abaAtiva === "conquistas" && <div style={{ display: "grid", gap: 12 }}><div style={{ ...cardClean, background: "rgba(44,67,96,.48)", border: "1px solid rgba(96,165,250,.22)", backdropFilter: "blur(16px)" }}><h2 style={{ margin: "0 0 6px", fontSize: 19 }}>{textoUi("Suas conquistas", "Your achievements")}</h2><p style={labelMini}>{textoUi("Marcos calculados a partir dos registros existentes.", "Milestones calculated from existing records.")}</p></div><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 10 }}>{[{n:"Primeiro recorde",ok:registrosPR.length>=1,d:"Registre seu primeiro PR"},{n:"Colecionador",ok:registrosPR.length>=5,d:"Registre 5 recordes"},{n:"Acompanhamento",ok:medidasCorporais.length>=3,d:"Registre 3 medições"},{n:"Planejador",ok:metasPessoais.length>=3,d:"Crie 3 metas pessoais"},{n:"Hidratação",ok:Object.keys(aguaPorData||{}).length>=7,d:"Registre água em 7 dias"},{n:"Constância",ok:Object.keys(logsPorData||{}).length>=10,d:"Tenha registros em 10 dias"}].map((x)=><div key={x.n} style={{ ...cardClean, background:x.ok?"rgba(59,130,246,.18)":"rgba(44,67,96,.38)", border:`1px solid ${x.ok?"rgba(96,165,250,.45)":"rgba(148,190,215,.14)"}` }}><div style={{fontSize:24,marginBottom:8}}>{x.ok?"🏆":"◇"}</div><strong style={{fontSize:13}}>{textoUi(x.n, ({"Primeiro recorde":"First record","Colecionador":"Collector","Acompanhamento":"Tracking","Planejador":"Planner","Hidratação":"Hydration","Constância":"Consistency"}[x.n] || x.n))}</strong><div style={{fontSize:11,color:"#AAA1B8",marginTop:5}}>{x.ok ? textoUi("Conquistado", "Achieved") : textoUi(x.d, ({"Registre seu primeiro PR":"Log your first personal record","Registre 5 recordes":"Log 5 personal records","Registre 3 medições":"Log 3 measurements","Crie 3 metas pessoais":"Create 3 personal goals","Registre água em 7 dias":"Log water on 7 days","Tenha registros em 10 dias":"Log activity on 10 days"}[x.d] || x.d))}</div></div>)}</div></div>}
