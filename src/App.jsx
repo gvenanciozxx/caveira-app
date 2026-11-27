@@ -3971,6 +3971,7 @@ export default function App() {
 
                 <div style={{ height: 1, background: "rgba(148,163,184,.14)", margin: "10px 2px 8px", flexShrink: 0 }} />
                 <span style={rotuloSecaoMenu}>{textoUi("TREINO & DESEMPENHO", "TRAINING & PERFORMANCE")}</span>
+                <button type="button" onClick={() => abrirPagina("dashboard")} style={estiloMenuAtivo("dashboard", abaAtiva)}>{renderIconeMenu("desempenho", 17)}<span>{textoUi("Dashboard", "Dashboard")}</span></button>
                 <button type="button" onClick={() => abrirPagina("cards")} style={estiloMenuAtivo("cards", abaAtiva)}>{renderIconeMenu("biblioteca", 17)}<span>{textoUi("Cards de Exercícios", "Exercise Cards")}</span></button>
                 <button type="button" onClick={() => abrirPagina("exercicios")} style={estiloMenuAtivo("exercicios", abaAtiva)}>{renderIconeMenu("biblioteca", 17)}<span>{textoUi("Biblioteca de Exercícios", "Exercise Library")}</span></button>
                 <button type="button" onClick={() => abrirPagina("desempenho")} style={estiloMenuAtivo("desempenho", abaAtiva)}>{renderIconeMenu("desempenho", 17)}<span>{textoUi("Central de Desempenho", "Performance Center")}</span></button>
@@ -6817,7 +6818,7 @@ export default function App() {
           width: ehDesktop ? `calc(100% - ${larguraMenuDesktop}px)` : "100%",
           maxWidth: larguraContainer,
           display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
+          gridTemplateColumns: "repeat(3, 1fr)",
           background: "rgba(28, 27, 34, 0.88)",
           borderTop: "1px solid rgba(190, 170, 225, 0.15)",
           padding: "8px 12px",
@@ -6829,7 +6830,6 @@ export default function App() {
           { id: "hoje", rotulo: textoUi("Hoje", "Today") },
           { id: "montar", rotulo: textoUi("Montar", "Build") },
           { id: "timer", rotulo: textoUi("Timer", "Timer") },
-          { id: "dashboard", rotulo: textoUi("Dashboard", "Dashboard") },
         ].map((aba) => {
           const ativa = abaAtiva === aba.id;
           return (
