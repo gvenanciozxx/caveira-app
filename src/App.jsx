@@ -3304,8 +3304,8 @@ export default function App() {
       data-caveira-theme={temaApp}
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(145deg, #17161F 0%, #1D1B27 52%, #17161F 100%)",
-        color: "#F1EEF7",
+        background: temaApp === "claro" ? "#F4F2F7" : "linear-gradient(145deg, #17161F 0%, #1D1B27 52%, #17161F 100%)",
+        color: temaApp === "claro" ? "#302B3A" : "#F1EEF7",
         width: ehDesktop ? `calc(100% - ${larguraMenuDesktop}px)` : "100%",
         maxWidth: larguraContainer,
         margin: ehDesktop ? `0 0 0 ${larguraMenuDesktop}px` : "0 auto",
@@ -3824,84 +3824,199 @@ export default function App() {
           color: #d9dce4 !important;
         }
 
-        /* Tema claro: somente apresentação visual; mantém os componentes e eventos originais. */
+        /* Tema claro — overrides estritamente visuais e escopados ao app. */
+        [data-caveira-theme="claro"] {
+          --cv-bg: #F4F2F7;
+          --cv-surface: #FFFFFF;
+          --cv-surface-soft: #F8F6FB;
+          --cv-text: #302B3A;
+          --cv-text-muted: #716A7D;
+          --cv-border: #E2DCE9;
+          --cv-accent: #8060AD;
+          --cv-accent-soft: #E9DEF8;
+          background: var(--cv-bg) !important;
+          color: var(--cv-text) !important;
+          color-scheme: light;
+        }
         html:has([data-caveira-theme="claro"]),
         body:has([data-caveira-theme="claro"]),
         #root:has([data-caveira-theme="claro"]) {
-          background: #f5f4f8 !important;
-          color: #272331 !important;
+          background: #F4F2F7 !important;
+          color: #302B3A !important;
           color-scheme: light;
         }
         body:has([data-caveira-theme="claro"]) {
           background-image:
-            radial-gradient(ellipse 55% 42% at 100% 100%, rgba(177,145,225,.12), transparent 72%),
-            radial-gradient(ellipse 40% 32% at 0% 100%, rgba(157,190,180,.08), transparent 72%) !important;
-        }
-        [data-caveira-theme="claro"] {
-          background: #f5f4f8 !important;
-          color: #272331 !important;
+            radial-gradient(ellipse 55% 42% at 100% 100%, rgba(128,96,173,.09), transparent 72%),
+            radial-gradient(ellipse 40% 32% at 0% 100%, rgba(157,190,180,.06), transparent 72%) !important;
         }
         [data-caveira-theme="claro"] aside {
-          background: linear-gradient(160deg, #ffffff, #f0edf6) !important;
-          border-color: #e3ddeb !important;
-          box-shadow: 12px 0 36px rgba(45,35,65,.08) !important;
+          background: linear-gradient(160deg, #FFFFFF, #F5F2F9) !important;
+          border-color: var(--cv-border) !important;
+          color: var(--cv-text) !important;
+          box-shadow: 12px 0 36px rgba(45,35,65,.07) !important;
         }
         [data-caveira-theme="claro"] header,
         [data-caveira-theme="claro"] nav[style*="position: fixed"] {
-          background: rgba(255,255,255,.92) !important;
-          border-color: #e6e1ed !important;
-          color: #302b3a !important;
-          box-shadow: 0 6px 24px rgba(45,35,65,.06) !important;
+          background: rgba(255,255,255,.96) !important;
+          border-color: var(--cv-border) !important;
+          color: var(--cv-text) !important;
+          box-shadow: 0 5px 22px rgba(45,35,65,.055) !important;
         }
-        [data-caveira-theme="claro"] div[style*="rgba(35, 32, 46"],
-        [data-caveira-theme="claro"] div[style*="rgba(31, 29, 42"],
-        [data-caveira-theme="claro"] div[style*="rgba(29, 27, 39"],
-        [data-caveira-theme="claro"] div[style*="rgba(20,22,28"],
-        [data-caveira-theme="claro"] div[style*="rgba(20, 22, 28"],
-        [data-caveira-theme="claro"] div[style*="rgba(27, 26, 35"],
-        [data-caveira-theme="claro"] section[style*="rgba(20,22,28"],
-        [data-caveira-theme="claro"] section[style*="rgba(20, 22, 28"],
-        [data-caveira-theme="claro"] section[style*="rgba(35, 32, 46"] {
-          background: #ffffff !important;
-          border-color: #e7e1ed !important;
-          color: #302b3a !important;
-          box-shadow: 0 8px 26px rgba(45,35,65,.055) !important;
+        /* Containers com superfícies originalmente grafite/pretas. */
+        [data-caveira-theme="claro"] [style*="background: rgba(35, 32, 46"],
+        [data-caveira-theme="claro"] [style*="background: rgba(31, 29, 42"],
+        [data-caveira-theme="claro"] [style*="background: rgba(29, 27, 39"],
+        [data-caveira-theme="claro"] [style*="background: rgba(20,22,28"],
+        [data-caveira-theme="claro"] [style*="background: rgba(27, 26, 35"],
+        [data-caveira-theme="claro"] [style*="background: rgba(17, 18, 24"],
+        [data-caveira-theme="claro"] [style*="background: rgba(16, 18, 24"],
+        [data-caveira-theme="claro"] [style*="background: rgba(49, 43, 63"],
+        [data-caveira-theme="claro"] [style*="background: rgba(44,67,96"],
+        [data-caveira-theme="claro"] [style*="background: rgba(38, 54, 75"],
+        [data-caveira-theme="claro"] [style*="background: rgba(20, 22, 28"],
+        [data-caveira-theme="claro"] [style*="background: #17161F"],
+        [data-caveira-theme="claro"] [style*="background: #1D1B27"],
+        [data-caveira-theme="claro"] [style*="background: #17131F"],
+        [data-caveira-theme="claro"] [style*="background: #15131C"],
+        [data-caveira-theme="claro"] [style*="background: #11141A"],
+        [data-caveira-theme="claro"] [style*="background: #090A0E"],
+        [data-caveira-theme="claro"] [style*="background: #101218"],
+        [data-caveira-theme="claro"] [style*="background: #252A35"],
+        [data-caveira-theme="claro"] [style*="background: #242832"],
+        [data-caveira-theme="claro"] [style*="background: #191720"],
+        [data-caveira-theme="claro"] [style*="background: linear-gradient(145deg"],
+        [data-caveira-theme="claro"] [style*="background: linear-gradient(160deg"] {
+          background: var(--cv-surface) !important;
+          border-color: var(--cv-border) !important;
+          color: var(--cv-text) !important;
+          box-shadow: 0 6px 22px rgba(45,35,65,.045) !important;
         }
-        [data-caveira-theme="claro"] div[style*="linear-gradient(145deg"],
-        [data-caveira-theme="claro"] div[style*="linear-gradient(160deg"] {
-          background: #f5f4f8 !important;
+        /* Superfícies neutras/semitransparentes tornam-se suaves no tema claro. */
+        [data-caveira-theme="claro"] [style*="background: rgba(190, 170, 225"],
+        [data-caveira-theme="claro"] [style*="background: rgba(190,170,225"],
+        [data-caveira-theme="claro"] [style*="background: rgba(148,163,184"],
+        [data-caveira-theme="claro"] [style*="background: rgba(148,190,215"],
+        [data-caveira-theme="claro"] [style*="background: rgba(255,255,255,.035"] {
+          background: #F8F6FB !important;
+          border-color: #E2DCE9 !important;
+        }
+        [data-caveira-theme="claro"] [style*="background: rgba(4,6,10"],
+        [data-caveira-theme="claro"] [style*="background: rgba(12,12,16"],
+        [data-caveira-theme="claro"] [style*="background: rgba(17,20,26"],
+        [data-caveira-theme="claro"] [style*="background: rgba(17,20,26,"],
+        [data-caveira-theme="claro"] [style*="background: rgba(24, 23, 31"],
+        [data-caveira-theme="claro"] [style*="background: rgba(28, 27, 34"],
+        [data-caveira-theme="claro"] [style*="background: rgba(35,32,46"],
+        [data-caveira-theme="claro"] [style*="background: rgba(35, 32, 46"],
+        [data-caveira-theme="claro"] [style*="background: rgba(19, 35, 55"],
+        [data-caveira-theme="claro"] [style*="background: rgba(13, 15, 21"],
+        [data-caveira-theme="claro"] [style*="background: rgba(20,22,28"],
+        [data-caveira-theme="claro"] [style*="background: rgba(20, 22, 28"],
+        [data-caveira-theme="claro"] [style*="background: rgba(49, 43, 63, 0.34"],
+        [data-caveira-theme="claro"] [style*="background: rgba(44,67,96"],
+        [data-caveira-theme="claro"] [style*="background: rgba(44, 67, 96"],
+        [data-caveira-theme="claro"] [style*="background: rgba(35,33,46"],
+        [data-caveira-theme="claro"] [style*="background: rgba(17,19,27"],
+        [data-caveira-theme="claro"] [style*="background: rgba(17,20,30"],
+        [data-caveira-theme="claro"] [style*="background: rgba(5,7,13"],
+        [data-caveira-theme="claro"] [style*="background: rgba(13, 15, 21"],
+        [data-caveira-theme="claro"] [style*="background: #0D0F14"],
+        [data-caveira-theme="claro"] [style*="background: #050506"],
+        [data-caveira-theme="claro"] [style*="background: #15171e"],
+        [data-caveira-theme="claro"] [style*="background: #171821"],
+        [data-caveira-theme="claro"] [style*="background: #252333"],
+        [data-caveira-theme="claro"] [style*="background: #11141B"],
+        [data-caveira-theme="claro"] [style*="background: linear-gradient(145deg, #11141a"],
+        [data-caveira-theme="claro"] [style*="background: linear-gradient(145deg, rgba(35,34,47"],
+        [data-caveira-theme="claro"] [style*="background: linear-gradient(145deg, rgba(35,33,46"],
+        [data-caveira-theme="claro"] [style*="background: radial-gradient(circle at 50% 0%" {
+          background: #FFFFFF !important;
+          border-color: var(--cv-border) !important;
+          color: var(--cv-text) !important;
+          box-shadow: 0 6px 22px rgba(45,35,65,.045) !important;
         }
         [data-caveira-theme="claro"] input,
         [data-caveira-theme="claro"] select,
         [data-caveira-theme="claro"] textarea {
-          background: #ffffff !important;
-          border-color: #ded7e8 !important;
-          color: #302b3a !important;
+          background: #FFFFFF !important;
+          border-color: #DCD5E6 !important;
+          color: #302B3A !important;
+          box-shadow: inset 0 1px 2px rgba(45,35,65,.025) !important;
         }
         [data-caveira-theme="claro"] input::placeholder,
-        [data-caveira-theme="claro"] textarea::placeholder { color: #8b8496 !important; }
-        [data-caveira-theme="claro"] button:not([style*="background: #A98BDD"]):not([style*="background: #C7A9EF"]),
-        [data-caveira-theme="claro"] a,
-        [data-caveira-theme="claro"] label,
-        [data-caveira-theme="claro"] h1,
-        [data-caveira-theme="claro"] h2,
-        [data-caveira-theme="claro"] h3,
-        [data-caveira-theme="claro"] p,
-        [data-caveira-theme="claro"] span,
-        [data-caveira-theme="claro"] strong {
-          color: #393344;
+        [data-caveira-theme="claro"] textarea::placeholder {
+          color: #8B8496 !important;
+          opacity: 1;
+        }
+        /* Texto inline em cores de texto do tema escuro. Não afeta textos coloridos de status. */
+        [data-caveira-theme="claro"] [style*="color: #F1EEF7"],
+        [data-caveira-theme="claro"] [style*="color: #E4D8F7"],
+        [data-caveira-theme="claro"] [style*="color: #D9D2E5"],
+        [data-caveira-theme="claro"] [style*="color: #BEB7CA"],
+        [data-caveira-theme="claro"] [style*="color: #9E96AD"],
+        [data-caveira-theme="claro"] [style*="color: #AAA1B8"],
+        [data-caveira-theme="claro"] [style*="color: #9C8BB5"],
+        [data-caveira-theme="claro"] [style*="color: #9299A6"],
+        [data-caveira-theme="claro"] [style*="color: #89909C"],
+        [data-caveira-theme="claro"] [style*="color: #E6E8ED"],
+        [data-caveira-theme="claro"] [style*="color: #EEEAF5"],
+        [data-caveira-theme="claro"] [style*="color: #DCCCF5"],
+        [data-caveira-theme="claro"] [style*="color: #DCCAF5"],
+        [data-caveira-theme="claro"] [style*="color: #D8C5F2"],
+        [data-caveira-theme="claro"] [style*="color: #D6C4F1"],
+        [data-caveira-theme="claro"] [style*="color: #C4A5EC"] {
+          color: var(--cv-text) !important;
+        }
+        [data-caveira-theme="claro"] [style*="border: 1px solid rgba(190, 170, 225"],
+        [data-caveira-theme="claro"] [style*="border: 1px solid rgba(190,170,225"],
+        [data-caveira-theme="claro"] [style*="border-color: rgba(190, 170, 225"],
+        [data-caveira-theme="claro"] [style*="border-color: rgba(190,170,225"] {
+          border-color: var(--cv-border) !important;
+        }
+        /* Botões escuros ficam em lilás de ação; botões pastel preservam sua semântica. */
+        [data-caveira-theme="claro"] button[style*="background: #111827"],
+        [data-caveira-theme="claro"] button[style*="background: #11141a"],
+        [data-caveira-theme="claro"] button[style*="background: #17161F"],
+        [data-caveira-theme="claro"] button[style*="background: #1D1B27"],
+        [data-caveira-theme="claro"] button[style*="background: #090a0e"],
+        [data-caveira-theme="claro"] button[style*="background: #252A35"] {
+          background: #8060AD !important;
+          color: #FFFFFF !important;
+          border-color: #8060AD !important;
+        }
+        [data-caveira-theme="claro"] button:not([style*="background: #A98BDD"]):not([style*="background: #C7A9EF"]):not([style*="background: #9ADFC2"]):not([style*="background: #B7EBD0"]):not([style*="background: #9DDFC8"]):not([style*="background: #E9C987"]):not([style*="background: #F1A8B8"]):not([style*="background: #F19AAB"]):not([style*="background: #E5A17E"]):not([style*="background: #A9E8CB"]) {
+          color: #4B405D !important;
         }
         [data-caveira-theme="claro"] button {
-          border-color: #e0d9e9;
+          border-color: #E2DCE9;
         }
-        [data-caveira-theme="claro"] div[role="status"] {
-          background: rgba(255,255,255,.96) !important;
-          border-color: #e1d9eb !important;
-          color: #55466c !important;
-          box-shadow: 0 4px 16px rgba(45,35,65,.08);
+        [data-caveira-theme="claro"] button:hover,
+        [data-caveira-theme="claro"] a:hover,
+        [data-caveira-theme="claro"] [role="button"]:hover {
+          filter: brightness(.97);
+        }
+        [data-caveira-theme="claro"] button:focus-visible,
+        [data-caveira-theme="claro"] a:focus-visible,
+        [data-caveira-theme="claro"] input:focus-visible,
+        [data-caveira-theme="claro"] select:focus-visible,
+        [data-caveira-theme="claro"] textarea:focus-visible {
+          outline: 2px solid rgba(128,96,173,.55) !important;
+          outline-offset: 2px;
+        }
+        [data-caveira-theme="claro"] button:disabled {
+          opacity: .48 !important;
+          cursor: not-allowed !important;
+        }
+        [data-caveira-theme="claro"] div[role="status"],
+        [data-caveira-theme="claro"] div[role="alert"] {
+          background: rgba(255,255,255,.97) !important;
+          border-color: #E2DCE9 !important;
+          color: #55466C !important;
+          box-shadow: 0 4px 16px rgba(45,35,65,.07) !important;
         }
         [data-caveira-theme="claro"] svg { color: inherit; }
-        [data-caveira-theme="claro"] ::selection { background: rgba(177,145,225,.28); color: #302b3a; }
+        [data-caveira-theme="claro"] ::selection { background: rgba(177,145,225,.28); color: #302B3A; }
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
         <span style={{ width: 6, height: 6, borderRadius: "50%", background: estaOnline ? "#B99AE7" : "#E9C987" }} />
