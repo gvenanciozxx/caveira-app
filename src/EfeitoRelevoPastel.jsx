@@ -1,7 +1,7 @@
 
 import { useEffect, useRef } from "react";
 
-export default function EfeitoRelevoPastel({ modo = "aberto" }) {
+export default function EfeitoRelevoPastel({ modo = "aberto", tema = "escuro" }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -18,9 +18,9 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
     padraoPontos.height = 4;
     const pctx = padraoPontos.getContext("2d");
 
-    pctx.fillStyle = "rgba(0, 0, 0, 0.20)";
+    pctx.fillStyle = tema === "claro" ? "rgba(90, 70, 120, 0.10)" : "rgba(0, 0, 0, 0.20)";
     pctx.fillRect(0, 0, 1.2, 1.2);
-    pctx.fillStyle = "rgba(197, 178, 255, 0.12)";
+    pctx.fillStyle = tema === "claro" ? "rgba(255, 255, 255, 0.42)" : "rgba(197, 178, 255, 0.12)";
     pctx.fillRect(2.5, 2.5, 1, 1);
 
     function ajustarTamanho() {
@@ -87,15 +87,23 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
       ctx.closePath();
       ctx.clip();
 
-      // Gradiente preto, grafite e lilás
+      // Paleta separada por tema; a pintura do Canvas não é controlada por CSS.
       const gradPastel = ctx.createLinearGradient(0, h, w, 0);
-
-      gradPastel.addColorStop(0.0, "#0b0b10");
-      gradPastel.addColorStop(0.2, "#111019");
-      gradPastel.addColorStop(0.42, "#191526");
-      gradPastel.addColorStop(0.64, "#29203b");
-      gradPastel.addColorStop(0.83, "#40315e");
-      gradPastel.addColorStop(1.0, "#59417b");
+      if (tema === "claro") {
+        gradPastel.addColorStop(0.0, "#F8F7FB");
+        gradPastel.addColorStop(0.2, "#F0ECF7");
+        gradPastel.addColorStop(0.42, "#E9E2F2");
+        gradPastel.addColorStop(0.64, "#DED3EC");
+        gradPastel.addColorStop(0.83, "#D4C5E7");
+        gradPastel.addColorStop(1.0, "#C8B6DE");
+      } else {
+        gradPastel.addColorStop(0.0, "#0b0b10");
+        gradPastel.addColorStop(0.2, "#111019");
+        gradPastel.addColorStop(0.42, "#191526");
+        gradPastel.addColorStop(0.64, "#29203b");
+        gradPastel.addColorStop(0.83, "#40315e");
+        gradPastel.addColorStop(1.0, "#59417b");
+      }
 
       ctx.fillStyle = gradPastel;
       ctx.fillRect(0, 0, w, h);
@@ -132,9 +140,9 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
           offsetBase + amp * 2.5
         );
 
-        gradDobra.addColorStop(0, "rgba(197, 178, 255, 0.20)");
-        gradDobra.addColorStop(0.45, "rgba(197, 178, 255, 0.035)");
-        gradDobra.addColorStop(1, "rgba(0, 0, 0, 0.42)");
+        gradDobra.addColorStop(0, tema === "claro" ? "rgba(126, 91, 170, 0.15)" : "rgba(197, 178, 255, 0.20)");
+        gradDobra.addColorStop(0.45, tema === "claro" ? "rgba(126, 91, 170, 0.035)" : "rgba(197, 178, 255, 0.035)");
+        gradDobra.addColorStop(1, tema === "claro" ? "rgba(90, 70, 120, 0.10)" : "rgba(0, 0, 0, 0.42)");
 
         ctx.fillStyle = gradDobra;
         ctx.fill();
@@ -155,7 +163,7 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
           else ctx.lineTo(x, y);
         }
 
-        ctx.strokeStyle = "rgba(197, 178, 255, 0.30)";
+        ctx.strokeStyle = tema === "claro" ? "rgba(126, 91, 170, 0.24)" : "rgba(197, 178, 255, 0.30)";
         ctx.lineWidth = 1.5;
         ctx.stroke();
       }
@@ -163,9 +171,9 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
       // Luz direcional lilás suave
       const luzLateral = ctx.createLinearGradient(0, 0, w, h);
 
-      luzLateral.addColorStop(0, "rgba(197, 178, 255, 0.14)");
-      luzLateral.addColorStop(0.5, "rgba(197, 178, 255, 0.015)");
-      luzLateral.addColorStop(1, "rgba(0, 0, 0, 0.35)");
+      luzLateral.addColorStop(0, tema === "claro" ? "rgba(255, 255, 255, 0.35)" : "rgba(197, 178, 255, 0.14)");
+      luzLateral.addColorStop(0.5, tema === "claro" ? "rgba(255, 255, 255, 0.04)" : "rgba(197, 178, 255, 0.015)");
+      luzLateral.addColorStop(1, tema === "claro" ? "rgba(100, 75, 135, 0.08)" : "rgba(0, 0, 0, 0.35)");
 
       ctx.fillStyle = luzLateral;
       ctx.fillRect(0, 0, w, h);
@@ -188,7 +196,7 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
         ctx.lineTo(pontosBorda[i].x, pontosBorda[i].y);
       }
 
-      ctx.strokeStyle = "rgba(197, 178, 255, 0.42)";
+      ctx.strokeStyle = tema === "claro" ? "rgba(126, 91, 170, 0.30)" : "rgba(197, 178, 255, 0.42)";
       ctx.lineWidth = modo === "linha" ? 2 : 1.6;
       ctx.stroke();
 
@@ -201,7 +209,7 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", ajustarTamanho);
     };
-  }, [modo]);
+  }, [modo, tema]);
 
   const ehLinha = modo === "linha";
 
@@ -216,7 +224,7 @@ export default function EfeitoRelevoPastel({ modo = "aberto" }) {
         overflow: "hidden",
         pointerEvents: "none",
         boxShadow: ehLinha
-          ? "1px 0 10px rgba(197, 178, 255, 0.25)"
+          ? (tema === "claro" ? "1px 0 10px rgba(126, 91, 170, 0.16)" : "1px 0 10px rgba(197, 178, 255, 0.25)")
           : "none",
       }}
     >

@@ -4191,7 +4191,7 @@ export default function App() {
           maskImage: "radial-gradient(ellipse 78% 76% at 100% 100%, #000 18%, rgba(0,0,0,0.72) 48%, rgba(0,0,0,0.22) 76%, transparent 100%)",
         }}
       >
-        <EfeitoRelevoPastel modo="aberto" />
+        <EfeitoRelevoPastel modo="aberto" tema={temaApp} />
       </div>
       {/* Sidebar compacta no desktop — mantém acesso rápido e animações do app */}
       {!menuAberto && ehDesktop && (
@@ -4223,7 +4223,7 @@ export default function App() {
             }}
           >
             <div style={{ position: "absolute", top: 0, right: -12, bottom: 0, width: 42, opacity: 0.7 }}>
-              <EfeitoRelevoPastel modo="aberto" />
+              <EfeitoRelevoPastel modo="aberto" tema={temaApp} />
             </div>
           </div>
           <div style={{ flex: 1 }} />
@@ -4293,7 +4293,7 @@ export default function App() {
               boxSizing: "border-box",
             }}
           >
-            <EfeitoRelevoPastel modo="aberto" />
+            <EfeitoRelevoPastel modo="aberto" tema={temaApp} />
 
             <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "14px", flex: 1, minHeight: 0 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
