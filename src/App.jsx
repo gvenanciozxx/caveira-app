@@ -3977,7 +3977,6 @@ export default function App() {
 
                 <div style={{ height: 1, background: "rgba(148,163,184,.14)", margin: "10px 2px 8px", flexShrink: 0 }} />
                 <span style={rotuloSecaoMenu}>{textoUi("SISTEMA", "SYSTEM")}</span>
-                <button type="button" onClick={abrirBackupMenu} style={btnMenu}>{renderIconeMenu("backup", 17)}<span>{textoUi("Backup & Dados", "Backup & Data")}</span></button>
                 <button type="button" onClick={() => abrirPagina("configuracoes")} style={estiloMenuAtivo("configuracoes", abaAtiva)}>{renderIconeMenu("configuracoes", 17)}<span>{textoUi("Configurações", "Settings")}</span></button>
               </div>
             </div>
@@ -6428,14 +6427,6 @@ export default function App() {
             </div>
             <button type="button" onClick={() => abrirPagina("observacoes")} style={{ ...btnSecundario, flex: "none", padding: "8px 12px" }}>Ver registros</button>
           </section>
-          {(dashboardData.diasSemBackup === null || dashboardData.diasSemBackup >= 7) && (
-            <div style={{ fontSize: "11px", color: "#E9C987", background: "rgba(251, 191, 36, 0.08)", padding: "8px 12px", borderRadius: "8px", border: "1px solid rgba(251, 191, 36, 0.25)" }}>
-              {dashboardData.diasSemBackup === null
-                ? "Dica: faça seu primeiro backup JSON abaixo para proteger seu histórico."
-                : `Faz ${dashboardData.diasSemBackup} dias desde o último backup JSON.`}
-            </div>
-          )}
-
           {/* Resumo semanal automático */}
           <div style={cardClean}>
             <div style={{ ...labelMini, marginBottom: "6px" }}>Resumo da semana (7 dias)</div>
@@ -6756,34 +6747,7 @@ export default function App() {
             </div>
           </div>
 
-          <div ref={backupRef} style={{ ...cardClean, display: "flex", flexDirection: "column", gap: "8px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
-              <span style={{ fontSize: "13px", fontWeight: 600 }}>Backup JSON</span>
-              <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", alignItems: "center" }}>
-                <button type="button" onClick={copiarBackupJSON} style={{ ...btnSecundario, flex: "none", padding: "6px 10px", fontSize: "11px" }}>
-                  Copiar JSON
-                </button>
-                <button type="button" onClick={baixarBackupJSON} style={{ ...btnSecundario, flex: "none", padding: "6px 10px", fontSize: "11px" }}>
-                  Baixar .json
-                </button>
-                <label style={{ ...btnSecundario, flex: "none", padding: "6px 10px", fontSize: "11px", cursor: "pointer" }}>
-                  Importar arquivo
-                  <input type="file" accept="application/json,.json" onChange={aoSelecionarArquivoJson} style={{ display: "none" }} />
-                </label>
-                <button type="button" onClick={importarBackupJSON} style={{ ...btnSecundario, flex: "none", padding: "6px 10px", fontSize: "11px" }}>
-                  Restaurar texto
-                </button>
-              </div>
-            </div>
-            <textarea
-              rows={3}
-              placeholder="Cole aqui um backup JSON para restaurar ou clique em Copiar/Baixar..."
-              value={textoBackup}
-              onChange={(e) => setTextoBackup(e.target.value)}
-              style={campoTexto}
-            />
-            {statusBackup && <div style={{ fontSize: "11px", color: "#BEB7CA" }}>{statusBackup}</div>}
-          </div>
+
 
           {/* Gráficos integrados: evolução real dos registros */}
           {(() => {
