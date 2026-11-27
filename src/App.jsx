@@ -570,6 +570,10 @@ export default function App() {
   const [presets, setPresets] = useState(PRESETS_INICIAIS);
   const [logsPorData, setLogsPorData] = useState({});
   const [observacoes, setObservacoes] = useState({});
+  const [registrosObservacoesTreino, setRegistrosObservacoesTreino] = useState([]);
+  const [novaObservacaoTreino, setNovaObservacaoTreino] = useState("");
+  const [microfoneObservacaoAtivo, setMicrofoneObservacaoAtivo] = useState(false);
+  const [excluirObservacaoId, setExcluirObservacaoId] = useState(null);
   const [duracaoPorData, setDuracaoPorData] = useState({});
   const [tempoAtivoPorData, setTempoAtivoPorData] = useState({});
   const [aquecimentoPorData, setAquecimentoPorData] = useState({});
@@ -775,6 +779,7 @@ export default function App() {
     presets,
     logsPorData,
     observacoes,
+    registrosObservacoesTreino,
     duracaoPorData,
     tempoAtivoPorData,
     aquecimentoPorData,
@@ -839,6 +844,14 @@ export default function App() {
     if (Array.isArray(d.presets)) setPresets(d.presets);
     if (d.logsPorData) setLogsPorData(d.logsPorData);
     if (d.observacoes) setObservacoes(d.observacoes);
+    if (Array.isArray(d.registrosObservacoesTreino)) {
+      setRegistrosObservacoesTreino(d.registrosObservacoesTreino);
+    } else {
+      const legados = Object.entries(d.observacoes || {})
+        .filter(([, texto]) => typeof texto === "string" && texto.trim())
+        .map(([dataISO, texto], indice) => ({ id: `observacao-legada-${dataISO}-${indice}`, dataISO, texto: texto.trim(), criadoEm: `${dataISO}T12:00:00.000Z` }));
+      setRegistrosObservacoesTreino(legados);
+    }
     if (d.duracaoPorData) setDuracaoPorData(d.duracaoPorData);
     if (d.tempoAtivoPorData) setTempoAtivoPorData(d.tempoAtivoPorData);
     if (d.aquecimentoPorData) setAquecimentoPorData(d.aquecimentoPorData);
@@ -1004,7 +1017,7 @@ export default function App() {
     }, 300);
     return () => {};
   }, [authSession?.user?.id, dadosNuvemCarregados, estaOnline, rotina, focoDiasPorChave, presets, logsPorData,
-    observacoes, duracaoPorData, tempoAtivoPorData, aquecimentoPorData, estadoDiaPorData,
+    observacoes, registrosObservacoesTreino, duracaoPorData, tempoAtivoPorData, aquecimentoPorData, estadoDiaPorData,
     checklistPorData, sinaisCorpoPorData, sonoPorData, motivoSemTreinoPorData,
     refeicoesModelos, refeicoesFeitasPorData, refeicaoLivrePorData, janelaTreinoPorData,
     cafeinaPorData, cardioPorData, suplementos, itensMochila, mochilaMarcadaPorData,
@@ -1279,6 +1292,8 @@ export default function App() {
     setPresets(PRESETS_INICIAIS);
     setLogsPorData({});
     setObservacoes({});
+    setRegistrosObservacoesTreino([]);
+    setNovaObservacaoTreino("");
     setDuracaoPorData({});
     setTempoAtivoPorData({});
     setAquecimentoPorData({});
@@ -1317,7 +1332,7 @@ export default function App() {
     setStatusDadosNuvem("Resetando e sincronizando seus dados...");
     const snapshotResetado = {
       rotina: ROTINA_INICIAL, exerciciosSalvosCards: [], focoDiasPorChave: {}, presets: PRESETS_INICIAIS,
-      logsPorData: {}, observacoes: {}, duracaoPorData: {}, tempoAtivoPorData: {},
+      logsPorData: {}, observacoes: {}, registrosObservacoesTreino: [], duracaoPorData: {}, tempoAtivoPorData: {},
       aquecimentoPorData: {}, estadoDiaPorData: {}, checklistPorData: {}, sinaisCorpoPorData: {},
       sonoPorData: {}, motivoSemTreinoPorData: {}, refeicoesModelos: REFEICOES_PADRAO_INICIAIS,
       refeicoesFeitasPorData: {}, refeicaoLivrePorData: {}, janelaTreinoPorData: {}, cafeinaPorData: {},
@@ -2345,6 +2360,56 @@ export default function App() {
       .sort((a, b) => b.dataISO.localeCompare(a.dataISO));
   }, [observacoes, buscaNota]);
 
+  function salvarObservacaoTreino() {
+    const texto = String(novaObservacaoTreino || "").trim();
+    if (!texto || !diaPodeEditar) return;
+    const registro = {
+      id: `obs-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      dataISO: dataSelecionada,
+      texto,
+      criadoEm: new Date().toISOString(),
+    };
+    setRegistrosObservacoesTreino((prev) => [registro, ...(prev || [])]);
+    setNovaObservacaoTreino("");
+    setStatusResumo("Observação salva no histórico.");
+  }
+
+  function iniciarMicrofoneObservacao() {
+    const SpeechRecognitionApi = typeof window !== "undefined"
+      ? (window.SpeechRecognition || window.webkitSpeechRecognition)
+      : null;
+    if (!SpeechRecognitionApi) {
+      setStatusResumo("Seu navegador não oferece reconhecimento de voz. Você pode digitar a observação.");
+      return;
+    }
+    try {
+      const reconhecimento = new SpeechRecognitionApi();
+      reconhecimento.lang = emIngles ? "en-US" : "pt-BR";
+      reconhecimento.interimResults = true;
+      reconhecimento.continuous = false;
+      setMicrofoneObservacaoAtivo(true);
+      reconhecimento.onresult = (evento) => {
+        const transcricao = Array.from(evento.results || []).map((resultado) => resultado[0]?.transcript || "").join(" ").trim();
+        if (transcricao) setNovaObservacaoTreino(transcricao);
+      };
+      reconhecimento.onerror = () => {
+        setMicrofoneObservacaoAtivo(false);
+        setStatusResumo("Não foi possível reconhecer a fala. Verifique a permissão do microfone.");
+      };
+      reconhecimento.onend = () => setMicrofoneObservacaoAtivo(false);
+      reconhecimento.start();
+    } catch {
+      setMicrofoneObservacaoAtivo(false);
+      setStatusResumo("Não foi possível iniciar o microfone neste navegador.");
+    }
+  }
+
+  function confirmarExclusaoObservacao() {
+    if (!excluirObservacaoId) return;
+    setRegistrosObservacoesTreino((prev) => (prev || []).filter((item) => item.id !== excluirObservacaoId));
+    setExcluirObservacaoId(null);
+  }
+
   function montarResumoTexto() {
     const nomesRefFeitas = refeicoesModelos
       .filter((r) => refeicoesFeitasDia.includes(r.id))
@@ -2516,6 +2581,10 @@ export default function App() {
     if (Array.isArray(parsed.presets)) setPresets(parsed.presets);
     if (parsed.logsPorData && typeof parsed.logsPorData === "object") setLogsPorData(parsed.logsPorData);
     if (parsed.observacoes && typeof parsed.observacoes === "object") setObservacoes(parsed.observacoes);
+    if (Array.isArray(parsed.registrosObservacoesTreino)) setRegistrosObservacoesTreino(parsed.registrosObservacoesTreino);
+    else if (parsed.observacoes && typeof parsed.observacoes === "object") {
+      setRegistrosObservacoesTreino(Object.entries(parsed.observacoes).filter(([, texto]) => typeof texto === "string" && texto.trim()).map(([dataISO, texto], indice) => ({ id: `observacao-backup-${dataISO}-${indice}`, dataISO, texto: texto.trim(), criadoEm: `${dataISO}T12:00:00.000Z` })));
+    }
     if (parsed.duracaoPorData && typeof parsed.duracaoPorData === "object") setDuracaoPorData(parsed.duracaoPorData);
     if (parsed.tempoAtivoPorData && typeof parsed.tempoAtivoPorData === "object") {
       setTempoAtivoPorData(parsed.tempoAtivoPorData);
@@ -3971,6 +4040,7 @@ export default function App() {
             )}
             {abaAtiva === "montar" && textoUi("Montar treinos.", "Build workouts.")}
             {abaAtiva === "dashboard" && "Dashboard."}
+            {abaAtiva === "observacoes" && "Observações do treino."}
             {abaAtiva === "timer" && "Timer."}
             {abaAtiva === "suplementos" && textoUi("Suplementos.", "Supplements.")}
             {abaAtiva === "alimentacao" && textoUi("Alimentação & Rotina.", "Nutrition & Routine.")}
@@ -3987,7 +4057,7 @@ export default function App() {
             <span style={{ fontSize: "12px", color: "#9E96AD" }}>
               {abaAtiva === "montar"
                 ? "Uma semana bem planejada começa aqui."
-                : abaAtiva === "configuracoes" ? textoUi("Gerencie seu perfil e as opções de segurança do aplicativo.", "Manage your profile and app security options.") : abaAtiva === "cards" ? "Seus exercícios guardados para montar e atualizar os treinos." : `${infoDia?.nome}, ${diaSel} de ${MESES_CURTOS[(mesSel || 1) - 1]?.toLowerCase()}${focoDiasPorChave[chaveDia] ? ` • Foco: ${focoDiasPorChave[chaveDia]}` : ""}`}
+                : abaAtiva === "configuracoes" ? textoUi("Gerencie seu perfil e as opções de segurança do aplicativo.", "Manage your profile and app security options.") : abaAtiva === "cards" ? "Seus exercícios guardados para montar e atualizar os treinos." : abaAtiva === "observacoes" ? "Consulte os registros salvos das suas sessões." : `${infoDia?.nome}, ${diaSel} de ${MESES_CURTOS[(mesSel || 1) - 1]?.toLowerCase()}${focoDiasPorChave[chaveDia] ? ` • Foco: ${focoDiasPorChave[chaveDia]}` : ""}`}
             </span>
             {abaAtiva === "hoje" && dataSelecionada !== hojeISO && (
               <button
@@ -4700,32 +4770,37 @@ export default function App() {
             )
           )}
 
-          {/* Observações do treino: anotações úteis para acompanhar a sessão e planejar ajustes. */}
-          <div style={{ padding: "14px", borderRadius: "10px", background: "rgba(49, 43, 63, 0.58)", border: "1px solid rgba(190, 170, 225, 0.14)", display: "flex", flexDirection: "column", gap: "8px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-              <span style={{ fontSize: "13px", fontWeight: 650 }}>{textoUi('Observações do treino', 'Workout notes')}</span>
-              <button
-                type="button"
-                onClick={copiarResumoDoDia}
-                style={{ ...btnSecundario, flex: "none", padding: "4px 9px", fontSize: "11px" }}
-              >
-                Copiar resumo
+          {/* Observações do treino: registros permanentes, enviados ao histórico do Dashboard. */}
+          <div style={{ padding: "12px", borderRadius: "10px", background: "rgba(49, 43, 63, 0.34)", border: "1px solid rgba(190, 170, 225, 0.14)", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <span style={{ fontSize: "13px", fontWeight: 650 }}>{textoUi('Observações do treino', 'Workout notes')}</span>
+            <div style={{ fontSize: "11px", lineHeight: 1.55, color: "#9E96AD" }}>
+              Registre detalhes desta sessão: cargas utilizadas, dificuldades, dores ou desconfortos, evolução, recordes pessoais e pontos que deseja acompanhar nos próximos treinos. Os registros salvos ficam no histórico do Dashboard e não podem ser editados.
+            </div>
+            <div style={{ display: "flex", alignItems: "stretch", gap: 8 }}>
+              <textarea
+                rows={3}
+                placeholder="Digite sua observação ou use o microfone..."
+                aria-label="Nova observação do treino"
+                value={novaObservacaoTreino}
+                disabled={!diaPodeEditar}
+                onChange={(e) => setNovaObservacaoTreino(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    salvarObservacaoTreino();
+                  }
+                }}
+                style={{ ...campoTexto, flex: 1, minWidth: 0, resize: "vertical" }}
+              />
+              <button type="button" title={microfoneObservacaoAtivo ? "Ouvindo..." : "Falar observação"} aria-label="Falar observação" onClick={iniciarMicrofoneObservacao} disabled={!diaPodeEditar || microfoneObservacaoAtivo} style={{ ...btnSecundario, flex: "none", width: 42, minWidth: 42, padding: 0, display: "grid", placeItems: "center", color: microfoneObservacaoAtivo ? "#F0A0A8" : "#DCCCF5" }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5m-4 0h8"/></svg>
               </button>
             </div>
-            <div style={{ fontSize: "11px", lineHeight: 1.55, color: "#9E96AD" }}>
-              Anote informações importantes desta sessão, como cargas utilizadas, dificuldades, evolução, recordes pessoais ou ajustes que deseja fazer nos próximos treinos.
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              <span style={{ fontSize: 10, color: microfoneObservacaoAtivo ? "#F0A0A8" : "#9E96AD" }}>{microfoneObservacaoAtivo ? "Ouvindo sua observação..." : "Enter para salvar • Shift + Enter para pular linha"}</span>
+              <button type="button" onClick={salvarObservacaoTreino} disabled={!novaObservacaoTreino.trim() || !diaPodeEditar} style={{ ...btnSecundario, flex: "none", padding: "7px 12px", opacity: !novaObservacaoTreino.trim() || !diaPodeEditar ? .5 : 1 }}>Salvar observação</button>
             </div>
-            <textarea
-              rows={3}
-              placeholder="Ex.: aumentei a carga no supino, senti dificuldade na última série..."
-              aria-label="Observações do treino"
-              value={observacoes[dataSelecionada] || ""}
-              onChange={(e) => setObservacoes((prev) => ({ ...prev, [dataSelecionada]: e.target.value }))}
-              style={campoTexto}
-            />
-            {statusResumo && (
-              <div style={{ fontSize: "11px", color: "#BEB7CA", whiteSpace: "pre-wrap" }}>{statusResumo}</div>
-            )}
+            {statusResumo && <div style={{ fontSize: "11px", color: "#BEB7CA", whiteSpace: "pre-wrap" }}>{statusResumo}</div>}
           </div>
 
           {/* Controle de hidratação */}
@@ -6346,6 +6421,14 @@ export default function App() {
 
       {abaAtiva === "dashboard" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <section style={{ ...cardClean, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+            <div>
+              <div style={{ ...labelMini, marginBottom: 5 }}>OBSERVAÇÕES DO TREINO</div>
+              <div style={{ fontSize: 13, color: "#EEEAF5" }}>{(registrosObservacoesTreino || []).length} registro(s) salvo(s) no seu histórico</div>
+              <div style={{ fontSize: 11, color: "#9E96AD", marginTop: 4 }}>Consulte suas anotações por data. Os registros não podem ser editados.</div>
+            </div>
+            <button type="button" onClick={() => abrirPagina("observacoes")} style={{ ...btnSecundario, flex: "none", padding: "8px 12px" }}>Ver registros</button>
+          </section>
           {(dashboardData.diasSemBackup === null || dashboardData.diasSemBackup >= 7) && (
             <div style={{ fontSize: "11px", color: "#E9C987", background: "rgba(251, 191, 36, 0.08)", padding: "8px 12px", borderRadius: "8px", border: "1px solid rgba(251, 191, 36, 0.25)" }}>
               {dashboardData.diasSemBackup === null
@@ -6724,6 +6807,40 @@ export default function App() {
       )}
 
       {/* ÁREAS PREMIUM ADICIONAIS */}
+      {abaAtiva === "observacoes" && (
+        <div style={{ display: "grid", gap: 12 }}>
+          <section style={cardClean}>
+            <div style={{ ...labelMini, marginBottom: 5 }}>HISTÓRICO DE OBSERVAÇÕES</div>
+            <p style={{ margin: 0, color: "#9E96AD", fontSize: 12, lineHeight: 1.55 }}>Aqui ficam todas as observações salvas durante seus treinos. Os registros são somente para consulta; você pode excluí-los, mas não editá-los.</p>
+          </section>
+          {(registrosObservacoesTreino || []).length === 0 ? (
+            <div style={{ ...cardClean, color: "#9E96AD", fontSize: 12 }}>Você ainda não salvou nenhuma observação de treino.</div>
+          ) : [...registrosObservacoesTreino].sort((a, b) => String(b.criadoEm || b.dataISO).localeCompare(String(a.criadoEm || a.dataISO))).map((registro) => (
+            <article key={registro.id} style={{ ...cardClean, display: "grid", gap: 9 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                <strong style={{ fontSize: 12, color: "#DCCCF5" }}>{registro.dataISO ? new Date(`${registro.dataISO}T12:00:00`).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" }) : "Data não informada"}</strong>
+                <button type="button" onClick={() => setExcluirObservacaoId(registro.id)} style={{ ...btnSecundario, flex: "none", padding: "5px 9px", color: "#F1A8B8", borderColor: "rgba(241,168,184,.25)" }}>Excluir</button>
+              </div>
+              <div style={{ fontSize: 12, lineHeight: 1.65, color: "#EEEAF5", whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{registro.texto}</div>
+            </article>
+          ))}
+          <button type="button" onClick={() => abrirPagina("dashboard")} style={{ ...btnSecundario, justifySelf: "start", flex: "none" }}>Voltar ao Dashboard</button>
+        </div>
+      )}
+
+      {excluirObservacaoId && (
+        <div role="presentation" onClick={() => setExcluirObservacaoId(null)} style={{ position: "fixed", inset: 0, zIndex: 12010, background: "rgba(4,6,10,.76)", display: "grid", placeItems: "center", padding: 16, backdropFilter: "blur(8px)" }}>
+          <div role="dialog" aria-modal="true" aria-labelledby="confirmar-exclusao-observacao" onClick={(e) => e.stopPropagation()} style={{ width: "min(100%, 390px)", padding: 18, borderRadius: 14, background: "#171821", border: "1px solid rgba(190,170,225,.22)", boxShadow: "0 20px 70px rgba(0,0,0,.45)" }}>
+            <h3 id="confirmar-exclusao-observacao" style={{ margin: "0 0 8px", fontSize: 16 }}>Excluir observação?</h3>
+            <p style={{ margin: "0 0 16px", color: "#AAA1B8", fontSize: 12, lineHeight: 1.6 }}>Tem certeza de que deseja excluir este registro? Essa ação não poderá ser desfeita.</p>
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+              <button type="button" onClick={() => setExcluirObservacaoId(null)} style={{ ...btnSecundario, flex: "none", padding: "8px 12px" }}>Cancelar</button>
+              <button type="button" onClick={confirmarExclusaoObservacao} style={{ ...btnSecundario, flex: "none", padding: "8px 12px", color: "#F1A8B8", borderColor: "rgba(241,168,184,.3)" }}>Sim, excluir</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {abaAtiva === "desempenho" && (() => {
         const totalTreinos = Object.values(estadoDiaPorData || {}).filter((v) => v === "treino" || v?.treino === true || v?.status === "treino").length;
         const ultimoPeso = medidasCorporais.length ? medidasCorporais[medidasCorporais.length - 1] : null;
