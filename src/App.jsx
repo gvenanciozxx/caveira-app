@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import EfeitoRelevoPastel from "./EfeitoRelevoPastel";
 import { supabase } from "./supabase";
 
@@ -571,9 +571,18 @@ export default function App() {
 
   // Reaplica o tema claro aos estilos inline renderizados (React converte HEX em RGB no DOM).
   // Este efeito é exclusivamente visual e não altera estados de dados nem handlers.
-  useEffect(() => {
+  useLayoutEffect(() => {
     const raiz = document.querySelector('[data-caveira-theme]');
     if (!raiz) return;
+    // Aplica o atributo no DOM antes da pintura, para o clique refletir o tema imediatamente.
+    raiz.setAttribute("data-caveira-theme", temaApp);
+    if (temaApp === "claro") {
+      document.documentElement.setAttribute("data-caveira-theme", "claro");
+      document.body.setAttribute("data-caveira-theme", "claro");
+    } else {
+      document.documentElement.removeAttribute("data-caveira-theme");
+      document.body.removeAttribute("data-caveira-theme");
+    }
     const classesTema = ["cv-claro-surface", "cv-claro-text", "cv-claro-dark-button"];
     const limpar = (el) => classesTema.forEach((c) => el.classList.remove(c));
     if (temaApp !== "claro") {
@@ -3869,6 +3878,17 @@ export default function App() {
         }
 
         /* Tema claro — overrides estritamente visuais e escopados ao app. */
+        /* Tema controlado pelo clique: aplicação imediata no documento inteiro. */
+        html[data-caveira-theme="claro"],
+        body[data-caveira-theme="claro"] {
+          background: #F4F2F7 !important;
+          color: #24212B !important;
+          color-scheme: light !important;
+        }
+        html[data-caveira-theme="claro"] body {
+          background-color: #F4F2F7 !important;
+          background-image: none !important;
+        }
         [data-caveira-theme="claro"] {
           --cv-bg: #F4F2F7;
           --cv-surface: #FFFFFF;
@@ -6717,7 +6737,7 @@ export default function App() {
               <label style={{ ...rotuloCampo, marginBottom: 0 }}>{textoUi("Tema do aplicativo", "App theme")}</label>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 7 }}>
                 {[{ id: "escuro", pt: "Escuro", en: "Dark" }, { id: "claro", pt: "Claro", en: "Light" }].map(opt => (
-                  <button key={opt.id} type="button" aria-pressed={temaApp === opt.id} onClick={() => setTemaApp(opt.id)} style={{ ...btnSecundario, background: temaApp === opt.id ? "rgba(197,178,255,.18)" : "transparent", borderColor: temaApp === opt.id ? "rgba(197,178,255,.55)" : "rgba(190,170,225,.18)", color: temaApp === opt.id ? (temaApp === "claro" ? "#60458f" : "#E6D8FA") : (temaApp === "claro" ? "#5f596b" : "#BEB7CA") }}>
+                  <button key={opt.id} type="button" aria-pressed={temaApp === opt.id} onClick={() => { setTemaApp(opt.id); const raizTema = document.querySelector('[data-caveira-theme]'); if (raizTema) raizTema.setAttribute("data-caveira-theme", opt.id); if (opt.id === "claro") { document.documentElement.setAttribute("data-caveira-theme", "claro"); document.body.setAttribute("data-caveira-theme", "claro"); } else { document.documentElement.removeAttribute("data-caveira-theme"); document.body.removeAttribute("data-caveira-theme"); } }} style={{ ...btnSecundario, background: temaApp === opt.id ? "rgba(197,178,255,.18)" : "transparent", borderColor: temaApp === opt.id ? "rgba(197,178,255,.55)" : "rgba(190,170,225,.18)", color: temaApp === opt.id ? (temaApp === "claro" ? "#60458f" : "#E6D8FA") : (temaApp === "claro" ? "#5f596b" : "#BEB7CA") }}>
                     {textoUi(opt.pt, opt.en)}
                   </button>
                 ))}
