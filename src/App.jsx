@@ -3035,13 +3035,6 @@ export default function App() {
           color: #494253 !important;
           font-weight: 550 !important;
         }
-        [data-caveira-theme="claro"] .caveira-observacoes-card {
-          background: #FFFFFF !important;
-          background-color: #FFFFFF !important;
-          border-color: #D8D1E2 !important;
-          color: #292431 !important;
-          box-shadow: 0 3px 14px rgba(40,30,55,.055) !important;
-        }
         [data-caveira-theme="claro"] .caveira-observacoes-titulo {
           color: #292431 !important;
           font-weight: 700 !important;
@@ -4237,6 +4230,81 @@ export default function App() {
           background-color: transparent !important;
           background-image: none !important;
         }
+        /* Observações: não transformar a superfície translúcida em um card branco/cinza no tema claro. */
+        [data-caveira-theme="claro"] .caveira-observacoes-card {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          border-color: transparent !important;
+          box-shadow: none !important;
+          color: #292431 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-observacoes-card .caveira-observacoes-titulo {
+          color: #292431 !important;
+          font-weight: 700 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-observacoes-card .caveira-observacoes-descricao {
+          color: #494253 !important;
+          font-weight: 550 !important;
+        }
+        /* Sessão de Hoje: remover a superfície branca aplicada pelo seletor global de aside no tema claro. */
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje,
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje > section,
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje .caveira-proxima-sessao,
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje .caveira-assinatura-painel {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          border-color: transparent !important;
+          box-shadow: none !important;
+        }
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje {
+          color: var(--cv-text) !important;
+        }
+
+        /* Correções consolidadas: tema claro/mobile e menu flutuante sem regras globais conflitantes. */
+        .caveira-exercicio-card { transition: background .18s ease, border-color .18s ease; }
+        .caveira-observacoes-input { background: rgba(13,15,21,.48) !important; border-color: rgba(190,170,225,.20) !important; color: #F1EEF7 !important; }
+        .caveira-agua-card { color: #E6E8ED; }
+        .caveira-agua-card input { background: #11141B !important; color: #F1EEF7 !important; border-color: #252A35 !important; }
+        .caveira-menu-inferior-flutuante { isolation: isolate; }
+        .caveira-menu-inferior-item { min-height: 46px; border-radius: 12px !important; font-size: 13px !important; letter-spacing: .01em; }
+        [data-caveira-theme="claro"] .caveira-exercicio-card { background: #F8F5FC !important; background-color: #F8F5FC !important; border-color: #DCD3E8 !important; color: #292431 !important; opacity: 1 !important; box-shadow: 0 2px 9px rgba(50,35,70,.045) !important; }
+        [data-caveira-theme="claro"] .caveira-exercicio-card *:not(button):not(svg):not(path) { color: #494253 !important; }
+        [data-caveira-theme="claro"] .caveira-exercicio-card button[style*="background: none"],
+        [data-caveira-theme="claro"] .caveira-exercicio-card button[style*="background: transparent"] { background: transparent !important; box-shadow: none !important; }
+        [data-caveira-theme="claro"] .caveira-exercicio-card button { color: #3E354B !important; }
+        [data-caveira-theme="claro"] .caveira-exercicio-card input { background: #FFFFFF !important; color: #292431 !important; border-color: #D2C8DE !important; }
+        [data-caveira-theme="claro"] .caveira-observacoes-card { background: transparent !important; background-color: transparent !important; background-image: none !important; border: 0 !important; box-shadow: none !important; }
+        [data-caveira-theme="claro"] .caveira-observacoes-input { background: transparent !important; background-color: transparent !important; background-image: none !important; color: #292431 !important; border: 1px solid #CFC4DC !important; box-shadow: none !important; font-weight: 550 !important; }
+        [data-caveira-theme="claro"] .caveira-observacoes-input::placeholder { color: #6F667C !important; }
+        [data-caveira-theme="claro"] .caveira-agua-card { background: #F8F5FC !important; background-color: #F8F5FC !important; border-color: #DCD3E8 !important; color: #292431 !important; box-shadow: 0 2px 9px rgba(50,35,70,.045) !important; }
+        [data-caveira-theme="claro"] .caveira-agua-card *:not(button):not(svg):not(path) { color: #494253 !important; }
+        [data-caveira-theme="claro"] .caveira-agua-card strong { color: #292431 !important; }
+        [data-caveira-theme="claro"] .caveira-agua-card input,
+        [data-caveira-theme="claro"] .caveira-agua-entrada { background: #FFFFFF !important; color: #292431 !important; border-color: #CFC4DC !important; }
+        [data-caveira-theme="claro"] .caveira-agua-card button { background: #E9E1F2 !important; color: #40344F !important; border-color: #C9B9DA !important; box-shadow: none !important; }
+        [data-caveira-theme="claro"] .caveira-menu-inferior-flutuante { background: rgba(249,247,252,.94) !important; background-color: rgba(249,247,252,.94) !important; border: 1px solid #D8CDE5 !important; box-shadow: 0 10px 30px rgba(50,35,70,.16) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; }
+        [data-caveira-theme="claro"] .caveira-menu-inferior-item { background: transparent !important; color: #514660 !important; border: 0 !important; box-shadow: none !important; }
+        [data-caveira-theme="claro"] .caveira-menu-inferior-item[style*="background: #282432"] { background: #E8DDF4 !important; color: #392B4C !important; }
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje,
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje section,
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje .caveira-proxima-sessao,
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje .caveira-assinatura-painel { background: transparent !important; background-color: transparent !important; background-image: none !important; border-color: transparent !important; box-shadow: none !important; }
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje div[style*="background"] { background: transparent !important; background-color: transparent !important; box-shadow: none !important; }
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje { color: #514A5F !important; }
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje strong,
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje span,
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje div { color: #514A5F !important; }
+        [data-caveira-theme="claro"] aside.caveira-sessao-hoje svg circle:first-child { stroke: #D8D0E2 !important; }
+        @media (max-width: 639px) {
+          .caveira-menu-inferior-flutuante { bottom: calc(14px + env(safe-area-inset-bottom)) !important; width: calc(100% - 20px) !important; padding: 11px 10px !important; border-radius: 17px !important; }
+          .caveira-menu-inferior-item { min-height: 48px !important; padding: 12px 5px !important; font-size: 13px !important; }
+          [data-caveira-theme="claro"] .caveira-menu-inferior-flutuante { background: rgba(249,247,252,.97) !important; }
+          .caveira-agua-card { padding: 12px !important; gap: 10px !important; }
+          .caveira-exercicio-card { gap: 8px !important; }
+        }
+        @media (min-width: 640px) { .caveira-menu-inferior-flutuante { bottom: 16px !important; } }
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
         <span style={{ width: 6, height: 6, borderRadius: "50%", background: estaOnline ? "#B99AE7" : "#E9C987" }} />
@@ -4997,6 +5065,7 @@ export default function App() {
                 return (
                   <div
                     key={ex.id}
+                    className="caveira-exercicio-card"
                     style={{
                       padding: ehDesktop ? "15px 17px" : "12px 10px",
                       borderRadius: "9px",
@@ -5211,6 +5280,7 @@ export default function App() {
             </div>
             <div style={{ display: "flex", alignItems: "stretch", gap: 8 }}>
               <textarea
+                className="caveira-observacoes-input"
                 rows={3}
                 placeholder="Digite sua observação ou use o microfone..."
                 aria-label="Nova observação do treino"
@@ -5243,7 +5313,7 @@ export default function App() {
               gap: "12px",
             }}
           >
-            <div style={{ padding: "14px", borderRadius: "7px", background: "#0D0F14", border: "1px solid #252A35", display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div className="caveira-agua-card" style={{ padding: "14px", borderRadius: "7px", background: "#0D0F14", border: "1px solid #252A35", display: "flex", flexDirection: "column", gap: "12px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "16px", fontWeight: 700, color: "#E6E8ED" }}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8FC7F4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3.5C9.2 7.1 6 10.2 6 14a6 6 0 0 0 12 0c0-3.8-3.2-6.9-6-10.5Z"/><path d="M4.5 10.5C3.2 12.2 2.5 13.6 2.5 15a4 4 0 0 0 4 4"/></svg>{textoUi('Água do dia', 'Daily water')}</span>
                 <label style={{ fontSize: "12px", color: "#BEB7CA" }}>
@@ -5281,6 +5351,7 @@ export default function App() {
                 style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px" }}
               >
                 <input
+                  className="caveira-agua-entrada"
                   type="number"
                   min="1"
                   step="1"
@@ -7260,20 +7331,26 @@ export default function App() {
 
       {/* Barra Inferior */}
       <nav
+        className="caveira-menu-inferior-flutuante"
         style={{
           position: "fixed",
-          bottom: 0,
+          bottom: ehDesktop ? "16px" : "calc(14px + env(safe-area-inset-bottom))",
           left: ehDesktop ? `${larguraMenuDesktop}px` : "50%",
           transform: ehDesktop ? "none" : "translateX(-50%)",
-          width: ehDesktop ? `calc(100% - ${larguraMenuDesktop}px)` : "100%",
-          maxWidth: larguraContainer,
+          width: ehDesktop ? `min(calc(100% - ${larguraMenuDesktop}px - 28px), ${larguraContainer})` : "calc(100% - 24px)",
+          maxWidth: ehDesktop ? larguraContainer : "460px",
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          background: "rgba(28, 27, 34, 0.88)",
-          borderTop: "1px solid rgba(190, 170, 225, 0.15)",
-          padding: "8px 12px",
+          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+          background: "rgba(28, 27, 34, 0.90)",
+          border: "1px solid rgba(190, 170, 225, 0.20)",
+          borderRadius: "18px",
+          padding: "12px 12px",
           boxSizing: "border-box",
-          transition: "max-width 0.2s ease",
+          transition: "max-width 0.2s ease, bottom 0.2s ease",
+          zIndex: 100,
+          boxShadow: "0 12px 32px rgba(0,0,0,.24)",
+          backdropFilter: "blur(18px)",
+          WebkitBackdropFilter: "blur(18px)",
         }}
       >
         {[
@@ -7285,10 +7362,11 @@ export default function App() {
           return (
             <button
               key={aba.id}
+              className="caveira-menu-inferior-item"
               type="button"
               onClick={() => abrirPagina(aba.id)}
               style={{
-                padding: "8px",
+                padding: "11px 8px",
                 borderRadius: "8px",
                 border: "none",
                 background: ativa ? "#282432" : "transparent",
