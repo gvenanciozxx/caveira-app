@@ -3035,13 +3035,6 @@ export default function App() {
           color: #494253 !important;
           font-weight: 550 !important;
         }
-        [data-caveira-theme="claro"] .caveira-observacoes-card {
-          background: #FFFFFF !important;
-          background-color: #FFFFFF !important;
-          border-color: #D8D1E2 !important;
-          color: #292431 !important;
-          box-shadow: 0 3px 14px rgba(40,30,55,.055) !important;
-        }
         [data-caveira-theme="claro"] .caveira-observacoes-titulo {
           color: #292431 !important;
           font-weight: 700 !important;
@@ -4236,6 +4229,23 @@ export default function App() {
           background: transparent !important;
           background-color: transparent !important;
           background-image: none !important;
+        }
+        /* Observações: não transformar a superfície translúcida em um card branco/cinza no tema claro. */
+        [data-caveira-theme="claro"] .caveira-observacoes-card {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          border-color: transparent !important;
+          box-shadow: none !important;
+          color: #292431 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-observacoes-card .caveira-observacoes-titulo {
+          color: #292431 !important;
+          font-weight: 700 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-observacoes-card .caveira-observacoes-descricao {
+          color: #494253 !important;
+          font-weight: 550 !important;
         }
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
