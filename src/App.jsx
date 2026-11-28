@@ -4271,6 +4271,54 @@ export default function App() {
           border: none !important;
           box-shadow: none !important;
         }
+
+        /* Tema claro: cards de exercício e hidratação alinhados à mesma superfície dos demais cards. */
+        [data-caveira-theme="claro"] .caveira-card-exercicio,
+        [data-caveira-theme="claro"] .caveira-card-hidratacao {
+          background: #FFFFFF !important;
+          background-color: #FFFFFF !important;
+          background-image: none !important;
+          border-color: #E2DCE9 !important;
+          color: #302B3A !important;
+          box-shadow: 0 3px 14px rgba(40,30,55,.055) !important;
+        }
+        [data-caveira-theme="claro"] .caveira-card-exercicio button:not([aria-label*="concluído"]):not([title*="concluído"]),
+        [data-caveira-theme="claro"] .caveira-card-hidratacao button {
+          background-color: #F0EAF7 !important;
+          background-image: none !important;
+          color: #514465 !important;
+          border-color: #D8CDE6 !important;
+          box-shadow: 0 1px 3px rgba(45,35,65,.04) !important;
+        }
+        [data-caveira-theme="claro"] .caveira-card-exercicio input,
+        [data-caveira-theme="claro"] .caveira-card-hidratacao input {
+          background: #FFFFFF !important;
+          background-color: #FFFFFF !important;
+          color: #302B3A !important;
+          border-color: #D8D1E2 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-card-exercicio button[style*="background: none"],
+        [data-caveira-theme="claro"] .caveira-card-exercicio button[style*="background: transparent"] {
+          background: transparent !important;
+          color: #302B3A !important;
+          border-color: transparent !important;
+          box-shadow: none !important;
+        }
+        [data-caveira-theme="claro"] .caveira-card-exercicio button[aria-label*="concluído"],
+        [data-caveira-theme="claro"] .caveira-card-exercicio button[title*="concluído"] {
+          background: #F0EAF7 !important;
+          color: #66527F !important;
+          border-color: #D8CDE6 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-card-hidratacao svg {
+          stroke: #8060AD !important;
+        }
+        [data-caveira-theme="claro"] .caveira-card-hidratacao > div[style*="height: 7px"] {
+          background: #E8E1F0 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-card-hidratacao > div[style*="height: 7px"] > div {
+          background: #A88ACD !important;
+        }
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
         <span style={{ width: 6, height: 6, borderRadius: "50%", background: estaOnline ? "#B99AE7" : "#E9C987" }} />
@@ -5033,6 +5081,7 @@ export default function App() {
                 return (
                   <div
                     key={ex.id}
+                    className="caveira-card-exercicio"
                     style={{
                       padding: ehDesktop ? "15px 17px" : "12px 10px",
                       borderRadius: "9px",
@@ -5279,7 +5328,7 @@ export default function App() {
               gap: "12px",
             }}
           >
-            <div style={{ padding: "14px", borderRadius: "7px", background: "#0D0F14", border: "1px solid #252A35", display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div className="caveira-card-hidratacao" style={{ padding: "14px", borderRadius: "7px", background: "#0D0F14", border: "1px solid #252A35", display: "flex", flexDirection: "column", gap: "12px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "16px", fontWeight: 700, color: "#E6E8ED" }}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8FC7F4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3.5C9.2 7.1 6 10.2 6 14a6 6 0 0 0 12 0c0-3.8-3.2-6.9-6-10.5Z"/><path d="M4.5 10.5C3.2 12.2 2.5 13.6 2.5 15a4 4 0 0 0 4 4"/></svg>{textoUi('Água do dia', 'Daily water')}</span>
                 <label style={{ fontSize: "12px", color: "#BEB7CA" }}>
