@@ -3047,6 +3047,16 @@ export default function App() {
           color: #292431 !important;
           font-weight: 500 !important;
         }
+        @media (max-width: 700px) {
+          [data-caveira-theme="claro"] .caveira-seu-treino-label {
+            color: #62536F !important;
+            font-weight: 750 !important;
+          }
+          [data-caveira-theme="claro"] .caveira-seu-treino-titulo {
+            color: #30283B !important;
+            font-weight: 800 !important;
+          }
+        }
       `}</style>
 
         <section className="caveira-entrada-card">
@@ -5016,8 +5026,8 @@ export default function App() {
           {/* Resumo da sessão + Puxar último treino parecido */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
             <div>
-              <div style={{ fontSize: "10px", letterSpacing: "0.04em", color: "#9AA1AE", fontWeight: 700 }}>{textoUi("SEU TREINO", "YOUR WORKOUT")}</div>
-              <div style={{ fontSize: ehDesktop ? "20px" : "18px", fontWeight: 750, marginTop: "5px", letterSpacing: "-0.025em", color: "#E6E8ED" }}>
+              <div className="caveira-seu-treino-label" style={{ fontSize: "10px", letterSpacing: "0.04em", color: "#9AA1AE", fontWeight: 700 }}>{textoUi("SEU TREINO", "YOUR WORKOUT")}</div>
+              <div className="caveira-seu-treino-titulo" style={{ fontSize: ehDesktop ? "20px" : "18px", fontWeight: 750, marginTop: "5px", letterSpacing: "-0.025em", color: "#E6E8ED" }}>
                 {exercicios.length === 0 ? "Dia de descanso" : `Treino de ${infoDia?.nome?.toLowerCase() || "hoje"}`}
               </div>
             </div>
