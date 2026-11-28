@@ -4246,30 +4246,56 @@ export default function App() {
           background-color: transparent !important;
           background-image: none !important;
         }
-        /* Reaplica o acabamento original da barra após os overrides globais de tema. */
-        [data-caveira-theme="claro"] nav.caveira-barra-inferior {
-          background: rgba(28, 27, 34, 0.88) !important;
-          background-color: rgba(28, 27, 34, 0.88) !important;
+        /* Menu inferior flutuante: alto contraste e distância das bordas no celular. */
+        nav.caveira-barra-inferior {
+          bottom: calc(14px + env(safe-area-inset-bottom, 0px)) !important;
+          border: 1px solid rgba(190, 170, 225, .24) !important;
+          border-radius: 16px !important;
+          background: rgba(35, 30, 45, .96) !important;
+          background-color: rgba(35, 30, 45, .96) !important;
           background-image: none !important;
-          border-top: 1px solid rgba(190, 170, 225, 0.15) !important;
-          box-shadow: none !important;
-          backdrop-filter: none !important;
-          -webkit-backdrop-filter: none !important;
+          box-shadow: 0 8px 26px rgba(0, 0, 0, .26), 0 2px 8px rgba(75, 48, 105, .18) !important;
+          backdrop-filter: blur(14px) !important;
+          -webkit-backdrop-filter: blur(14px) !important;
+          padding: 7px !important;
+          z-index: 1000 !important;
         }
-        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior {
+        nav.caveira-barra-inferior button.caveira-aba-inferior {
+          min-height: 46px !important;
+          padding: 10px 8px !important;
+          border-radius: 11px !important;
           background: transparent !important;
           background-color: transparent !important;
           background-image: none !important;
-          border: none !important;
+          border: 1px solid transparent !important;
           box-shadow: none !important;
-          color: #9E96AD !important;
+          color: #E1D8EB !important;
+          font-size: 13px !important;
+          font-weight: 600 !important;
+          opacity: 1 !important;
+          text-shadow: none !important;
         }
-        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"] {
-          background: #282432 !important;
-          background-color: #282432 !important;
-          color: #F1EEF7 !important;
-          border: none !important;
-          box-shadow: none !important;
+        nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"] {
+          background: #8057A7 !important;
+          background-color: #8057A7 !important;
+          color: #FFFFFF !important;
+          border: 1px solid rgba(220, 205, 240, .28) !important;
+          box-shadow: 0 2px 9px rgba(0, 0, 0, .16) !important;
+          font-weight: 750 !important;
+        }
+        [data-caveira-theme="claro"] nav.caveira-barra-inferior,
+        [data-caveira-theme="escuro"] nav.caveira-barra-inferior {
+          background: rgba(35, 30, 45, .96) !important;
+          background-color: rgba(35, 30, 45, .96) !important;
+          border-color: rgba(190, 170, 225, .24) !important;
+        }
+        @media (max-width: 899px) {
+          nav.caveira-barra-inferior {
+            width: calc(100% - 24px) !important;
+            max-width: 520px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+          }
         }
 
         /* Tema claro: cards de exercício e hidratação alinhados à mesma superfície dos demais cards. */
@@ -7348,18 +7374,21 @@ export default function App() {
         className="caveira-barra-inferior"
         style={{
           position: "fixed",
-          bottom: 0,
+          bottom: "calc(14px + env(safe-area-inset-bottom, 0px))",
           left: ehDesktop ? `${larguraMenuDesktop}px` : "50%",
           transform: ehDesktop ? "none" : "translateX(-50%)",
-          width: ehDesktop ? `calc(100% - ${larguraMenuDesktop}px)` : "100%",
-          maxWidth: larguraContainer,
+          width: ehDesktop ? `calc(100% - ${larguraMenuDesktop}px)` : "calc(100% - 24px)",
+          maxWidth: ehDesktop ? larguraContainer : "520px",
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          background: "rgba(28, 27, 34, 0.88)",
-          borderTop: "1px solid rgba(190, 170, 225, 0.15)",
-          padding: "8px 12px",
+          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+          background: "rgba(35, 30, 45, 0.96)",
+          border: "1px solid rgba(190, 170, 225, 0.24)",
+          borderRadius: "16px",
+          boxShadow: "0 8px 26px rgba(0, 0, 0, .26)",
+          padding: "7px",
           boxSizing: "border-box",
-          transition: "max-width 0.2s ease",
+          transition: "max-width 0.2s ease, bottom 0.2s ease",
+          zIndex: 1000,
         }}
       >
         {[
@@ -7376,13 +7405,14 @@ export default function App() {
               aria-current={ativa ? "page" : undefined}
               onClick={() => abrirPagina(aba.id)}
               style={{
-                padding: "8px",
-                borderRadius: "8px",
-                border: "none",
-                background: ativa ? "#282432" : "transparent",
-                color: ativa ? "#F1EEF7" : "#9E96AD",
-                fontSize: "12px",
-                fontWeight: ativa ? 700 : 500,
+                padding: "10px 8px",
+                minHeight: "46px",
+                borderRadius: "11px",
+                border: "1px solid transparent",
+                background: ativa ? "#8057A7" : "transparent",
+                color: ativa ? "#FFFFFF" : "#E1D8EB",
+                fontSize: "13px",
+                fontWeight: ativa ? 750 : 600,
                 cursor: "pointer",
               }}
             >
