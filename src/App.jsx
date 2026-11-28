@@ -2984,7 +2984,77 @@ export default function App() {
             .caveira-entrada-botao { max-width: 320px; }
           }
           button, a { touch-action: manipulation; }
-        `}</style>
+  
+        /* Tipografia global: reforça leitura sem alterar cores de ações, alertas ou ícones. */
+        [data-caveira-theme] p,
+        [data-caveira-theme] small,
+        [data-caveira-theme] label,
+        [data-caveira-theme] li,
+        [data-caveira-theme] td,
+        [data-caveira-theme] th,
+        [data-caveira-theme] input,
+        [data-caveira-theme] textarea,
+        [data-caveira-theme] select,
+        [data-caveira-theme] summary {
+          font-weight: 500 !important;
+          -webkit-font-smoothing: antialiased;
+          text-rendering: optimizeLegibility;
+        }
+        [data-caveira-theme] p,
+        [data-caveira-theme] small,
+        [data-caveira-theme] label,
+        [data-caveira-theme] li,
+        [data-caveira-theme] td,
+        [data-caveira-theme] th,
+        [data-caveira-theme] summary {
+          font-weight: 550 !important;
+        }
+        [data-caveira-theme="claro"] p,
+        [data-caveira-theme="claro"] small,
+        [data-caveira-theme="claro"] label,
+        [data-caveira-theme="claro"] li,
+        [data-caveira-theme="claro"] td,
+        [data-caveira-theme="claro"] th,
+        [data-caveira-theme="claro"] summary {
+          color: #494253 !important;
+        }
+        /* Textos de apoio que antes recebiam cinzas/lilases muito claros via inline ou RGB. */
+        [data-caveira-theme="claro"] [style*="color: #9E96AD"],
+        [data-caveira-theme="claro"] [style*="color: #9e96ad"],
+        [data-caveira-theme="claro"] [style*="color: #AAA1B8"],
+        [data-caveira-theme="claro"] [style*="color: #aaa1b8"],
+        [data-caveira-theme="claro"] [style*="color: #BEB7CA"],
+        [data-caveira-theme="claro"] [style*="color: #beb7ca"],
+        [data-caveira-theme="claro"] [style*="color: #9299A6"],
+        [data-caveira-theme="claro"] [style*="color: #89909C"],
+        [data-caveira-theme="claro"] [style*="color: #9AA1AE"],
+        [data-caveira-theme="claro"] [style*="color: #8D96A4"],
+        [data-caveira-theme="claro"] [style*="color: rgb(158, 150, 173)"],
+        [data-caveira-theme="claro"] [style*="color: rgb(190, 183, 202)"],
+        [data-caveira-theme="claro"] [style*="color: rgb(170, 161, 184)"] {
+          color: #494253 !important;
+          font-weight: 550 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-observacoes-card {
+          background: #FFFFFF !important;
+          background-color: #FFFFFF !important;
+          border-color: #D8D1E2 !important;
+          color: #292431 !important;
+          box-shadow: 0 3px 14px rgba(40,30,55,.055) !important;
+        }
+        [data-caveira-theme="claro"] .caveira-observacoes-titulo {
+          color: #292431 !important;
+          font-weight: 700 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-observacoes-descricao {
+          color: #494253 !important;
+          font-weight: 550 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-observacoes-card textarea {
+          color: #292431 !important;
+          font-weight: 500 !important;
+        }
+      `}</style>
 
         <section className="caveira-entrada-card">
           <img
@@ -3894,26 +3964,19 @@ export default function App() {
             radial-gradient(ellipse 55% 42% at 100% 100%, rgba(128,96,173,.09), transparent 72%),
             radial-gradient(ellipse 40% 32% at 0% 100%, rgba(157,190,180,.06), transparent 72%) !important;
         }
-        /* Painel de sessão e barra inferior: sem placas brancas no tema claro. */
-        [data-caveira-theme="claro"] aside.caveira-sessao-hoje {
-          background: transparent !important;
-          background-color: transparent !important;
-          background-image: none !important;
-          border-color: transparent !important;
-          color: var(--cv-text) !important;
-          box-shadow: none !important;
-          backdrop-filter: none !important;
-          -webkit-backdrop-filter: none !important;
-        }
-        [data-caveira-theme="claro"] header {
-          background: transparent !important;
-          background-color: transparent !important;
-          background-image: none !important;
+        [data-caveira-theme="claro"] aside {
+          background: linear-gradient(160deg, #FFFFFF, #F5F2F9) !important;
           border-color: var(--cv-border) !important;
           color: var(--cv-text) !important;
-          box-shadow: none !important;
+          box-shadow: 12px 0 36px rgba(45,35,65,.07) !important;
         }
-        /* Barra inferior: seu visual grafite original é mantido também no tema claro. */
+        [data-caveira-theme="claro"] header,
+        [data-caveira-theme="claro"] nav[style*="position: fixed"] {
+          background: rgba(255,255,255,.96) !important;
+          border-color: var(--cv-border) !important;
+          color: var(--cv-text) !important;
+          box-shadow: 0 5px 22px rgba(45,35,65,.055) !important;
+        }
         /* Containers com superfícies originalmente grafite/pretas. */
         [data-caveira-theme="claro"] [style*="background: rgba(35, 32, 46"],
         [data-caveira-theme="claro"] [style*="background: rgba(31, 29, 42"],
@@ -4114,78 +4177,6 @@ export default function App() {
           opacity: 1 !important;
           box-shadow: 0 2px 5px rgba(45,35,65,.07) !important;
         }
-        /* Menu lateral: overrides isolados para impedir que as regras globais do tema claro clareiem a navegação. */
-        [data-caveira-theme="claro"] .caveira-menu-drawer,
-        [data-caveira-theme="claro"] aside.caveira-menu-compacto {
-          background: linear-gradient(145deg, #241B35 0%, #302342 52%, #241B35 100%) !important;
-          background-color: #2B203D !important;
-          color: #FFFFFF !important;
-          border-right-color: rgba(197,178,255,.22) !important;
-          box-shadow: 18px 0 48px rgba(0,0,0,.32) !important;
-        }
-        [data-caveira-theme="claro"] .caveira-menu-drawer button {
-          background: transparent !important;
-          background-color: transparent !important;
-          background-image: none !important;
-          border-color: transparent !important;
-          color: #FFFFFF !important;
-          box-shadow: none !important;
-          opacity: 1 !important;
-        }
-        [data-caveira-theme="claro"] .caveira-menu-drawer button span,
-        [data-caveira-theme="claro"] .caveira-menu-drawer button svg,
-        [data-caveira-theme="claro"] .caveira-menu-drawer > div span {
-          color: #FFFFFF !important;
-        }
-        [data-caveira-theme="claro"] .caveira-menu-drawer button[style*="#252833"] {
-          background: #493461 !important;
-          background-color: #493461 !important;
-          color: #FFFFFF !important;
-          border-color: rgba(255,255,255,.07) !important;
-          box-shadow: inset 0 0 18px rgba(197,178,255,.045) !important;
-        }
-        [data-caveira-theme="claro"] .caveira-menu-drawer button[aria-label="Fechar menu"] {
-          background: rgba(49,35,70,.94) !important;
-          background-color: rgba(49,35,70,.94) !important;
-          border: 1px solid rgba(197,178,255,.22) !important;
-          color: #FFFFFF !important;
-        }
-        [data-caveira-theme="claro"] .caveira-menu-drawer .caveira-usuario-nome,
-        [data-caveira-theme="claro"] .caveira-menu-drawer .caveira-usuario-email {
-          color: #FFFFFF !important;
-        }
-        [data-caveira-theme="claro"] .caveira-menu-drawer img,
-        [data-caveira-theme="claro"] .caveira-menu-compacto img {
-          background: transparent !important;
-          background-color: transparent !important;
-          border: 0 !important;
-          box-shadow: none !important;
-        }
-        [data-caveira-theme="claro"] .caveira-menu-compacto button {
-          background: transparent !important;
-          background-color: transparent !important;
-          background-image: none !important;
-          border: 0 !important;
-          box-shadow: none !important;
-          color: #FFFFFF !important;
-        }
-        [data-caveira-theme="claro"] .caveira-menu-compacto button.caveira-logo-menu-compacto {
-          background: transparent !important;
-          background-color: transparent !important;
-          border: 0 !important;
-          outline: 0 !important;
-          box-shadow: none !important;
-          padding: 0 !important;
-        }
-        [data-caveira-theme="claro"] .caveira-menu-compacto button[aria-label="Abrir perfil e menu"] {
-          background: linear-gradient(135deg,#d8a9ed,#a7b9ff) !important;
-          background-color: #C7A9EF !important;
-          color: #FFFFFF !important;
-          border: 0 !important;
-        }
-        [data-caveira-theme="claro"] .caveira-menu-compacto button[aria-label="Sair"] {
-          color: #FFFFFF !important;
-        }
         [data-caveira-theme="claro"] button:disabled {
           background-color: #E7E1ED !important;
           color: #716A7D !important;
@@ -4246,127 +4237,6 @@ export default function App() {
           background-color: transparent !important;
           background-image: none !important;
         }
-        /* Menu inferior flutuante: alto contraste e distância das bordas no celular. */
-        nav.caveira-barra-inferior {
-          bottom: calc(14px + env(safe-area-inset-bottom, 0px)) !important;
-          border: 1px solid rgba(190, 170, 225, .24) !important;
-          border-radius: 16px !important;
-          background: rgba(35, 30, 45, .96) !important;
-          background-color: rgba(35, 30, 45, .96) !important;
-          background-image: none !important;
-          box-shadow: 0 8px 26px rgba(0, 0, 0, .26), 0 2px 8px rgba(75, 48, 105, .18) !important;
-          backdrop-filter: blur(14px) !important;
-          -webkit-backdrop-filter: blur(14px) !important;
-          padding: 7px !important;
-          z-index: 1000 !important;
-        }
-        nav.caveira-barra-inferior button.caveira-aba-inferior {
-          min-height: 46px !important;
-          padding: 10px 8px !important;
-          border-radius: 11px !important;
-          background: transparent !important;
-          background-color: transparent !important;
-          background-image: none !important;
-          border: 1px solid transparent !important;
-          box-shadow: none !important;
-          color: #E1D8EB !important;
-          font-size: 13px !important;
-          font-weight: 600 !important;
-          opacity: 1 !important;
-          text-shadow: none !important;
-        }
-        nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"] {
-          background: #8057A7 !important;
-          background-color: #8057A7 !important;
-          color: #FFFFFF !important;
-          border: 1px solid rgba(220, 205, 240, .28) !important;
-          box-shadow: 0 2px 9px rgba(0, 0, 0, .16) !important;
-          font-weight: 750 !important;
-        }
-        [data-caveira-theme="claro"] nav.caveira-barra-inferior,
-        [data-caveira-theme="escuro"] nav.caveira-barra-inferior {
-          background: rgba(35, 30, 45, .96) !important;
-          background-color: rgba(35, 30, 45, .96) !important;
-          border-color: rgba(190, 170, 225, .24) !important;
-        }
-        @media (max-width: 899px) {
-          nav.caveira-barra-inferior {
-            width: calc(100% - 24px) !important;
-            max-width: 520px !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-          }
-        }
-
-        /* Tema claro: cards de exercício e hidratação alinhados à mesma superfície dos demais cards. */
-        [data-caveira-theme="claro"] .caveira-card-exercicio,
-        [data-caveira-theme="claro"] .caveira-card-hidratacao {
-          background: #FFFFFF !important;
-          background-color: #FFFFFF !important;
-          background-image: none !important;
-          border-color: #E2DCE9 !important;
-          color: #302B3A !important;
-          box-shadow: 0 3px 14px rgba(40,30,55,.055) !important;
-        }
-        [data-caveira-theme="claro"] .caveira-card-exercicio button:not([aria-label*="concluído"]):not([title*="concluído"]),
-        [data-caveira-theme="claro"] .caveira-card-hidratacao button {
-          background-color: #F0EAF7 !important;
-          background-image: none !important;
-          color: #514465 !important;
-          border-color: #D8CDE6 !important;
-          box-shadow: 0 1px 3px rgba(45,35,65,.04) !important;
-        }
-        [data-caveira-theme="claro"] .caveira-card-exercicio input,
-        [data-caveira-theme="claro"] .caveira-card-hidratacao input {
-          background: #FFFFFF !important;
-          background-color: #FFFFFF !important;
-          color: #302B3A !important;
-          border-color: #D8D1E2 !important;
-        }
-        [data-caveira-theme="claro"] .caveira-card-exercicio button[style*="background: none"],
-        [data-caveira-theme="claro"] .caveira-card-exercicio button[style*="background: transparent"] {
-          background: transparent !important;
-          color: #302B3A !important;
-          border-color: transparent !important;
-          box-shadow: none !important;
-        }
-        [data-caveira-theme="claro"] .caveira-card-exercicio button[aria-label*="concluído"],
-        [data-caveira-theme="claro"] .caveira-card-exercicio button[title*="concluído"] {
-          background: #F0EAF7 !important;
-          color: #66527F !important;
-          border-color: #D8CDE6 !important;
-        }
-        [data-caveira-theme="claro"] .caveira-card-hidratacao svg {
-          stroke: #8060AD !important;
-        }
-        [data-caveira-theme="claro"] .caveira-card-hidratacao > div[style*="height: 7px"] {
-          background: #E8E1F0 !important;
-        }
-        [data-caveira-theme="claro"] .caveira-card-hidratacao > div[style*="height: 7px"] > div {
-          background: #A88ACD !important;
-        }
-        /* Observações: superfície e contraste alinhados aos cards principais. */
-        [data-caveira-theme="claro"] .caveira-card-observacoes-treino {
-          background: #FFFFFF !important;
-          background-color: #FFFFFF !important;
-          border-color: #E2DCE9 !important;
-          color: #302B3A !important;
-          box-shadow: 0 3px 14px rgba(40,30,55,.055) !important;
-        }
-        [data-caveira-theme="claro"] .caveira-card-observacoes-treino > span,
-        [data-caveira-theme="claro"] .caveira-card-observacoes-treino > div {
-          color: #40364F !important;
-          font-weight: 600 !important;
-        }
-        [data-caveira-theme="claro"] .caveira-card-observacoes-treino textarea {
-          color: #302B3A !important;
-          background: #FFFFFF !important;
-          border-color: #D8D1E2 !important;
-        }
-        [data-caveira-theme="claro"] .caveira-card-observacoes-treino textarea::placeholder {
-          color: #756783 !important;
-          opacity: 1 !important;
-        }
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
         <span style={{ width: 6, height: 6, borderRadius: "50%", background: estaOnline ? "#B99AE7" : "#E9C987" }} />
@@ -4398,7 +4268,6 @@ export default function App() {
       {/* Sidebar compacta no desktop — mantém acesso rápido e animações do app */}
       {!menuAberto && ehDesktop && (
         <aside
-          className="caveira-menu-compacto"
           aria-label="Navegação compacta"
           style={{
             position: "fixed", left: 0, top: 0, bottom: 0,
@@ -4409,7 +4278,7 @@ export default function App() {
             padding: "18px 0 16px", boxSizing: "border-box",
           }}
         >
-          <button className="caveira-logo-menu-compacto" type="button" onClick={() => setMenuAberto(true)} title="Expandir menu" aria-label="Expandir menu"
+          <button type="button" onClick={() => setMenuAberto(true)} title="Expandir menu" aria-label="Expandir menu"
             style={{ border: 0, background: "transparent", padding: 0, cursor: "pointer", marginBottom: 24 }}>
             {renderLogo(34)}
           </button>
@@ -4475,7 +4344,6 @@ export default function App() {
           }}
         >
           <aside
-            className="caveira-menu-drawer"
             onClick={(e) => e.stopPropagation()}
             style={{
               position: ehDesktop ? "fixed" : "relative",
@@ -4549,7 +4417,7 @@ export default function App() {
             <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: "9px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 8px", background: "transparent", borderTop: "1px solid rgba(190, 170, 225, 0.14)", borderRadius: 0, minWidth: 0, paddingTop: "16px" }}>
                 <div style={{ width: "34px", height: "34px", borderRadius: "50%", flexShrink: 0, overflow: "hidden", display: "grid", placeItems: "center", background: "#342B46", border: "1px solid #74618F", color: "#DCCCF5", fontWeight: 800, fontSize: "13px" }}>{perfilFoto ? <img src={perfilFoto} alt="Foto de perfil" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : (authSession.user.user_metadata?.nome || authSession.user.email || "U").slice(0, 1).toUpperCase()}</div>
-                <div style={{ minWidth: 0, flex: 1 }}><div className="caveira-usuario-nome" style={{ color: "#F1EEF7", fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.user_metadata?.nome || "Usuário"}</div><div className="caveira-usuario-email" style={{ color: "#BEB7CA", fontSize: "10px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.email}</div></div>
+                <div style={{ minWidth: 0, flex: 1 }}><div style={{ color: "#F1EEF7", fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.user_metadata?.nome || "Usuário"}</div><div style={{ color: "#BEB7CA", fontSize: "10px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{authSession.user.email}</div></div>
                 <button type="button" onClick={sairDaConta} title="Sair da conta" aria-label="Sair da conta" style={{ border: 0, background: "transparent", color: "#89909c", cursor: "pointer", display: "grid", placeItems: "center", padding: 8 }}>{renderIconeMenu("sair", 18)}</button>
               </div>
             </div>
@@ -5129,7 +4997,6 @@ export default function App() {
                 return (
                   <div
                     key={ex.id}
-                    className="caveira-card-exercicio"
                     style={{
                       padding: ehDesktop ? "15px 17px" : "12px 10px",
                       borderRadius: "9px",
@@ -5337,9 +5204,9 @@ export default function App() {
           )}
 
           {/* Observações do treino: registros permanentes, enviados ao histórico do Dashboard. */}
-          <div className="caveira-card-observacoes-treino" style={{ padding: "12px", borderRadius: "10px", background: temaApp === "claro" ? "#FFFFFF" : "rgba(49, 43, 63, 0.34)", border: "1px solid rgba(190, 170, 225, 0.14)", display: "flex", flexDirection: "column", gap: "8px" }}>
-            <span style={{ fontSize: "13px", fontWeight: 750 }}>{textoUi('Observações do treino', 'Workout notes')}</span>
-            <div style={{ fontSize: "11px", lineHeight: 1.55, color: temaApp === "claro" ? "#40364F" : "#D6CBE6", fontWeight: 550 }}>
+          <div className="caveira-observacoes-card" style={{ padding: "12px", borderRadius: "10px", background: "rgba(49, 43, 63, 0.34)", border: "1px solid rgba(190, 170, 225, 0.14)", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <span className="caveira-observacoes-titulo" style={{ fontSize: "13px", fontWeight: 650 }}>{textoUi('Observações do treino', 'Workout notes')}</span>
+            <div className="caveira-observacoes-descricao" style={{ fontSize: "11px", lineHeight: 1.55, color: "#9E96AD" }}>
               Registre detalhes desta sessão: cargas utilizadas, dificuldades, dores ou desconfortos, evolução, recordes pessoais e pontos que deseja acompanhar nos próximos treinos. Os registros salvos ficam no histórico do Dashboard e não podem ser editados.
             </div>
             <div style={{ display: "flex", alignItems: "stretch", gap: 8 }}>
@@ -5376,7 +5243,7 @@ export default function App() {
               gap: "12px",
             }}
           >
-            <div className="caveira-card-hidratacao" style={{ padding: "14px", borderRadius: "7px", background: "#0D0F14", border: "1px solid #252A35", display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div style={{ padding: "14px", borderRadius: "7px", background: "#0D0F14", border: "1px solid #252A35", display: "flex", flexDirection: "column", gap: "12px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "16px", fontWeight: 700, color: "#E6E8ED" }}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8FC7F4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3.5C9.2 7.1 6 10.2 6 14a6 6 0 0 0 12 0c0-3.8-3.2-6.9-6-10.5Z"/><path d="M4.5 10.5C3.2 12.2 2.5 13.6 2.5 15a4 4 0 0 0 4 4"/></svg>{textoUi('Água do dia', 'Daily water')}</span>
                 <label style={{ fontSize: "12px", color: "#BEB7CA" }}>
@@ -7393,24 +7260,20 @@ export default function App() {
 
       {/* Barra Inferior */}
       <nav
-        className="caveira-barra-inferior"
         style={{
           position: "fixed",
-          bottom: "calc(14px + env(safe-area-inset-bottom, 0px))",
+          bottom: 0,
           left: ehDesktop ? `${larguraMenuDesktop}px` : "50%",
           transform: ehDesktop ? "none" : "translateX(-50%)",
-          width: ehDesktop ? `calc(100% - ${larguraMenuDesktop}px)` : "calc(100% - 24px)",
-          maxWidth: ehDesktop ? larguraContainer : "520px",
+          width: ehDesktop ? `calc(100% - ${larguraMenuDesktop}px)` : "100%",
+          maxWidth: larguraContainer,
           display: "grid",
-          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-          background: "rgba(35, 30, 45, 0.96)",
-          border: "1px solid rgba(190, 170, 225, 0.24)",
-          borderRadius: "16px",
-          boxShadow: "0 8px 26px rgba(0, 0, 0, .26)",
-          padding: "7px",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          background: "rgba(28, 27, 34, 0.88)",
+          borderTop: "1px solid rgba(190, 170, 225, 0.15)",
+          padding: "8px 12px",
           boxSizing: "border-box",
-          transition: "max-width 0.2s ease, bottom 0.2s ease",
-          zIndex: 1000,
+          transition: "max-width 0.2s ease",
         }}
       >
         {[
@@ -7423,18 +7286,15 @@ export default function App() {
             <button
               key={aba.id}
               type="button"
-              className="caveira-aba-inferior"
-              aria-current={ativa ? "page" : undefined}
               onClick={() => abrirPagina(aba.id)}
               style={{
-                padding: "10px 8px",
-                minHeight: "46px",
-                borderRadius: "11px",
-                border: "1px solid transparent",
-                background: ativa ? "#8057A7" : "transparent",
-                color: ativa ? "#FFFFFF" : "#E1D8EB",
-                fontSize: "13px",
-                fontWeight: ativa ? 750 : 600,
+                padding: "8px",
+                borderRadius: "8px",
+                border: "none",
+                background: ativa ? "#282432" : "transparent",
+                color: ativa ? "#F1EEF7" : "#9E96AD",
+                fontSize: "12px",
+                fontWeight: ativa ? 700 : 500,
                 cursor: "pointer",
               }}
             >
