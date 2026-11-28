@@ -4289,6 +4289,37 @@ export default function App() {
           background-color: rgba(35, 30, 45, .96) !important;
           border-color: rgba(190, 170, 225, .24) !important;
         }
+        /* Elimina os fundos claros aplicados pelo estilo global de botões: só a aba ativa é roxa. */
+        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior,
+        [data-caveira-theme="escuro"] nav.caveira-barra-inferior button.caveira-aba-inferior {
+          background: transparent !important;
+          background-color: transparent !important;
+          background-image: none !important;
+          color: #E1D8EB !important;
+          border: 1px solid transparent !important;
+          box-shadow: none !important;
+          opacity: 1 !important;
+        }
+        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"],
+        [data-caveira-theme="escuro"] nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"] {
+          background: #8057A7 !important;
+          background-color: #8057A7 !important;
+          background-image: none !important;
+          color: #FFFFFF !important;
+          border: 1px solid rgba(220, 205, 240, .28) !important;
+          box-shadow: 0 2px 9px rgba(0, 0, 0, .16) !important;
+        }
+        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior:hover,
+        [data-caveira-theme="escuro"] nav.caveira-barra-inferior button.caveira-aba-inferior:hover {
+          background: rgba(128, 87, 167, .22) !important;
+          background-color: rgba(128, 87, 167, .22) !important;
+          color: #FFFFFF !important;
+        }
+        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"]:hover,
+        [data-caveira-theme="escuro"] nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"]:hover {
+          background: #8057A7 !important;
+          background-color: #8057A7 !important;
+        }
         @media (max-width: 899px) {
           nav.caveira-barra-inferior {
             width: calc(100% - 24px) !important;
