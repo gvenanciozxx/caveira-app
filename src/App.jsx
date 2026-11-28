@@ -4275,7 +4275,21 @@ export default function App() {
         [data-caveira-theme="claro"] .caveira-exercicio-card button[style*="background: transparent"] { background: transparent !important; box-shadow: none !important; }
         [data-caveira-theme="claro"] .caveira-exercicio-card button { color: #3E354B !important; }
         [data-caveira-theme="claro"] .caveira-exercicio-card input { background: #FFFFFF !important; color: #292431 !important; border-color: #D2C8DE !important; }
-        [data-caveira-theme="claro"] .caveira-observacoes-card { background: transparent !important; background-color: transparent !important; background-image: none !important; border: 0 !important; box-shadow: none !important; }
+        /* Observações: superfície igual aos cards padrão em ambos os temas. */
+        .caveira-observacoes-card {
+          background: rgba(35, 32, 46, 0.76) !important;
+          background-color: rgba(35, 32, 46, 0.76) !important;
+          background-image: none !important;
+          border: 1px solid rgba(190, 170, 225, 0.13) !important;
+          box-shadow: none !important;
+        }
+        [data-caveira-theme="claro"] .caveira-observacoes-card {
+          background: #F8F5FC !important;
+          background-color: #F8F5FC !important;
+          background-image: none !important;
+          border: 1px solid #DCD3E8 !important;
+          box-shadow: 0 2px 9px rgba(50,35,70,.045) !important;
+        }
         [data-caveira-theme="claro"] .caveira-observacoes-input { background: transparent !important; background-color: transparent !important; background-image: none !important; color: #292431 !important; border: 1px solid #CFC4DC !important; box-shadow: none !important; font-weight: 550 !important; }
         [data-caveira-theme="claro"] .caveira-observacoes-input::placeholder { color: #6F667C !important; }
         [data-caveira-theme="claro"] .caveira-agua-card { background: #F8F5FC !important; background-color: #F8F5FC !important; border-color: #DCD3E8 !important; color: #292431 !important; box-shadow: 0 2px 9px rgba(50,35,70,.045) !important; }
@@ -4287,6 +4301,13 @@ export default function App() {
         [data-caveira-theme="claro"] .caveira-menu-inferior-flutuante { background: rgba(249,247,252,.94) !important; background-color: rgba(249,247,252,.94) !important; border: 1px solid #D8CDE5 !important; box-shadow: 0 10px 30px rgba(50,35,70,.16) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; }
         [data-caveira-theme="claro"] .caveira-menu-inferior-item { background: transparent !important; color: #514660 !important; border: 0 !important; box-shadow: none !important; }
         [data-caveira-theme="claro"] .caveira-menu-inferior-item[style*="background: #282432"] { background: #E8DDF4 !important; color: #392B4C !important; }
+        /* Estado ativo do menu inferior: baseado no estado da página, não em busca de estilo inline. */
+        .caveira-menu-inferior-item { background: transparent !important; color: #AFA5BE !important; border: 1px solid transparent !important; box-shadow: none !important; }
+        .caveira-menu-inferior-item.caveira-menu-inferior-item-ativa,
+        .caveira-menu-inferior-item[aria-current="page"] { background: #8057A7 !important; background-color: #8057A7 !important; color: #FFFFFF !important; border: 1px solid rgba(220,205,240,.28) !important; box-shadow: 0 2px 9px rgba(0,0,0,.16) !important; font-weight: 750 !important; }
+        [data-caveira-theme="claro"] .caveira-menu-inferior-item { color: #514660 !important; }
+        [data-caveira-theme="claro"] .caveira-menu-inferior-item.caveira-menu-inferior-item-ativa,
+        [data-caveira-theme="claro"] .caveira-menu-inferior-item[aria-current="page"] { background: #8057A7 !important; background-color: #8057A7 !important; color: #FFFFFF !important; border: 1px solid rgba(220,205,240,.28) !important; box-shadow: 0 2px 9px rgba(0,0,0,.16) !important; }
         [data-caveira-theme="claro"] aside.caveira-sessao-hoje,
         [data-caveira-theme="claro"] aside.caveira-sessao-hoje section,
         [data-caveira-theme="claro"] aside.caveira-sessao-hoje .caveira-proxima-sessao,
@@ -5273,7 +5294,7 @@ export default function App() {
           )}
 
           {/* Observações do treino: registros permanentes, enviados ao histórico do Dashboard. */}
-          <div className="caveira-observacoes-card" style={{ padding: "12px", borderRadius: "10px", background: "rgba(49, 43, 63, 0.34)", border: "1px solid rgba(190, 170, 225, 0.14)", display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div className="caveira-observacoes-card" style={{ padding: "12px", borderRadius: "10px", display: "flex", flexDirection: "column", gap: "8px" }}>
             <span className="caveira-observacoes-titulo" style={{ fontSize: "13px", fontWeight: 650 }}>{textoUi('Observações do treino', 'Workout notes')}</span>
             <div className="caveira-observacoes-descricao" style={{ fontSize: "11px", lineHeight: 1.55, color: "#9E96AD" }}>
               Registre detalhes desta sessão: cargas utilizadas, dificuldades, dores ou desconfortos, evolução, recordes pessoais e pontos que deseja acompanhar nos próximos treinos. Os registros salvos ficam no histórico do Dashboard e não podem ser editados.
@@ -7362,8 +7383,9 @@ export default function App() {
           return (
             <button
               key={aba.id}
-              className="caveira-menu-inferior-item"
+              className={`caveira-menu-inferior-item${ativa ? " caveira-menu-inferior-item-ativa" : ""}`}
               type="button"
+              aria-current={ativa ? "page" : undefined}
               onClick={() => abrirPagina(aba.id)}
               style={{
                 padding: "11px 8px",
