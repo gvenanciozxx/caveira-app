@@ -4289,37 +4289,6 @@ export default function App() {
           background-color: rgba(35, 30, 45, .96) !important;
           border-color: rgba(190, 170, 225, .24) !important;
         }
-        /* Elimina os fundos claros aplicados pelo estilo global de botões: só a aba ativa é roxa. */
-        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior,
-        [data-caveira-theme="escuro"] nav.caveira-barra-inferior button.caveira-aba-inferior {
-          background: transparent !important;
-          background-color: transparent !important;
-          background-image: none !important;
-          color: #E1D8EB !important;
-          border: 1px solid transparent !important;
-          box-shadow: none !important;
-          opacity: 1 !important;
-        }
-        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"],
-        [data-caveira-theme="escuro"] nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"] {
-          background: #8057A7 !important;
-          background-color: #8057A7 !important;
-          background-image: none !important;
-          color: #FFFFFF !important;
-          border: 1px solid rgba(220, 205, 240, .28) !important;
-          box-shadow: 0 2px 9px rgba(0, 0, 0, .16) !important;
-        }
-        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior:hover,
-        [data-caveira-theme="escuro"] nav.caveira-barra-inferior button.caveira-aba-inferior:hover {
-          background: rgba(128, 87, 167, .22) !important;
-          background-color: rgba(128, 87, 167, .22) !important;
-          color: #FFFFFF !important;
-        }
-        [data-caveira-theme="claro"] nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"]:hover,
-        [data-caveira-theme="escuro"] nav.caveira-barra-inferior button.caveira-aba-inferior[aria-current="page"]:hover {
-          background: #8057A7 !important;
-          background-color: #8057A7 !important;
-        }
         @media (max-width: 899px) {
           nav.caveira-barra-inferior {
             width: calc(100% - 24px) !important;
@@ -4375,6 +4344,28 @@ export default function App() {
         }
         [data-caveira-theme="claro"] .caveira-card-hidratacao > div[style*="height: 7px"] > div {
           background: #A88ACD !important;
+        }
+        /* Observações: superfície e contraste alinhados aos cards principais. */
+        [data-caveira-theme="claro"] .caveira-card-observacoes-treino {
+          background: #FFFFFF !important;
+          background-color: #FFFFFF !important;
+          border-color: #E2DCE9 !important;
+          color: #302B3A !important;
+          box-shadow: 0 3px 14px rgba(40,30,55,.055) !important;
+        }
+        [data-caveira-theme="claro"] .caveira-card-observacoes-treino > span,
+        [data-caveira-theme="claro"] .caveira-card-observacoes-treino > div {
+          color: #40364F !important;
+          font-weight: 600 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-card-observacoes-treino textarea {
+          color: #302B3A !important;
+          background: #FFFFFF !important;
+          border-color: #D8D1E2 !important;
+        }
+        [data-caveira-theme="claro"] .caveira-card-observacoes-treino textarea::placeholder {
+          color: #756783 !important;
+          opacity: 1 !important;
         }
       `}</style>
       <div role="status" aria-live="polite" title={statusOffline} style={{ position: "fixed", top: 10, right: 12, zIndex: 80, display: "flex", alignItems: "center", gap: 7, padding: "6px 10px", borderRadius: 999, border: `1px solid ${estaOnline ? "rgba(96,165,250,.22)" : "rgba(251,191,36,.34)"}`, background: estaOnline ? "rgba(27,41,60,.84)" : "rgba(120,75,20,.9)", color: estaOnline ? "#E4D8F7" : "#F1DCA8", fontSize: 10, fontWeight: 700, backdropFilter: "blur(12px)", pointerEvents: "none" }}>
@@ -5346,9 +5337,9 @@ export default function App() {
           )}
 
           {/* Observações do treino: registros permanentes, enviados ao histórico do Dashboard. */}
-          <div style={{ padding: "12px", borderRadius: "10px", background: "rgba(49, 43, 63, 0.34)", border: "1px solid rgba(190, 170, 225, 0.14)", display: "flex", flexDirection: "column", gap: "8px" }}>
-            <span style={{ fontSize: "13px", fontWeight: 650 }}>{textoUi('Observações do treino', 'Workout notes')}</span>
-            <div style={{ fontSize: "11px", lineHeight: 1.55, color: "#9E96AD" }}>
+          <div className="caveira-card-observacoes-treino" style={{ padding: "12px", borderRadius: "10px", background: temaApp === "claro" ? "#FFFFFF" : "rgba(49, 43, 63, 0.34)", border: "1px solid rgba(190, 170, 225, 0.14)", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <span style={{ fontSize: "13px", fontWeight: 750 }}>{textoUi('Observações do treino', 'Workout notes')}</span>
+            <div style={{ fontSize: "11px", lineHeight: 1.55, color: temaApp === "claro" ? "#40364F" : "#D6CBE6", fontWeight: 550 }}>
               Registre detalhes desta sessão: cargas utilizadas, dificuldades, dores ou desconfortos, evolução, recordes pessoais e pontos que deseja acompanhar nos próximos treinos. Os registros salvos ficam no histórico do Dashboard e não podem ser editados.
             </div>
             <div style={{ display: "flex", alignItems: "stretch", gap: 8 }}>
